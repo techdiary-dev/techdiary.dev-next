@@ -15,7 +15,11 @@ const OAuthCallback = () => {
         .post(`/api/auth/signed-login?${searchParams.toString()}`)
         .then((_res) => {
           http.post("api/auth/login-spark").then((res) => {
-            router.push("/");
+            console.log({
+              res,
+              _res,
+            });
+            // router.push("/");
           });
         });
     });
