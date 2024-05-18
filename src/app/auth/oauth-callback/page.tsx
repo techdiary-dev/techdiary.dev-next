@@ -7,8 +7,6 @@ import React, { useEffect } from "react";
 const OAuthCallback = () => {
   const searchParams = useSearchParams();
 
-  const router = useRouter();
-
   useEffect(() => {
     http.get("sanctum/csrf-cookie").then((res) => {
       http
