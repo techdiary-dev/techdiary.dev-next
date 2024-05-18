@@ -4,7 +4,7 @@ import { logout } from "./action";
 
 const Logout = () => {
   const _logout = async () => {
-    await logout();
+    alert("Logout");
   };
 
   return <button onClick={_logout}>Logout</button>;
