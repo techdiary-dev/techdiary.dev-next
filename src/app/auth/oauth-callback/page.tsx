@@ -1,10 +1,10 @@
 "use client";
 
 import { http } from "@/clients/http.client";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 
-const OAuthCallback = () => {
+const OAuthCallbackClient = () => {
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -17,13 +17,21 @@ const OAuthCallback = () => {
               res,
               _res,
             });
-            // router.push("/");
+            window.location.href = "/";
           });
         });
     });
   }, [searchParams]);
 
-  return <h1>Please wait...</h1>;
+  return <h1>Please wait... </h1>;
+};
+
+const OAuthCallback = () => {
+  return (
+    <Suspense fallback={<h1>Please wait...</h1>}>
+      <OAuthCallbackClient />
+    </Suspense>
+  );
 };
 
 export default OAuthCallback;
