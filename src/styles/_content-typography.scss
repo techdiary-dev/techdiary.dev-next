@@ -1,0 +1,30 @@
+.content-typography {
+    @apply prose md:prose-xl prose-slate dark:prose-invert;
+    @apply max-w-none;
+
+    @apply prose-code:p-0;
+    @apply prose-a:inline-block;
+    @apply prose-p:p-0;
+    @apply prose-img:inline-block;
+
+    @apply prose-headings:font-semibold;
+
+    @apply prose-h1:text-xl md:prose-h1:text-2xl;
+    @apply prose-h2:text-lg md:prose-h2:text-2xl;
+    @apply prose-h3:text-base md:prose-h3:text-xl;
+    @apply prose-h4:text-base md:prose-h4:text-xl;
+
+    iframe {
+        @apply w-full aspect-[16/9];
+    }
+
+    .table-of-contents {
+        @apply bg-slate-100 py-2 dark:bg-slate-700 prose-sm md:prose-base;
+        @apply mb-4;
+    }
+
+    .heading-permalink {
+        @apply md:scroll-mt-20 scroll-mt-16;
+        @apply mr-3;
+    }
+}

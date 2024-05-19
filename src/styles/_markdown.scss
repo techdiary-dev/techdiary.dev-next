@@ -1,0 +1,104 @@
+.markdown {
+  @apply text-dark leading-normal break-words;
+
+  & > * + * {
+    @apply mt-0 mb-4;
+  }
+
+  li + li {
+    @apply mt-1;
+  }
+
+  li > p + p {
+    @apply mt-6;
+  }
+
+  strong {
+    @apply font-semibold;
+    a {
+      @apply font-bold;
+    }
+  }
+
+  a {
+    @apply text-blue-400 font-normal;
+  }
+
+  h1 {
+    @apply leading-tight border-b text-4xl font-semibold mb-4 mt-6 pb-2;
+  }
+
+  h2 {
+    @apply leading-tight border-b text-2xl font-semibold mb-4 mt-6 pb-2;
+  }
+
+  h3 {
+    @apply leading-snug text-lg font-semibold mb-4 mt-6;
+  }
+
+  h4 {
+    @apply leading-none text-base font-semibold mb-4 mt-6;
+  }
+
+  h5 {
+    @apply leading-tight text-sm font-semibold mb-4 mt-6;
+  }
+
+  h6 {
+    @apply leading-tight text-sm font-semibold mb-4 mt-6;
+  }
+
+  blockquote {
+    @apply text-base border-l-4 border-gray-300 pl-4 pr-4;
+  }
+
+  code {
+    @apply font-mono text-sm inline bg-gray-200 rounded px-1 py-1;
+  }
+
+  img {
+    @apply inline-block;
+  }
+
+  pre {
+    @apply bg-gray-100 rounded p-4;
+    code {
+      @apply block bg-transparent p-0 overflow-visible rounded-none;
+    }
+
+    &.hljs {
+      background-color: #1f2937;
+
+      code {
+        @apply leading-loose;
+      }
+    }
+  }
+
+  ul {
+    @apply text-base pl-8 list-disc;
+  }
+
+  ol {
+    @apply text-base pl-8 list-decimal;
+  }
+
+  kbd {
+    @apply text-xs inline-block rounded border px-1 py-1 align-middle font-normal font-mono shadow;
+  }
+
+  //  Table
+  table {
+    @apply text-base border-gray-600;
+    th {
+      @apply border py-1 px-3;
+    }
+    td {
+      @apply border py-1 px-3;
+    }
+  }
+
+  .highlight pre {
+    @apply bg-gray-100;
+  }
+}

@@ -1,0 +1,25 @@
+.navbar {
+  @apply bg-white dark:bg-slate-900;
+  @apply sticky left-0 top-0 z-30 w-full border-b;
+
+  .navbar__inner {
+    @apply fill-current;
+    @apply h-12;
+    @apply flex items-center justify-between;
+  }
+
+  &__logo {
+    @apply text-gray-800 dark:text-gray-100;
+  }
+  &__left {
+    @apply flex items-center gap-1;
+  }
+  &__hambargur-button {
+    @apply md:hidden;
+  }
+
+  &__hambargur-icon {
+    @apply h-6 w-6;
+    @apply text-gray-700 dark:text-gray-200;
+  }
+}
