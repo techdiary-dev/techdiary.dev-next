@@ -57,7 +57,7 @@ const SocialLinksWidget = () => {
           <span>ডিসকর্ড</span>
         </a>
         <a
-          href="https://api.techdiary.dev/rss/articles"
+          href="/sitemaps/articles/sitemap.xml"
           target="_blank"
           rel="nofollow"
           className="text-dark-secondary flex items-center space-x-2"
