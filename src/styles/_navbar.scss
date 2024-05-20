@@ -1,5 +1,5 @@
 .navbar {
-  @apply bg-white dark:bg-slate-900;
+  @apply bg-background;
   @apply sticky left-0 top-0 z-30 w-full border-b;
 
   .navbar__inner {
@@ -9,7 +9,7 @@
   }
 
   &__logo {
-    @apply text-gray-800 dark:text-gray-100;
+    @apply text-primary;
   }
   &__left {
     @apply flex items-center gap-1;

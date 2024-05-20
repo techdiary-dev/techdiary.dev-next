@@ -147,7 +147,7 @@ const UnAuthenticatedMenu = () => {
     <Menu shadow="md" width={200}>
       <Menu.Target>
         <UnstyledButton>
-          <Avatar />
+          <Avatar radius={"sm"} />
         </UnstyledButton>
       </Menu.Target>
 
