@@ -8,7 +8,7 @@ const DiscordWidget = () => {
     queryKey: ["discord-widget"],
     queryFn: () =>
       fetch(
-        "https://discord.com/api/v9/invites/dk2yfBg3?with_counts=true&with_expiration=true"
+        "https://discord.com/api/v9/invites/74cRC9ZBHY?with_counts=true&with_expiration=true"
       ).then((res) => res.json()),
   });
 
@@ -36,15 +36,15 @@ const DiscordWidget = () => {
 
           {!isLoading && (
             <>
-              <p className="text-sm text-forground-muted flex gap-2">
+              <div className="text-sm text-forground-muted flex gap-2">
                 <p className="font-semibold">মোট সদস্য</p>
                 <p>{data?.approximate_member_count}</p>
-              </p>
+              </div>
 
-              <p className="text-sm text-forground-muted flex gap-2">
+              <div className="text-sm text-forground-muted flex gap-2">
                 <p className="font-semibold">অনলাইনে আছেন</p>
                 <p>{data?.approximate_presence_count}</p>
-              </p>
+              </div>
             </>
           )}
         </div>
