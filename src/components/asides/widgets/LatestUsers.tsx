@@ -1,69 +1,75 @@
-"use client";
-
+import { http } from "@/clients/http.client";
+import { PaginatedResponse } from "@/models/PaginatedResponse.model";
+import { relativeTime } from "@/utils/relativeTime";
+import { AxiosResponse } from "axios";
 // import { relativeTime } from "@/utils/relativeTime";
-// import { Skeleton } from "@mantine/core";
 import Link from "next/link";
 
 interface IUser {
   id: string;
   name: string | null;
   username: string | null;
-  image: string | null;
-  created_at: Date;
+  profilePhoto: string | null;
+  social_links: {
+    twitter: string | null;
+    github: string | null;
+  };
+  joined: Date;
 }
 
-const LatestUsers = () => {
-  // const { data, isFetching } = api.user.getAll.useQuery({
-  //   limit: 10,
-  // });
+const LatestUsers = async () => {
+  const { data } = await http.get<PaginatedResponse<IUser>>(
+    "/api/profile/list"
+  );
 
   return (
     <div>
       <h3 className="mb-2 text-sm font-semibold text-gray-600 dark:text-slate-300">
         সর্বশেষ নিবন্ধিত ব্যবহারকারী
       </h3>
-      {/* <div className="flex flex-col gap-5">
-        {isFetching &&
-          Array.from({ length: 10 }).map((_, i) => <UserSkeleton key={i} />)}
+      <div className="flex flex-col gap-5">
+        {/* {isFetching &&
+          Array.from({ length: 10 }).map((_, i) => <UserSkeleton key={i} />)} */}
 
-        {data?.data.map((user) => (
-          <User user={user} key={user.id} />
+        {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+        {data.data.map((user) => (
+          <User key={user.id} user={user} />
         ))}
-      </div> */}
+      </div>
     </div>
   );
 };
 
 export default LatestUsers;
 
-// const User = ({ user }: { user: IUser }) => (
-//   <div className="flex items-center" v-for="user in users">
-//     <Link href={`/@${user.username}`}>
-//       <div className="h-10 w-10 overflow-hidden rounded-full">
-//         <img
-//           src={user?.image!}
-//           alt={user?.name!}
-//           loading="lazy"
-//           className="h-auto w-full"
-//         />
-//       </div>
-//     </Link>
+const User = ({ user }: { user: IUser }) => (
+  <div className="flex items-center" v-for="user in users">
+    <Link href={`/@${user.username}`}>
+      <div className="h-10 w-10 overflow-hidden rounded-full">
+        <img
+          src={user?.profilePhoto!}
+          alt={user?.name!}
+          loading="lazy"
+          className="h-auto w-full"
+        />
+      </div>
+    </Link>
 
-//     <div className="ml-2">
-//       <h3 className="text-dark text-base">
-//         <Link
-//           href={`/@${user?.username}`}
-//           className="text-gray-800 dark:text-gray-300"
-//         >
-//           {user.name}
-//         </Link>
-//       </h3>
-//       <p className="text-dark-secondary text-xs">
-//         {relativeTime(new Date(user.created_at))}
-//       </p>
-//     </div>
-//   </div>
-// );
+    <div className="ml-2">
+      <h3 className="text-dark text-base">
+        <Link
+          href={`/@${user?.username}`}
+          className="text-gray-800 dark:text-gray-300"
+        >
+          {user.name}
+        </Link>
+      </h3>
+      <p className="text-dark-secondary text-xs">
+        {relativeTime(new Date(user.joined))}
+      </p>
+    </div>
+  </div>
+);
 
 // const UserSkeleton = () => {
 //   return (

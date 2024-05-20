@@ -10,7 +10,7 @@ const HomeRightSidebar = () => {
       <SocialLinksWidget />
       <ImportantLinksWidget />
       <DiscordWidget />
-      {/* <LatestUsers /> */}
+      <LatestUsers />
     </div>
   );
 };
