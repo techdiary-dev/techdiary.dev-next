@@ -2,8 +2,19 @@ import FakeEditor from "@/components/FakeEditor";
 import HomeLeftSidebar from "@/components/asides/HomeLeftSidebar";
 import HomeRightSidebar from "@/components/asides/HomeRightSidebar";
 import ThreeColumnLayout from "@/components/layout/ThreeColumnLayout";
+import ArticleFeed from "./components/ArticleFeed";
+import { http } from "@/clients/http.client";
+import { PaginatedResponse } from "@/models/PaginatedResponse.model";
+import { IArticleFeedItem } from "@/models/Article.model";
 
 export default async function Home() {
+  const { data: articles } = await http.get<
+    PaginatedResponse<IArticleFeedItem>
+  >("api/articles", {
+    params: {
+      limit: 20,
+    },
+  });
   // const _cookies = cookies().getAll();
 
   // const me = await http.get("api/profile/me", {
@@ -19,7 +30,9 @@ export default async function Home() {
       RightSidebar={<HomeRightSidebar />}
     >
       <FakeEditor />
-      <div className="mt-10 flex flex-col gap-10"></div>
+      <div className="mt-8">
+        <ArticleFeed initialData={articles} />
+      </div>
       <div className="my-20"></div>
     </ThreeColumnLayout>
   );

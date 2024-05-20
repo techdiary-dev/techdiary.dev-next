@@ -14,6 +14,7 @@
     "@mantine/hooks": "^7.9.2",
     "@mantine/modals": "^7.9.2",
     "@tailwindcss/typography": "^0.5.13",
+    "@tanstack/react-query": "^5.37.1",
     "axios": "^1.6.8",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
@@ -21,6 +22,7 @@
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.2.1",
+    "reactjs-visibility": "^0.1.4",
     "sass": "^1.77.2"
   },
   "devDependencies": {
