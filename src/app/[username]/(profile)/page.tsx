@@ -31,7 +31,16 @@ const UserProfilePage: NextPage<UserProfilePageProps> = async ({ params }) => {
 
   const {
     data: { data: profile },
-  } = await http.get<{ data: IUser }>(`/api/profile/username/${username}`);
+    status,
+  } = await http.get<{ data: IUser }>(`/api/profile/username/${username}`, {
+    validateStatus: () => true,
+  });
+
+  if (status === 404) {
+    throw new Error("ব্যবহারকারী খুঁজে পাওয়া যাচ্ছে না 🥹");
+  } else if (status != 200) {
+    throw new Error("কোন একটা সমস্যা হয়েছে 🚧");
+  }
 
   return (
     <BaseLayout>
