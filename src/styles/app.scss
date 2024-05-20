@@ -8,11 +8,11 @@
   }
 
   a {
-    @apply text-primary-400;
+    @apply text-primary;
   }
 
   *::selection {
-    @apply bg-primary-400 text-gray-800;
+    @apply bg-primary text-gray-800;
   }
   ::-webkit-scrollbar {
     width: 3px;
@@ -28,9 +28,9 @@
 }
 
 body {
-  @apply font-KohinoorBangla;
-  @apply text-dark;
-  @apply bg-white dark:bg-slate-900;
+  // @apply font-KohinoorBangla;
+  background-color: var(--background);
+  color: var(--forground);
 }
 
 @layer utilities {
@@ -107,6 +107,7 @@ body {
   border-top: 1px solid #e9eef1;
   overflow: hidden;
 }
+@import "theme";
 @import "base";
 @import "layout";
 @import "navbar";

@@ -1,18 +1,46 @@
-import { Avatar, Menu, UnstyledButton } from "@mantine/core";
+"use client";
+
+import {
+  ActionIcon,
+  Avatar,
+  Menu,
+  Text,
+  UnstyledButton,
+  useComputedColorScheme,
+  useMantineColorScheme,
+} from "@mantine/core";
 import { AiFillGithub, AiOutlineGoogle } from "react-icons/ai";
 import { HiLogout, HiOutlineBookmark, HiOutlineCog } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";
 
 const NavbarAction = () => {
+  const { setColorScheme } = useMantineColorScheme();
+  const computedColorScheme = useComputedColorScheme();
+
   return (
     <div className="flex items-center gap-2 md:gap-6">
+      <ActionIcon
+        onClick={() =>
+          setColorScheme(computedColorScheme === "light" ? "dark" : "light")
+        }
+        color="primary"
+        size="xl"
+        aria-label="Toggle color scheme"
+      >
+        click
+      </ActionIcon>
       {/* <div className="flex items-center gap-1">
         <button>
           <IconHome />
         </button>
         <button>
-          <IconMoon />
+          <IconMoon
+            onClick={() =>
+              setColorScheme(computedColorScheme === "dark" ? "light" : "dark")
+            }
+          />
         </button>
+        <Text>Color Scheme: {computedColorScheme}</Text>
       </div> */}
       {/* {status === "loading" && <Loader />}
       {status === "authenticated" && (
@@ -37,7 +65,7 @@ const AuthenticatedMenu = () => {
     <Menu shadow="md" width={200}>
       <Menu.Target>
         <UnstyledButton>
-          {/* <Avatar src={data?.user?.image} alt={data?.user.name || ""} /> */}
+          <Avatar alt="T" />
         </UnstyledButton>
       </Menu.Target>
 
@@ -125,7 +153,7 @@ const IconHome = () => (
   </svg>
 );
 
-const IconMoon = () => (
+const IconMoon: React.FC<{ onClick: () => void }> = ({ onClick }) => (
   <svg
     data-v-35a3619a
     width={20}

@@ -9,7 +9,7 @@ const SocialLinksWidget = () => {
           href="https://www.facebook.com/techdiary.dev"
           target="_blank"
           rel="nofollow"
-          className="text-dark-secondary flex items-center space-x-2"
+          className="text-forground-muted flex items-center space-x-2"
         >
           <svg
             className="h-5 w-5 fill-current"
@@ -26,7 +26,7 @@ const SocialLinksWidget = () => {
           href="https://www.instagram.com/techdiary.dev"
           target="_blank"
           rel="nofollow"
-          className="text-dark-secondary flex items-center space-x-2"
+          className="text-forground-muted flex items-center space-x-2"
         >
           <svg
             className="h-5 w-5 fill-current"
@@ -43,7 +43,7 @@ const SocialLinksWidget = () => {
           href="https://www.instagram.com/techdiary.dev"
           target="_blank"
           rel="nofollow"
-          className="text-dark-secondary flex items-center space-x-2"
+          className="text-forground-muted flex items-center space-x-2"
         >
           <svg
             className="h-5 w-5 fill-current"
@@ -57,10 +57,10 @@ const SocialLinksWidget = () => {
           <span>ডিসকর্ড</span>
         </a>
         <a
-          href="/sitemaps/articles/sitemap.xml"
+          href="/sitemap.xml"
           target="_blank"
           rel="nofollow"
-          className="text-dark-secondary flex items-center space-x-2"
+          className="text-forground-muted flex items-center space-x-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -1,3 +1,5 @@
+"use client";
+
 import { IArticleFeedItem } from "@/models/Article.model";
 import Link from "next/link";
 import React from "react";

@@ -1,39 +1,36 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
-  content: ["./src/**/*.{js,jsx,ts,tsx,html}"],
-  darkMode: "class", // or 'media' or 'class'
+  darkMode: ["class", '[data-mantine-color-scheme="dark"]'],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     extend: {
+      animation: { "reverse-spin": "reverse-spin 1s linear infinite" },
+      keyframes: { "reverse-spin": { from: { transform: "rotate(360deg)" } } },
       colors: {
-        primary: {
-          50: "#F5F6FF",
-          100: "#E6E9FF",
-          200: "#CCD4FF",
-          300: "#AEBAFE",
-          400: "#8A9CFE",
-          500: "#768BFE",
-          600: "#627AFE",
-          700: "#4964FD",
-          800: "#2646FD",
-          900: "#0221D4",
-          950: "#011898",
+        background: "var(--background)",
+        forground: {
+          DEFAULT: "var(--forground)",
+          muted: "var(--forgroun-muted)",
         },
-        secondary: "#FDF9F3",
-      },
-      fontFamily: {
-        KohinoorBangla: ["KohinoorBangla", "Nunito", "Arial"],
-        siliguri: ["Hind Siliguri", "Nunito", "Arial"],
-        mono: ["Fira Code", "techdiary-bangla", "monospace"],
-        boshonto: ["Boshonto", "Kohinoor Bangla"],
-      },
-      zIndex: {
-        "-1": "-1",
+        primary: {
+          DEFAULT: "var(--primary)",
+          foreground: "var(--primary-foreground)",
+          variant: "var(--primary-variant)",
+        },
+        light: "var(--theme-light)",
+        surface: "var(--theme-surface)",
+        "light-gray": "var(--light-gray)",
+        "text-gray": "var(--text-gray)",
+        "text-muted": "var(--text-muted)",
+        "card-header": "var(--card-header)",
+        neutral: {
+          primary: "var(--neutral-primary)",
+          secondary: "var(--neutral-secondary)",
+          muted: "var(--neutral-muted)",
+        },
       },
     },
-  },
-  variants: {
-    extend: {},
   },
   plugins: [require("@tailwindcss/typography")],
 };
