@@ -239,11 +239,14 @@ const UserProfilePage: NextPage<UserProfilePageProps> = async ({ params }) => {
           </aside>
 
           <main className="border rounded app-border-color md:col-span-9 col-span-full">
-            <pre>{JSON.stringify(profile, null, 2)}</pre>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: profile?.profile_readme_html || "",
+              }}
+              className="p-4 content-typography"
+            ></div>
           </main>
-          <a href="#" className="navigation__item"></a>
         </div>
-        <a href="#" className="navigation__item"></a>
       </div>
     </BaseLayout>
   );

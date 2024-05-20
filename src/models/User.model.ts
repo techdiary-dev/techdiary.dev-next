@@ -25,6 +25,7 @@ export interface IUser {
   updated_at: Date;
   two_factor_secret: null;
   two_factor_recovery_codes: null;
+  profile_readme_html?: string;
 }
 
 export interface SocialLinks {
