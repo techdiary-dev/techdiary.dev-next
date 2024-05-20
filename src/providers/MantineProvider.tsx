@@ -1,14 +1,8 @@
 import { MantineProvider } from "@mantine/core";
-import { useLocalStorage } from "@mantine/hooks";
 import React, { PropsWithChildren } from "react";
+import { ModalsProvider } from "@mantine/modals";
 
 const AppMantineProvider: React.FC<PropsWithChildren> = ({ children }) => {
-  const [colorScheme, setColorScheme] = useLocalStorage({
-    key: "techdiary-color-scheme",
-    defaultValue: "light",
-    getInitialValueInEffect: true,
-  });
-
   return (
     <MantineProvider
       withCssVariables
@@ -33,7 +27,7 @@ const AppMantineProvider: React.FC<PropsWithChildren> = ({ children }) => {
         primaryColor: "primary",
       }}
     >
-      {children}
+      <ModalsProvider>{children}</ModalsProvider>
     </MantineProvider>
   );
 };

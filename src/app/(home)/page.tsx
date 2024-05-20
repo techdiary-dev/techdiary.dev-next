@@ -6,6 +6,8 @@ import ArticleFeed from "./components/ArticleFeed";
 import { http } from "@/clients/http.client";
 import { PaginatedResponse } from "@/models/PaginatedResponse.model";
 import { IArticleFeedItem } from "@/models/Article.model";
+import { useAtom } from "jotai";
+import { userAtom } from "@/store/user.atom";
 
 export default async function Home() {
   const { data: articles } = await http.get<
@@ -15,6 +17,7 @@ export default async function Home() {
       limit: 20,
     },
   });
+
   // const _cookies = cookies().getAll();
 
   // const me = await http.get("api/profile/me", {

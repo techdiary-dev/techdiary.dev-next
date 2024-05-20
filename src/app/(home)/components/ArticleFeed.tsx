@@ -8,11 +8,14 @@ import { VisibilityObserver } from "reactjs-visibility";
 import ArticleCard from "./ArticleCard";
 import { http } from "@/clients/http.client";
 import { Loader } from "@mantine/core";
+import { useAtom } from "jotai";
+import { userAtom } from "@/store/user.atom";
 
 interface ArticleFeedProps {
   initialData: PaginatedResponse<IArticleFeedItem>;
 }
 const ArticleFeed: React.FC<ArticleFeedProps> = ({ initialData }) => {
+  const [user] = useAtom(userAtom);
   const { data, fetchNextPage } = useInfiniteQuery<
     PaginatedResponse<IArticleFeedItem>
   >({
@@ -32,6 +35,7 @@ const ArticleFeed: React.FC<ArticleFeedProps> = ({ initialData }) => {
   });
   return (
     <div className="flex flex-col gap-8 mt-4">
+      <pre>{JSON.stringify(user)}</pre>
       {data?.pages.map((page) => {
         return page.data.map((article) => (
           <ArticleCard key={article.id} article={article} />
