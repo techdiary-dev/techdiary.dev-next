@@ -5,7 +5,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { data } = await http.get("api/articles", {
     params: {
       limit: 100,
-      page: 1,
+      page: -1,
     },
   });
 

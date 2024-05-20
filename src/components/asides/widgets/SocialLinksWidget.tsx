@@ -57,7 +57,7 @@ const SocialLinksWidget = () => {
           <span>ডিসকর্ড</span>
         </a>
         <a
-          href="/sitemap.xml"
+          href="/sitemaps/articles/sitemap.xml"
           target="_blank"
           rel="nofollow"
           className="text-forground-muted flex items-center space-x-2"
