@@ -1,8 +1,7 @@
-import React from "react";
-import SocialLinksWidget from "./widgets/SocialLinksWidget";
-import ImportantLinksWidget from "./widgets/ImportantLinksWidget";
 import DiscordWidget from "./widgets/DiscordWidget";
+import ImportantLinksWidget from "./widgets/ImportantLinksWidget";
 import LatestUsers from "./widgets/LatestUsers";
+import SocialLinksWidget from "./widgets/SocialLinksWidget";
 import SocialLogin from "./widgets/SocialLogin";
 
 const HomeRightSidebar = () => {

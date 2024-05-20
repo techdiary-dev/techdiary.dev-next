@@ -1,13 +1,11 @@
+import { http } from "@/clients/http.client";
 import FakeEditor from "@/components/FakeEditor";
 import HomeLeftSidebar from "@/components/asides/HomeLeftSidebar";
 import HomeRightSidebar from "@/components/asides/HomeRightSidebar";
 import ThreeColumnLayout from "@/components/layout/ThreeColumnLayout";
-import ArticleFeed from "./components/ArticleFeed";
-import { http } from "@/clients/http.client";
-import { PaginatedResponse } from "@/models/PaginatedResponse.model";
 import { IArticleFeedItem } from "@/models/Article.model";
-import { useAtom } from "jotai";
-import { userAtom } from "@/store/user.atom";
+import { PaginatedResponse } from "@/models/PaginatedResponse.model";
+import ArticleFeed from "./components/ArticleFeed";
 
 export default async function Home() {
   const { data: articles } = await http.get<

@@ -8,11 +8,15 @@ import { useInfiniteQuery } from "@tanstack/react-query";
 import React from "react";
 import { VisibilityObserver } from "reactjs-visibility";
 import ArticleCard from "./ArticleCard";
+import { useAtomValue } from "jotai";
+import { userAtom } from "@/store/user.atom";
 
 interface ArticleFeedProps {
   initialData: PaginatedResponse<IArticleFeedItem>;
 }
 const ArticleFeed: React.FC<ArticleFeedProps> = ({ initialData }) => {
+  const currentUser = useAtomValue(userAtom);
+
   const { data, fetchNextPage } = useInfiniteQuery<
     PaginatedResponse<IArticleFeedItem>
   >({
