@@ -1,6 +1,6 @@
 "use client";
 
-import { http } from "@/clients/http.client";
+import { http } from "@/http/http.client";
 import { HomeIcon, MoonIcon, PlusIcon, SunIcon } from "@radix-ui/react-icons";
 
 import { userAtom } from "@/store/user.atom";
@@ -89,7 +89,6 @@ const AuthenticatedMenu = () => {
       onConfirm: () => {
         http.post("/api/auth/logout").finally(() => {
           setCurrentUser(null);
-          window.location.reload();
         });
       },
       confirmProps: { color: "red" },

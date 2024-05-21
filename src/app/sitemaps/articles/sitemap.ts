@@ -1,4 +1,4 @@
-import { http } from "@/clients/http.client";
+import { http } from "@/http/http.client";
 import type { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

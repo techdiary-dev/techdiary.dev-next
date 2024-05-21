@@ -1,4 +1,4 @@
-import { IUser } from "@/models/User.model";
+import { IUser } from "@/http/models/User.model";
 import { cookies } from "next/headers";
 
 export const ssrGetMe = async () => {

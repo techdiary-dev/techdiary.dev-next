@@ -1,5 +1,5 @@
 "use client";
-import { IUser } from "@/models/User.model";
+import { IUser } from "@/http/models/User.model";
 import { jotaiStore } from "@/store/store";
 import { userAtom } from "@/store/user.atom";
 import { useHydrateAtoms } from "jotai/utils";

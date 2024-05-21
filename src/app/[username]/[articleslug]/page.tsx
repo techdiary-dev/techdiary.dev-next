@@ -1,14 +1,10 @@
-import { http } from "@/clients/http.client";
+import { http } from "@/http/http.client";
 import HomeLeftSidebar from "@/components/asides/HomeLeftSidebar";
-import HomeRightSidebar from "@/components/asides/HomeRightSidebar";
-import SocialLinksWidget from "@/components/asides/widgets/SocialLinksWidget";
 import SocialLogin from "@/components/asides/widgets/SocialLogin";
-import BaseLayout from "@/components/layout/BaseLayout";
 import ThreeColumnLayout from "@/components/layout/ThreeColumnLayout";
-import { IArticleDetail } from "@/models/Article.model";
+import { IArticleDetail } from "@/http/models/Article.model";
 import { markdownToHtml } from "@/utils/markdoc-parser";
-import { NextPage } from "next";
-import Link from "next/link";
+import { Metadata, NextPage } from "next";
 import LatestArticles from "./LatestArticles";
 
 interface ArticleDetailsPageProps {
@@ -17,6 +13,10 @@ interface ArticleDetailsPageProps {
     articleslug: string;
   };
 }
+
+export const metadata: Metadata = {
+  title: "Techdiary - A blogging platform for developers",
+};
 
 const ArticleDetailsPage: NextPage<ArticleDetailsPageProps> = async ({
   params,

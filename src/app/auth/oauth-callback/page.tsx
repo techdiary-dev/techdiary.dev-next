@@ -1,6 +1,6 @@
 "use client";
 
-import { http } from "@/clients/http.client";
+import { http } from "@/http/http.client";
 import BaseLayout from "@/components/layout/BaseLayout";
 import { Loader, Space, Text } from "@mantine/core";
 import { useSearchParams } from "next/navigation";

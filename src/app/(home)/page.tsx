@@ -1,10 +1,10 @@
-import { http } from "@/clients/http.client";
+import { http } from "@/http/http.client";
 import FakeEditor from "@/components/FakeEditor";
 import HomeLeftSidebar from "@/components/asides/HomeLeftSidebar";
 import HomeRightSidebar from "@/components/asides/HomeRightSidebar";
 import ThreeColumnLayout from "@/components/layout/ThreeColumnLayout";
-import { IArticleFeedItem } from "@/models/Article.model";
-import { PaginatedResponse } from "@/models/PaginatedResponse.model";
+import { IArticleFeedItem } from "@/http/models/Article.model";
+import { PaginatedResponse } from "@/http/models/PaginatedResponse.model";
 import ArticleFeed from "./components/ArticleFeed";
 
 export default async function Home() {
@@ -15,15 +15,6 @@ export default async function Home() {
       limit: 20,
     },
   });
-
-  // const _cookies = cookies().getAll();
-
-  // const me = await http.get("api/profile/me", {
-  //   headers: {
-  //     Cookie: _cookies.map((c) => `${c.name}=${c.value}`).join("; "),
-  //     referer: process.env.NEXT_PUBLIC_APP_URL,
-  //   },
-  // });
 
   return (
     <ThreeColumnLayout

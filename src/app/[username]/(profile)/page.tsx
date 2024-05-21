@@ -1,4 +1,4 @@
-import { http } from "@/clients/http.client";
+import { http } from "@/http/http.client";
 import {
   FaBehance,
   FaDribbble,
@@ -13,7 +13,7 @@ import {
   FaYoutube,
 } from "react-icons/fa";
 import BaseLayout from "@/components/layout/BaseLayout";
-import { IUser } from "@/models/User.model";
+import { IUser } from "@/http/models/User.model";
 import { Link2Icon } from "@radix-ui/react-icons";
 import { NextPage } from "next";
 import React from "react";

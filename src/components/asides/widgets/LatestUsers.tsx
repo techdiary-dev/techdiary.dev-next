@@ -1,5 +1,5 @@
-import { http } from "@/clients/http.client";
-import { PaginatedResponse } from "@/models/PaginatedResponse.model";
+import { http } from "@/http/http.client";
+import { PaginatedResponse } from "@/http/models/PaginatedResponse.model";
 import { relativeTime } from "@/utils/relativeTime";
 import { AxiosResponse } from "axios";
 // import { relativeTime } from "@/utils/relativeTime";

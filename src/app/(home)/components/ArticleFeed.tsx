@@ -1,21 +1,19 @@
 "use client";
 
-import { http } from "@/clients/http.client";
-import { IArticleFeedItem } from "@/models/Article.model";
-import { PaginatedResponse } from "@/models/PaginatedResponse.model";
+import { IArticleFeedItem } from "@/http/models/Article.model";
+import { PaginatedResponse } from "@/http/models/PaginatedResponse.model";
+import { ArticleRepository } from "@/http/repositories/article.repository";
 import { Loader } from "@mantine/core";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import React from "react";
 import { VisibilityObserver } from "reactjs-visibility";
 import ArticleCard from "./ArticleCard";
-import { useAtomValue } from "jotai";
-import { userAtom } from "@/store/user.atom";
 
 interface ArticleFeedProps {
   initialData: PaginatedResponse<IArticleFeedItem>;
 }
 const ArticleFeed: React.FC<ArticleFeedProps> = ({ initialData }) => {
-  const currentUser = useAtomValue(userAtom);
+  const articleRepository = new ArticleRepository();
 
   const { data, fetchNextPage } = useInfiniteQuery<
     PaginatedResponse<IArticleFeedItem>
@@ -28,12 +26,13 @@ const ArticleFeed: React.FC<ArticleFeedProps> = ({ initialData }) => {
     initialPageParam: initialData.meta.current_page,
     getNextPageParam: (lastPage, pages) => lastPage.meta.current_page + 1,
     queryFn: async ({ pageParam }) => {
-      const response = await http.get(
-        `/api/articles?page=${pageParam}&limit=10`
-      );
-      return response.data as PaginatedResponse<IArticleFeedItem>;
+      return articleRepository.getArticles({
+        page: pageParam as number,
+        limit: 10,
+      });
     },
   });
+
   return (
     <div className="flex flex-col gap-8 mt-4">
       {data?.pages.map((page) => {

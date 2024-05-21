@@ -1,6 +1,7 @@
-import { http } from "@/clients/http.client";
-import { IArticleFeedItem } from "@/models/Article.model";
-import { PaginatedResponse } from "@/models/PaginatedResponse.model";
+import { http } from "@/http/http.client";
+import { IArticleFeedItem } from "@/http/models/Article.model";
+import { PaginatedResponse } from "@/http/models/PaginatedResponse.model";
+import { ArticleRepository } from "@/http/repositories/article.repository";
 import Link from "next/link";
 import React from "react";
 
@@ -11,14 +12,13 @@ interface LatestArticlesProps {
 const LatestArticles: React.FC<LatestArticlesProps> = async ({
   excludeIds,
 }) => {
-  const {
-    data: { data: articles },
-  } = await http.get<PaginatedResponse<IArticleFeedItem>>("/api/articles", {
-    params: {
-      limit: 10,
-      excludeIds,
-    },
+  const articleRepository = new ArticleRepository();
+
+  const { data: articles } = await articleRepository.getArticles({
+    limit: 10,
+    excludeIds,
   });
+
   return (
     <div>
       <h3 className="mb-2 text-sm font-semibold text-forground-muted">

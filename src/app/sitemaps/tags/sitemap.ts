@@ -1,5 +1,5 @@
-import { http } from "@/clients/http.client";
-import { PaginatedResponse } from "@/models/PaginatedResponse.model";
+import { http } from "@/http/http.client";
+import { PaginatedResponse } from "@/http/models/PaginatedResponse.model";
 import type { MetadataRoute } from "next";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
