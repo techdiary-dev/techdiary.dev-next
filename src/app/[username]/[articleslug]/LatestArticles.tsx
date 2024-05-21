@@ -6,11 +6,19 @@ import React from "react";
 
 interface LatestArticlesProps {
   tag?: string;
+  excludeIds: string[];
 }
-const LatestArticles: React.FC<LatestArticlesProps> = async ({ tag }) => {
+const LatestArticles: React.FC<LatestArticlesProps> = async ({
+  excludeIds,
+}) => {
   const {
     data: { data: articles },
-  } = await http.get<PaginatedResponse<IArticleFeedItem>>("/api/articles");
+  } = await http.get<PaginatedResponse<IArticleFeedItem>>("/api/articles", {
+    params: {
+      limit: 10,
+      excludeIds,
+    },
+  });
   return (
     <div>
       <h3 className="mb-2 text-sm font-semibold text-forground-muted">

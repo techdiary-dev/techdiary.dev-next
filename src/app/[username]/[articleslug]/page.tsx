@@ -35,7 +35,7 @@ const ArticleDetailsPage: NextPage<ArticleDetailsPageProps> = async ({
       RightSidebar={
         <div className="flex flex-col gap-4">
           <SocialLogin />
-          <LatestArticles />
+          <LatestArticles excludeIds={[article?.id]} />
         </div>
       }
     >
