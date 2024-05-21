@@ -6,12 +6,12 @@ import useShare from "@/hooks/useShare";
 import { notifications } from "@mantine/notifications";
 
 import { relativeTime } from "@/utils/relativeTime";
-import { HoverCard, Menu } from "@mantine/core";
+import { HoverCard, Menu, Text } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
 import React from "react";
 import { AiFillFacebook } from "react-icons/ai";
-import { FaBookmark, FaRegBookmark } from "react-icons/fa";
+import { LiaCommentsSolid } from "react-icons/lia";
 import { FiCopy } from "react-icons/fi";
 import { RiTwitterFill } from "react-icons/ri";
 
@@ -26,6 +26,8 @@ import UserHoverCard from "@/components/UserHoverCard";
 import {
   BookmarkFilledIcon,
   BookmarkIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
   Share2Icon,
 } from "@radix-ui/react-icons";
 
@@ -186,6 +188,18 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
       >
         {article?.title}
       </Link>
+
+      <Text my={"md"}>
+        {article?.body?.excerpt}
+        {"..."}
+
+        <Link
+          href={`/@${article?.user?.username}/${article?.slug}`}
+          className="font-semibold hover:underline"
+        >
+          [পড়ুন]
+        </Link>
+      </Text>
       <div className="article-card__thumbnail">
         <Link href={`@${article?.user?.username}/${article?.slug}`}>
           <div className="inline-block w-full overflow-hidden rounded-md">
@@ -201,12 +215,6 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
       </div>
 
       <div className="article-card__content">
-        <a
-          href={`@${article?.user?.username}/${article?.slug}`}
-          className="article-card__excerpt"
-        >
-          {article?.excerpt}
-        </a>
         <div className="article-card__tags"></div>
         <div className="mt-2 flex items-center space-x-4">
           <div className="vote">
@@ -217,20 +225,7 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
                 ),
               })}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="h-4 w-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M5 15l7-7 7 7"
-                ></path>
-              </svg>
+              <ChevronUpIcon className="h-4 w-4" />
               <span>{voteState.score}</span>
             </button>
             <button
@@ -240,37 +235,11 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
                 ),
               })}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                className="h-4 w-4"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M19 9l-7 7-7-7"
-                ></path>
-              </svg>
+              <ChevronDownIcon className="h-4 w-4" />
             </button>
           </div>
           <p className="flex items-center space-x-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              className="h-5 w-5 text-gray-500"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"
-              ></path>
-            </svg>
+            <LiaCommentsSolid size={22} />
             <span>{article?.comments_count}</span>
           </p>
         </div>

@@ -13,6 +13,12 @@ export interface IArticleFeedItem {
   excerpt: null;
   isPublished: boolean;
   user: UserReference;
+  body: {
+    html?: string;
+    markdown?: string;
+    plainText?: string;
+    excerpt?: string;
+  };
   created_at: Date;
 }
 
@@ -25,6 +31,8 @@ export interface IArticleDetail {
   body: {
     html?: string;
     markdown?: string;
+    plainText?: string;
+    excerpt?: string;
   };
   votes: Votes;
   bookmarked_users: string[];
