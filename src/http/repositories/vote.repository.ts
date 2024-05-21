@@ -1,12 +1,10 @@
 import { ApiRepository } from "./repository";
 
-class VoteRepository extends ApiRepository {
+export class VoteRepository extends ApiRepository {
   vote(payload: IVotePayload) {
-    return this.httpClient.post("/vote", payload);
+    return this.http.post("/api/vote", payload);
   }
 }
-
-export default new VoteRepository();
 
 export interface IVotePayload {
   model_name: "ARTICLE" | "COMMENT";
