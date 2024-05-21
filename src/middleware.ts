@@ -20,7 +20,7 @@ export async function middleware(request: NextRequest) {
 
     console.log("calling middleware", request.nextUrl.pathname);
 
-    if (me?.status !== 200) {
+    if (api.status !== 200) {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
