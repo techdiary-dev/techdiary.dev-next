@@ -1,26 +1,14 @@
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { ssrGetMe } from "./utils/ssr-user";
 
 export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/dashboard")) {
-    const _cookies = cookies().getAll();
-    const api = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/profile/me`,
-      {
-        method: "GET",
-        headers: {
-          Cookie: _cookies.map((c) => `${c.name}=${c.value}`).join("; "),
-          referer: process.env.NEXT_PUBLIC_APP_URL,
-          Accept: "application/json",
-        } as any,
-      }
-    );
-    const me = await api.json();
-
+    const { status } = await ssrGetMe();
     console.log("calling middleware", request.nextUrl.pathname);
 
-    if (api.status !== 200) {
+    if (status !== 200) {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
