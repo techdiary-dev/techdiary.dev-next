@@ -23,6 +23,11 @@ import { BookmarkRepository } from "@/http/repositories/bookmark.repository";
 import { userAtom } from "@/store/user.atom";
 import { useAtomValue } from "jotai";
 import UserHoverCard from "@/components/UserHoverCard";
+import {
+  BookmarkFilledIcon,
+  BookmarkIcon,
+  Share2Icon,
+} from "@radix-ui/react-icons";
 
 interface Props {
   article: IArticleFeedItem;
@@ -126,36 +131,23 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
           {/* Bookmark button */}
           <button onClick={() => mutate__createBookmark(article.id)}>
             {state.bookmarked_users?.includes(currentUser?.id!) ? (
-              <FaBookmark />
+              <BookmarkFilledIcon className="w-5 h-5 text-forground" />
             ) : (
-              <FaRegBookmark />
+              <BookmarkIcon className="w-5 h-5 text-forground" />
             )}
           </button>
 
           <Menu shadow="md" width={200}>
             <Menu.Target>
               <button className="relative">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  className="w-5 text-gray-700"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"
-                  ></path>
-                </svg>
+                <Share2Icon className="w-5 h-5 text-forground" />
               </button>
             </Menu.Target>
 
             <Menu.Dropdown>
               <Menu.Item
                 leftSection={
-                  <AiFillFacebook size={22} className="text-gray-700" />
+                  <AiFillFacebook size={22} className="text-forground" />
                 }
                 component="button"
                 onClick={() => share("facebook")}
@@ -164,7 +156,7 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
               </Menu.Item>
               <Menu.Item
                 leftSection={
-                  <RiTwitterFill size={22} className="text-gray-700" />
+                  <RiTwitterFill size={22} className="text-forground" />
                 }
                 component="button"
                 onClick={() => share("twitter")}
@@ -172,7 +164,7 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
                 টুইটার শেয়ার করুন
               </Menu.Item>
               <Menu.Item
-                leftSection={<FiCopy size={22} className="text-gray-700" />}
+                leftSection={<FiCopy size={22} className="text-forground" />}
                 component="button"
                 onClick={() => {
                   clipboard.copy(article.url);

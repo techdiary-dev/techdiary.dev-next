@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import "@mantine/core/styles.css";
+import "@mantine/notifications/styles.css";
 import "../styles/app.scss";
 
 import { ColorSchemeScript } from "@mantine/core";

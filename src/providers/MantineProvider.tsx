@@ -1,6 +1,7 @@
 import { MantineProvider } from "@mantine/core";
 import React, { PropsWithChildren } from "react";
 import { ModalsProvider } from "@mantine/modals";
+import { Notifications } from "@mantine/notifications";
 
 const AppMantineProvider: React.FC<PropsWithChildren> = ({ children }) => {
   return (
@@ -27,7 +28,10 @@ const AppMantineProvider: React.FC<PropsWithChildren> = ({ children }) => {
         primaryColor: "primary",
       }}
     >
-      <ModalsProvider>{children}</ModalsProvider>
+      <ModalsProvider>
+        <Notifications />
+        {children}
+      </ModalsProvider>
     </MantineProvider>
   );
 };
