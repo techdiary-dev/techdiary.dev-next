@@ -41,14 +41,18 @@ const ArticleDetailsPage: NextPage<ArticleDetailsPageProps> = async ({
     >
       <div className="relative overflow-hidden">
         <div className="relative">
-          {article.thumbnail && (
+          {article?.thumbnail && (
             <div>
-              <img src={article.thumbnail} className="rounded-lg" />
+              <img src={article?.thumbnail} className="rounded-lg w-full" />
             </div>
           )}
 
+          <div className=" my-6">
+            <h1 className="text-3xl font-bold">{article.title}</h1>
+          </div>
+
           <div
-            className="mx-auto mt-6 content-typography"
+            className="mx-auto content-typography"
             dangerouslySetInnerHTML={{ __html: html }}
           ></div>
 
