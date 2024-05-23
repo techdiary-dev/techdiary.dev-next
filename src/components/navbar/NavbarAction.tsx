@@ -5,7 +5,6 @@ import { HomeIcon, MoonIcon, PlusIcon, SunIcon } from "@radix-ui/react-icons";
 
 import { userAtom } from "@/store/user.atom";
 import {
-  ActionIcon,
   Avatar,
   Button,
   Menu,
@@ -17,7 +16,7 @@ import {
 import { modals } from "@mantine/modals";
 import { useAtom, useAtomValue } from "jotai";
 import Link from "next/link";
-import { AiFillGithub, AiOutlineGoogle, AiOutlinePlus } from "react-icons/ai";
+import { AiFillGithub, AiOutlineGoogle } from "react-icons/ai";
 import {
   HiLogout,
   HiOutlineBookmark,
@@ -27,7 +26,7 @@ import {
 import { MdOutlineDashboard } from "react-icons/md";
 
 const NavbarAction = () => {
-  const [currentUser] = useAtom(userAtom);
+  const currentUser = useAtomValue(userAtom);
   const { setColorScheme } = useMantineColorScheme();
   const computedColorScheme = useComputedColorScheme();
 
