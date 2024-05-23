@@ -7,5 +7,5 @@ export const http = axios.create({
     Accept: "application/json",
   },
   withCredentials: true,
-  withXSRFToken: true,
+  withXSRFToken: true, //
 });
