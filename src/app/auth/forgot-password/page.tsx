@@ -13,10 +13,10 @@ import { ensureCSRF } from "@/utils/ensureCSRF";
 import { showNotification } from "@mantine/notifications";
 import { AxiosError } from "axios";
 
-const LoginPage = () => {
+const ForgotPasswordPage = () => {
   const api = new AuthRepository();
-  const loginMutation = useMutation({
-    mutationFn: (payload: ILoginFormPayload) => api.login(payload),
+  const mutation = useMutation({
+    mutationFn: (payload: ILoginFormPayload) => api.forgotPassword(payload),
   });
 
   const form = useForm<ILoginFormPayload>({
@@ -25,7 +25,7 @@ const LoginPage = () => {
 
   const onSubmit = async (data: ILoginFormPayload) => {
     await ensureCSRF(() => {
-      loginMutation.mutate(data, {
+      mutation.mutate(data, {
         onSuccess: () => {
           window.location.href = "/";
         },
@@ -68,24 +68,9 @@ const LoginPage = () => {
               {...form.register("email")}
             />
           </Input.Wrapper>
-          <Input.Wrapper
-            error={
-              <ErrorMessage
-                name={"password"}
-                errors={form?.formState?.errors}
-              />
-            }
-          >
-            <Input
-              placeholder="Password"
-              type="password"
-              size="lg"
-              variant="filled"
-              {...form.register("password")}
-            />
-          </Input.Wrapper>
-          <Button type="submit" size="lg" loading={loginMutation?.isPending}>
-            লগইন
+
+          <Button type="submit" size="lg" loading={mutation?.isPending}>
+            Send Password Reset Link
           </Button>
         </form>
 
@@ -105,9 +90,8 @@ const LoginPage = () => {
 
 const formValidationSchema = yup.object({
   email: yup.string().email().required().label("Email"),
-  password: yup.string().min(6).max(32).required().label("Password"),
 });
 
 type ILoginFormPayload = yup.InferType<typeof formValidationSchema>;
 
-export default LoginPage;
+export default ForgotPasswordPage;

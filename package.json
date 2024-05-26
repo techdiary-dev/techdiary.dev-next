@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^3.4.2",
     "@mantine/core": "^7.9.2",
     "@mantine/dropzone": "^7.9.2",
