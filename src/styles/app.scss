@@ -8,7 +8,7 @@
   }
 
   a {
-    @apply text-primary;
+    @apply text-primary hover:underline;
   }
 
   *::selection {

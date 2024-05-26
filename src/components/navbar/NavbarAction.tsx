@@ -24,6 +24,7 @@ import {
   HiOutlineUserCircle,
 } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";
+import { AuthRepository } from "@/http/repositories/auth.repository";
 
 const NavbarAction = () => {
   const currentUser = useAtomValue(userAtom);
@@ -74,6 +75,7 @@ export default NavbarAction;
 
 const AuthenticatedMenu = () => {
   const [currentUser, setCurrentUser] = useAtom(userAtom);
+  const authApi = new AuthRepository();
 
   const handleLogout = async () => {
     modals.openConfirmModal({
@@ -86,7 +88,7 @@ const AuthenticatedMenu = () => {
       labels: { confirm: "লগ আউট করতে চাই", cancel: "না" },
       onCancel: () => console.log("না"),
       onConfirm: () => {
-        http.post("/api/auth/logout").finally(() => {
+        authApi.logout().finally(() => {
           setCurrentUser(null);
         });
       },

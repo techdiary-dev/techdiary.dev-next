@@ -153,6 +153,15 @@ const SocialLogin = () => {
           )}
           <span className="login__label">গুগল দিয়ে লগইন</span>
         </button>
+
+        <div>
+          <Link
+            href={`/auth/login`}
+            className="flex gap-2 items-center text-primary underline"
+          >
+            ইমেল দিয়ে লগইন করুন
+          </Link>
+        </div>
       </div>
     );
 };
