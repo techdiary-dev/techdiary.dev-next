@@ -11,6 +11,29 @@ export class AuthRepository extends ApiRepository {
   }
 
   /**
+   * Forgot password
+   * @param payload
+   * @returns
+   */
+  forgotPassword(payload: { email: string }) {
+    return this.http.post("/api/auth/forgot-password", payload);
+  }
+
+  /**
+   * Reset password
+   * @param payload
+   * @returns
+   */
+  resetPassword(payload: {
+    token: string;
+    email: string;
+    password: string;
+    password_confirmation: string;
+  }) {
+    return this.http.post("/api/auth/reset-password", payload);
+  }
+
+  /**
    * Logout user
    * @returns
    */

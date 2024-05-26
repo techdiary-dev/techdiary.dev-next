@@ -12,11 +12,20 @@ import { useMutation } from "@tanstack/react-query";
 import { ensureCSRF } from "@/utils/ensureCSRF";
 import { showNotification } from "@mantine/notifications";
 import { AxiosError } from "axios";
+import { useRouter, useSearchParams } from "next/navigation";
 
-const LoginPage = () => {
+const ResetPasswordPage = () => {
   const api = new AuthRepository();
-  const loginMutation = useMutation({
-    mutationFn: (payload: ILoginFormPayload) => api.login(payload),
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const mutation = useMutation({
+    mutationFn: (payload: {
+      token: string;
+      email: string;
+      password: string;
+      password_confirmation: string;
+    }) => api.resetPassword(payload),
   });
 
   const form = useForm<ILoginFormPayload>({
@@ -25,26 +34,31 @@ const LoginPage = () => {
 
   const onSubmit = async (data: ILoginFormPayload) => {
     await ensureCSRF(() => {
-      loginMutation.mutate(data, {
-        onSuccess: () => {
-          window.location.href = "/";
+      mutation.mutate(
+        {
+          email: searchParams.get("email") || "",
+          token: searchParams.get("token") || "",
+          ...data,
         },
-        onError: (e) => {
-          if (e instanceof AxiosError) {
+        {
+          onSuccess: () => {
             showNotification({
-              title: e.response?.data?.message || "Login failed",
+              title: "Password has been reset successfully",
               message: "",
-              color: "red",
             });
-          } else {
-            showNotification({
-              title: "Error",
-              message: "Login failed",
-              color: "red",
-            });
-          }
-        },
-      });
+            router.push("/auth/login");
+          },
+          onError: (error: Error) => {
+            if (error instanceof AxiosError) {
+              showNotification({
+                title: error.response?.data?.message || "Something went wrong",
+                message: "",
+                color: "red",
+              });
+            }
+          },
+        }
+      );
     });
   };
 
@@ -55,20 +69,19 @@ const LoginPage = () => {
           className="flex flex-col gap-4"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <Input.Wrapper
-            error={
-              <ErrorMessage name={"email"} errors={form?.formState?.errors} />
-            }
-          >
+          <Input.Wrapper label="Email">
             <Input
               placeholder="Email"
               type="email"
               size="lg"
               variant="filled"
-              {...form.register("email")}
+              value={searchParams.get("email") || ""}
+              disabled
             />
           </Input.Wrapper>
+
           <Input.Wrapper
+            label="Password"
             error={
               <ErrorMessage
                 name={"password"}
@@ -84,8 +97,27 @@ const LoginPage = () => {
               {...form.register("password")}
             />
           </Input.Wrapper>
-          <Button type="submit" size="lg" loading={loginMutation?.isPending}>
-            লগইন
+
+          <Input.Wrapper
+            label="Password Confirmation"
+            error={
+              <ErrorMessage
+                name={"password_confirmation"}
+                errors={form?.formState?.errors}
+              />
+            }
+          >
+            <Input
+              placeholder="Password Confirmation"
+              type="password"
+              size="lg"
+              variant="filled"
+              {...form.register("password_confirmation")}
+            />
+          </Input.Wrapper>
+
+          <Button type="submit" size="lg" loading={mutation?.isPending}>
+            Reset Password
           </Button>
         </form>
 
@@ -104,10 +136,10 @@ const LoginPage = () => {
 };
 
 const formValidationSchema = yup.object({
-  email: yup.string().email().required().label("Email"),
-  password: yup.string().min(6).max(32).required().label("Password"),
+  password: yup.string().required().label("Password"),
+  password_confirmation: yup.string().required().label("Password Confirmation"),
 });
 
 type ILoginFormPayload = yup.InferType<typeof formValidationSchema>;
 
-export default LoginPage;
+export default ResetPasswordPage;
