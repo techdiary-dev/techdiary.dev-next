@@ -4,7 +4,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ErrorMessage } from "@hookform/error-message";
 import BaseLayout from "@/components/layout/BaseLayout";
-import { Button, Input, Text } from "@mantine/core";
+import { Alert, Button, Input, Text } from "@mantine/core";
 import Link from "next/link";
 import React from "react";
 import { AuthRepository } from "@/http/repositories/auth.repository";
@@ -12,6 +12,10 @@ import { useMutation } from "@tanstack/react-query";
 import { ensureCSRF } from "@/utils/ensureCSRF";
 import { showNotification } from "@mantine/notifications";
 import { AxiosError } from "axios";
+import {
+  getHookFormErrorMessage,
+  getServerErrorMessage,
+} from "@/utils/form-error";
 
 const ForgotPasswordPage = () => {
   const api = new AuthRepository();
@@ -29,21 +33,6 @@ const ForgotPasswordPage = () => {
         onSuccess: () => {
           window.location.href = "/";
         },
-        onError: (e) => {
-          if (e instanceof AxiosError) {
-            showNotification({
-              title: e.response?.data?.message || "Login failed",
-              message: "",
-              color: "red",
-            });
-          } else {
-            showNotification({
-              title: "Error",
-              message: "Login failed",
-              color: "red",
-            });
-          }
-        },
       });
     });
   };
@@ -55,10 +44,14 @@ const ForgotPasswordPage = () => {
           className="flex flex-col gap-4"
           onSubmit={form.handleSubmit(onSubmit)}
         >
+          {mutation.isError && (
+            <Alert color="red" title="কিছু ভুল হয়েছে">
+              {getServerErrorMessage(mutation.error)}
+            </Alert>
+          )}
+
           <Input.Wrapper
-            error={
-              <ErrorMessage name={"email"} errors={form?.formState?.errors} />
-            }
+            error={getHookFormErrorMessage("email", form?.formState?.errors)}
           >
             <Input
               placeholder="Email"

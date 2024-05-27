@@ -4,7 +4,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { ErrorMessage } from "@hookform/error-message";
 import BaseLayout from "@/components/layout/BaseLayout";
-import { Button, Input, Text } from "@mantine/core";
+import { Alert, Button, Input, Text } from "@mantine/core";
 import Link from "next/link";
 import React from "react";
 import { AuthRepository } from "@/http/repositories/auth.repository";
@@ -13,6 +13,10 @@ import { ensureCSRF } from "@/utils/ensureCSRF";
 import { showNotification } from "@mantine/notifications";
 import { AxiosError } from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
+import {
+  getHookFormErrorMessage,
+  getServerErrorMessage,
+} from "@/utils/form-error";
 
 const ResetPasswordPage = () => {
   const api = new AuthRepository();
@@ -48,15 +52,6 @@ const ResetPasswordPage = () => {
             });
             router.push("/auth/login");
           },
-          onError: (error: Error) => {
-            if (error instanceof AxiosError) {
-              showNotification({
-                title: error.response?.data?.message || "Something went wrong",
-                message: "",
-                color: "red",
-              });
-            }
-          },
         }
       );
     });
@@ -69,7 +64,12 @@ const ResetPasswordPage = () => {
           className="flex flex-col gap-4"
           onSubmit={form.handleSubmit(onSubmit)}
         >
-          <Input.Wrapper label="Email">
+          {mutation.isError && (
+            <Alert color="red" title="কিছু ভুল হয়েছে">
+              {getServerErrorMessage(mutation.error)}
+            </Alert>
+          )}
+          <Input.Wrapper label="Email (Read Only)">
             <Input
               placeholder="Email"
               type="email"
@@ -82,12 +82,7 @@ const ResetPasswordPage = () => {
 
           <Input.Wrapper
             label="Password"
-            error={
-              <ErrorMessage
-                name={"password"}
-                errors={form?.formState?.errors}
-              />
-            }
+            error={getHookFormErrorMessage("password", form?.formState?.errors)}
           >
             <Input
               placeholder="Password"
@@ -100,12 +95,10 @@ const ResetPasswordPage = () => {
 
           <Input.Wrapper
             label="Password Confirmation"
-            error={
-              <ErrorMessage
-                name={"password_confirmation"}
-                errors={form?.formState?.errors}
-              />
-            }
+            error={getHookFormErrorMessage(
+              "password_confirmation",
+              form?.formState?.errors
+            )}
           >
             <Input
               placeholder="Password Confirmation"
