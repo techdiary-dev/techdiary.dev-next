@@ -3,6 +3,7 @@ import React from "react";
 import DarkLogo from "../logos/DarkLogo";
 import SearchInput from "./SearchInput";
 import NavbarAction from "./NavbarAction";
+import { setLanguage } from "@/i18n/i18n.server-action";
 
 const Navbar = () => {
   return (

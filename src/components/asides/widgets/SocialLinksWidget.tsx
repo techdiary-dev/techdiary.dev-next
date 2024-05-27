@@ -1,9 +1,11 @@
-import React from "react";
+"use client";
+
+import _t from "@/i18n/_t";
 
 const SocialLinksWidget = () => {
   return (
     <div>
-      <h3 className="text-sm font-semibold">আমাদের সাথে যুক্ত হোন</h3>
+      <h3 className="text-sm font-semibold">{_t("Connect with us")}</h3>
       <div className="flex flex-col space-y-2">
         <a
           href="https://www.facebook.com/techdiary.dev"
