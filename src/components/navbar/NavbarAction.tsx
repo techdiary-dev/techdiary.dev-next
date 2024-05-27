@@ -25,6 +25,7 @@ import {
 } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";
 import { AuthRepository } from "@/http/repositories/auth.repository";
+import { setLanguage, toggleLanguage } from "@/i18n/i18n.server-action";
 
 const NavbarAction = () => {
   const currentUser = useAtomValue(userAtom);
@@ -59,6 +60,8 @@ const NavbarAction = () => {
       >
         নতুন ডায়েরি
       </Button>
+
+      <button onClick={() => toggleLanguage()}>Click me</button>
 
       {currentUser ? (
         <>
