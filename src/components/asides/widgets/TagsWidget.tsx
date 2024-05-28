@@ -1,5 +1,6 @@
 "use client";
 
+import _t from "@/i18n/_t";
 import Image from "next/image";
 import React, { useState } from "react";
 
@@ -104,7 +105,7 @@ const TagsWidget = () => {
   return (
     <div>
       <h3 className="mb-2 text-sm font-semibold text-gray-600 dark:text-slate-300">
-        নির্বাচিত ট্যাগ সমূহ
+        {_t("Top tags")}
       </h3>
 
       <div className="flex flex-col gap-2">
@@ -116,11 +117,15 @@ const TagsWidget = () => {
         ))}
       </div>
 
-      {count === 10 && (
+      <button className="mt-2 text-sm" onClick={() => setCount(tags.length)}>
+        {_t("All tags")}...
+      </button>
+
+      {/* {count === 10 && (
         <button className="mt-2 text-sm" onClick={() => setCount(tags.length)}>
-          সকল ট্যাগ...
+          {_t("All tags")}...
         </button>
-      )}
+      )} */}
     </div>
   );
 };
