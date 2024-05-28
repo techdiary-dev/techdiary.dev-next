@@ -25,12 +25,19 @@ import {
 } from "react-icons/hi";
 import { MdOutlineDashboard } from "react-icons/md";
 import { AuthRepository } from "@/http/repositories/auth.repository";
-import { setLanguage, toggleLanguage } from "@/i18n/i18n.server-action";
+import { setLanguage } from "@/i18n/i18n.server-action";
+import { i18nLangAtom } from "@/store/i18n-lang.atom";
 
 const NavbarAction = () => {
   const currentUser = useAtomValue(userAtom);
   const { setColorScheme } = useMantineColorScheme();
+  const [i18nLang, setI18nLang] = useAtom(i18nLangAtom);
   const computedColorScheme = useComputedColorScheme();
+  const handleSwitchLanguage = () => {
+    let _i18nLang = i18nLang === "en" ? "bn" : "en";
+    setI18nLang(_i18nLang as "en" | "bn");
+    setLanguage(_i18nLang as "en" | "bn");
+  };
 
   return (
     <div className="flex items-center gap-2 md:gap-6">
@@ -61,7 +68,7 @@ const NavbarAction = () => {
         নতুন ডায়েরি
       </Button>
 
-      <button onClick={() => toggleLanguage()}>Click me</button>
+      <button onClick={handleSwitchLanguage}>Click me</button>
 
       {currentUser ? (
         <>
