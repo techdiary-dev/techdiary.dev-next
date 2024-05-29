@@ -1,9 +1,7 @@
 import Link from "next/link";
-import React from "react";
 import DarkLogo from "../logos/DarkLogo";
-import SearchInput from "./SearchInput";
 import NavbarAction from "./NavbarAction";
-import { setLanguage } from "@/i18n/i18n.server-action";
+import SearchInput from "./SearchInput";
 
 const Navbar = () => {
   return (
