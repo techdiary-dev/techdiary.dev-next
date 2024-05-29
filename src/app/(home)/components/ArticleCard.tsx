@@ -203,20 +203,22 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
         </Link>
       </Text>
       <div className="article-card__thumbnail">
-        <Link href={`/@${article?.user?.username}/${article?.slug}`}>
-          <div className="inline-block w-full overflow-hidden rounded-md">
-            <Image
-              width={620}
-              height={280}
-              src={article.thumbnail}
-              alt={article.title}
-              sizes="(max-width: 900px) 100vw, 900px"
-              className="w-full"
-              placeholder="blur"
-              blurDataURL="/thumbnail-placeholder.png"
-            />
-          </div>
-        </Link>
+        {article?.thumbnail ? (
+          <Link href={`/@${article?.user?.username}/${article?.slug}`}>
+            <div className="inline-block w-full overflow-hidden rounded-md">
+              <Image
+                width={620}
+                height={280}
+                src={article.thumbnail}
+                alt={article.title}
+                sizes="(max-width: 900px) 100vw, 900px"
+                className="w-full"
+                placeholder="blur"
+                blurDataURL="/thumbnail-placeholder.png"
+              />
+            </div>
+          </Link>
+        ) : null}
       </div>
 
       <div className="article-card__content">
