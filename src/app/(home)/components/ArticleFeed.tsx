@@ -24,6 +24,7 @@ const ArticleFeed: React.FC<ArticleFeedProps> = ({ initialData }) => {
       pages: [initialData],
     },
     initialPageParam: initialData.meta.current_page,
+    refetchOnMount: false,
     getNextPageParam: (lastPage, pages) => lastPage.meta.current_page + 1,
     queryFn: async ({ pageParam }) => {
       return articleRepository.getArticles({
