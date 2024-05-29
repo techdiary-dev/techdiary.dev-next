@@ -30,6 +30,15 @@ const config: Config = {
           muted: "var(--neutral-muted)",
         },
       },
+      fontFamily: {
+        KohinoorBangla: ["KohinoorBangla", "Nunito", "Arial"],
+        siliguri: ["Hind Siliguri", "Nunito", "Arial"],
+        mono: ["Fira Code", "techdiary-bangla", "monospace"],
+        boshonto: ["Boshonto", "Kohinoor Bangla"],
+      },
+      zIndex: {
+        "-1": "-1",
+      },
     },
   },
   plugins: [require("@tailwindcss/typography")],

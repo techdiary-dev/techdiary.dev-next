@@ -30,6 +30,8 @@ import {
   ChevronUpIcon,
   Share2Icon,
 } from "@radix-ui/react-icons";
+import { fontBosonhoto } from "@/utils/fonts";
+import Image from "next/image";
 
 interface Props {
   article: IArticleFeedItem;
@@ -201,14 +203,17 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
         </Link>
       </Text>
       <div className="article-card__thumbnail">
-        <Link href={`@${article?.user?.username}/${article?.slug}`}>
+        <Link href={`/@${article?.user?.username}/${article?.slug}`}>
           <div className="inline-block w-full overflow-hidden rounded-md">
-            <img
-              width={1200}
-              height={630}
+            <Image
+              width={620}
+              height={280}
               src={article.thumbnail}
               alt={article.title}
+              sizes="(max-width: 900px) 100vw, 900px"
               className="w-full"
+              placeholder="blur"
+              blurDataURL="/thumbnail-placeholder.png"
             />
           </div>
         </Link>

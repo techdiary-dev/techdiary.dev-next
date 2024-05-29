@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
@@ -7,14 +6,13 @@ import "../styles/app.scss";
 
 import { ColorSchemeScript } from "@mantine/core";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
   title: "Techdiary - A blogging platform for developers",
   openGraph: { title: "Techdiary" },
 };
 
 import AppProvider from "@/providers/AppProvider";
+import { fontKohinoorBanglaRegular } from "@/utils/fonts";
 import React, { PropsWithChildren } from "react";
 import RootWrapper from "../providers/RootWrapper";
 
@@ -24,10 +22,9 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
       <head>
         <ColorSchemeScript key={"techdiary-color-scheme"} />
       </head>
-      <body className={inter.className}>
-        <RootWrapper>
-          <AppProvider>{children}</AppProvider>
-        </RootWrapper>
+      <body style={fontKohinoorBanglaRegular.style}>
+        <AppProvider>{children}</AppProvider>
+        {/* <RootWrapper></RootWrapper> */}
       </body>
     </html>
   );
