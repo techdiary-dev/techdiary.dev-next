@@ -40,10 +40,10 @@ const NavbarAction = () => {
   };
 
   return (
-    <div className="flex items-center gap-2 md:gap-6">
+    <div className="flex items-center gap-4 md:gap-6">
       <div className="flex items-center gap-3">
         <Link href="/" className="text-forground-muted">
-          <HomeIcon height={21} width={21} />
+          <HomeIcon height={25} width={25} />
         </Link>
 
         <UnstyledButton
@@ -53,14 +53,15 @@ const NavbarAction = () => {
           }
         >
           {computedColorScheme == "dark" ? (
-            <SunIcon height={21} width={21} />
+            <SunIcon height={25} width={25} />
           ) : (
-            <MoonIcon height={21} width={21} />
+            <MoonIcon height={24} width={24} />
           )}
         </UnstyledButton>
       </div>
       <Button
-        leftSection={<PlusIcon height={20} width={20} />}
+        className="hidden md:inline-block"
+        leftSection={<PlusIcon height={22} width={22} />}
         onClick={() => {
           alert("not implemented");
         }}
@@ -68,7 +69,7 @@ const NavbarAction = () => {
         নতুন ডায়েরি
       </Button>
 
-      <button onClick={handleSwitchLanguage}>Click me</button>
+      {/* <button onClick={handleSwitchLanguage}>Click me</button> */}
 
       {currentUser ? (
         <>
