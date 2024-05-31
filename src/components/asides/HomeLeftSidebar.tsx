@@ -1,9 +1,7 @@
-import Image from "next/image";
-import React, { useState } from "react";
+import _ts from "@/i18n/_ts";
 import { AiOutlineHome } from "react-icons/ai";
 import { HiOutlineBookmark, HiPlus } from "react-icons/hi";
 import TagsWidget from "./widgets/TagsWidget";
-import _ts from "@/i18n/_ts";
 
 const HomeLeftSidebar = () => {
   return (
