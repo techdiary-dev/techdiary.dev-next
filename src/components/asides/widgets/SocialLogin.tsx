@@ -1,6 +1,6 @@
 "use client";
 
-import _t from "@/i18n/_t";
+import { useTranslation } from "@/i18n/use-translation";
 import { userAtom } from "@/store/user.atom";
 import { BookmarkIcon, DashboardIcon, PersonIcon } from "@radix-ui/react-icons";
 import { useAtomValue } from "jotai";
@@ -8,6 +8,7 @@ import Link from "next/link";
 import React from "react";
 
 const SocialLogin = () => {
+  const { _t } = useTranslation();
   const currentUser = useAtomValue(userAtom);
   const [loadingGithub, setLoadingGithub] = React.useState(false);
   const [loadingGoogle, setLoadingGoogle] = React.useState(false);

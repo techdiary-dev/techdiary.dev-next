@@ -1,8 +1,8 @@
 "use client";
 
-import _t from "@/i18n/_t";
+import { useTranslation } from "@/i18n/use-translation";
 import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 
 const tags = [
   {
@@ -101,6 +101,7 @@ const tags = [
 
 const TagsWidget = () => {
   const [count, setCount] = useState(10);
+  const { _t } = useTranslation();
 
   return (
     <div>
@@ -117,15 +118,16 @@ const TagsWidget = () => {
         ))}
       </div>
 
-      <button className="mt-2 text-sm" onClick={() => setCount(tags.length)}>
+      {/* <button className="mt-2 text-sm" onClick={() => setCount(tags.length)}>
         {_t("All tags")}...
-      </button>
+      </button> */}
 
-      {/* {count === 10 && (
+      {count === 10 && (
         <button className="mt-2 text-sm" onClick={() => setCount(tags.length)}>
-          {_t("All tags")}...
+          {_t("All tags")}
+          ...
         </button>
-      )} */}
+      )}
     </div>
   );
 };
