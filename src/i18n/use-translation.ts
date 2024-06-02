@@ -8,7 +8,7 @@ const dictionaries: {
 export const useTranslation = () => {
   const _lang = useAtomValue(i18nLangAtom) || "en";
   return {
-    _t: (key: string) => dictionaries[_lang]?.[key] || key,
+    _t: (key: string) => dictionaries?.[_lang]?.[key] || key,
     currentLang: _lang,
   };
 };
