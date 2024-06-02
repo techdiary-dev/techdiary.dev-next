@@ -26,4 +26,13 @@ export class ArticleRepository extends ApiRepository {
 
     return data;
   }
+
+  public async getMyArticles(params: BasePaginationQuery, headers?: any) {
+    const { data } = await this.http.get<PaginatedResponse<IArticleFeedItem>>(
+      `/api/articles/mine`,
+      { params, headers }
+    );
+
+    return data;
+  }
 }

@@ -11,11 +11,11 @@
     @apply text-primary hover:underline;
   }
 
-  *::selection {
-    @apply bg-primary text-gray-800;
-  }
+  // *::selection {
+  //   @apply bg-primary text-gray-800;
+  // }
   ::-webkit-scrollbar {
-    width: 3px;
+    width: 4px;
   }
 
   ::-webkit-scrollbar-track {
@@ -23,7 +23,8 @@
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply rounded-lg bg-gray-100;
+    @apply rounded-lg;
+    background-color: var(--muted);
   }
 }
 

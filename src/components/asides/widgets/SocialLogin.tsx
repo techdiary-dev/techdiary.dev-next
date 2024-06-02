@@ -50,10 +50,10 @@ const SocialLogin = () => {
         <div className="flex flex-col gap-2 items-start w-full">
           <Link
             className="text-forground flex gap-2 items-center"
-            href={`/dashboard`}
+            href={`/@${currentUser?.username}`}
           >
             <PersonIcon className="h-4 w-4" />
-            <p>{_t("Profile")}</p>
+            <p>{_t("My profile")}</p>
           </Link>
           <Link
             className="text-forground flex gap-2 items-center"
@@ -65,7 +65,7 @@ const SocialLogin = () => {
 
           <Link
             className="text-forground flex gap-2 items-center"
-            href={`/dashboard`}
+            href={`/dashboard/bookmarks`}
           >
             <BookmarkIcon className="h-4 w-4" />
             <p>{_t("Bookmarks")}</p>

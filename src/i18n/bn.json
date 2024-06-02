@@ -23,5 +23,7 @@
   "Sure to logout?": "লগআউট করতে চাচ্ছেন?",
   "You will be logged out after this": "একবার লগাউট করে ফেললে আপনাকে আবার নতুন করে লগইন করতে হবে",
   "My profile": "আমার প্রোফাইল",
-  "Settings": "সেটিং"
+  "Settings": "সেটিং",
+  "Personal access token": "ব্যক্তিগত এক্সেস টোকেন",
+  "Notifications": "নোটিফিকেশন"
 }

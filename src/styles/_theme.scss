@@ -3,21 +3,20 @@
   --forground: #0c0c0c;
   --forgroun-muted: #475569;
 
-  --primary: #8A9CFE;
+  --primary: #8a9cfe;
   --primary-foreground: #fff;
   --primary-variant: color-mix(in srgb, var(--primary-temp), #000 10%);
 
   --secondary: #f4a261;
   --secondary-foreground: #171717;
 
-  --muted: #F5F5F5
+  --muted: #f4f4f5;
   --muted-foreground: #737373;
 
+  --destructive: #ef4343;
+  --destructive-foreground: #fafafa;
 
-  --destructive: #EF4343;
-  --destructive-foreground: #FAFAFA;
-
-  --border: #E5E7EB;
+  --border: #e5e7eb;
 
   // text
   --text-base: #0a0a0a;
@@ -30,18 +29,11 @@
   --theme-surface: #fff;
 
   // https://stackoverflow.com/a/55330103/3705299
-
-  
 }
 
 html[data-mantine-color-scheme="dark"] {
-  --theme-primary: color-mix(
-    in srgb,
-    var(--theme-primary-temp),
-    #000 10%
-  ) !important;
-
-  --background: #0B1215;
+  --background: #0b1215;
+  --muted: #1e272c;
   --forground: #fff;
   --forgroun-muted: #e1e4e8;
 }

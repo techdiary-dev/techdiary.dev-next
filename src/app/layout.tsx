@@ -7,7 +7,7 @@ import "../styles/app.scss";
 import { ColorSchemeScript } from "@mantine/core";
 
 export const metadata: Metadata = {
-  title: "Techdiary - A blogging platform for developers",
+  title: "Techdiary - %s",
   openGraph: { title: "Techdiary" },
   icons: { icon: "/favicon.png" },
 };

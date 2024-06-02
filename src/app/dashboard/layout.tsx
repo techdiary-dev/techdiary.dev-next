@@ -1,46 +1,9 @@
-"use client";
-
-import Navbar from "@/components/navbar/Navbar";
-import NavbarAction from "@/components/navbar/NavbarAction";
-import { AppShell, Burger, Drawer, Group, Skeleton } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
 import React, { PropsWithChildren } from "react";
-import DashboardNavbar from "./_components/DashboardNavbar";
+import DashboardLayout from "./_components/DashboardLayout";
+import { Metadata } from "next";
 
-const DashboardLayout: React.FC<PropsWithChildren> = ({ children }) => {
-  const [opened, { toggle, close }] = useDisclosure(false);
-
-  return (
-    <>
-      <Drawer opened={opened} onClose={close}>
-        <DashboardNavbar />
-      </Drawer>
-
-      <AppShell
-        header={{ height: 49 }}
-        navbar={{ width: 250, breakpoint: "xs", collapsed: { mobile: true } }}
-        padding="md"
-        withBorder={true}
-      >
-        <AppShell.Header>
-          <Navbar
-            Trailing={
-              <Burger
-                size={"md"}
-                opened={opened}
-                onClick={toggle}
-                className=" sm:hidden"
-              />
-            }
-          />
-        </AppShell.Header>
-        <AppShell.Navbar p="md">
-          <DashboardNavbar />
-        </AppShell.Navbar>
-        <AppShell.Main>{children}</AppShell.Main>
-      </AppShell>
-    </>
-  );
+const layout: React.FC<PropsWithChildren> = ({ children }) => {
+  return <DashboardLayout>{children}</DashboardLayout>;
 };
 
-export default DashboardLayout;
+export default layout;

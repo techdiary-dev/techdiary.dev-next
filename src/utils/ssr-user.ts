@@ -1,6 +1,15 @@
 import { IUser } from "@/http/models/User.model";
 import { cookies } from "next/headers";
 
+export const cookieHeaders = () => {
+  const _cookies = cookies().getAll();
+  return {
+    Cookie: _cookies.map((c) => `${c.name}=${c.value}`).join("; "),
+    referer: process.env.NEXT_PUBLIC_APP_URL,
+    Accept: "application/json",
+  };
+};
+
 export const ssrGetMe = async () => {
   const _cookies = cookies().getAll();
 
@@ -10,11 +19,7 @@ export const ssrGetMe = async () => {
 
   const api = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/profile/me`, {
     method: "GET",
-    headers: {
-      Cookie: _cookies.map((c) => `${c.name}=${c.value}`).join("; "),
-      referer: process.env.NEXT_PUBLIC_APP_URL,
-      Accept: "application/json",
-    } as any,
+    headers: cookieHeaders() as any,
   });
   const me = (await api.json()) as IUser;
 
