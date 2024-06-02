@@ -2,8 +2,6 @@
 
 import { IArticleFeedItem } from "@/http/models/Article.model";
 import { PaginatedResponse } from "@/http/models/PaginatedResponse.model";
-import { ArticleRepository } from "@/http/repositories/article.repository";
-import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
 interface IDashboardPageProps {
