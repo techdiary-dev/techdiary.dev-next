@@ -94,7 +94,7 @@ const NavbarAction = () => {
               </clipPath>
             </defs>
           </svg>
-          <span>{currentLang == "bn" ? "বাংলা" : "English"}</span>
+          <span>{currentLang == "bn" ? "En" : "বাং"}</span>
         </button>
       </div>
       <Button
@@ -104,7 +104,7 @@ const NavbarAction = () => {
           alert("not implemented");
         }}
       >
-        নতুন ডায়েরি
+        {_t("New diary")}
       </Button>
 
       {currentUser ? (
@@ -123,16 +123,15 @@ export default NavbarAction;
 const AuthenticatedMenu = () => {
   const [currentUser, setCurrentUser] = useAtom(userAtom);
   const authApi = new AuthRepository();
+  const { _t } = useTranslation();
 
   const handleLogout = async () => {
     modals.openConfirmModal({
-      title: "লগআউট করতে চাচ্ছেন?",
+      title: _t("Sure to logout?"),
       children: (
-        <Text size="sm">
-          একবার লগাউট করে ফেললে আপনাকে আবার নতুন করে লগইন করতে হবে
-        </Text>
+        <Text size="sm">{_t("You will be logged out after this")}</Text>
       ),
-      labels: { confirm: "লগ আউট করতে চাই", cancel: "না" },
+      labels: { confirm: _t("Logout"), cancel: _t("Cancel") },
       onCancel: () => console.log("না"),
       onConfirm: () => {
         authApi.logout().finally(() => {
@@ -164,21 +163,23 @@ const AuthenticatedMenu = () => {
           href={`@${currentUser?.username || ""}`}
           leftSection={<HiOutlineUserCircle size={18} />}
         >
-          আমার প্রোফাইল
+          {_t("My profile")}
         </Menu.Item>
         <Menu.Item leftSection={<MdOutlineDashboard size={18} />}>
-          ড্যাসবোর্ড
+          {_t("Dashboard")}
         </Menu.Item>
         <Menu.Item leftSection={<HiOutlineBookmark size={18} />}>
-          বুকমার্ক সমূহ
+          {_t("Bookmarks")}
         </Menu.Item>
-        <Menu.Item leftSection={<HiOutlineCog size={18} />}>সেটিং</Menu.Item>
+        <Menu.Item leftSection={<HiOutlineCog size={18} />}>
+          {_t("Settings")}
+        </Menu.Item>
         <Menu.Item
           leftSection={<HiLogout size={18} />}
           component="button"
           onClick={handleLogout}
         >
-          লগ আউট
+          {_t("Logout")}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
