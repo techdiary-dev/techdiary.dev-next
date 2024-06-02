@@ -5,9 +5,11 @@ import BaseLayout from "@/components/layout/BaseLayout";
 import { Loader, Space, Text } from "@mantine/core";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
+import { useTranslation } from "@/i18n/use-translation";
 
 const OAuthCallbackClient = () => {
   const searchParams = useSearchParams();
+  const { _t } = useTranslation();
 
   useEffect(() => {
     http.get("sanctum/csrf-cookie").then((res) => {
@@ -32,7 +34,7 @@ const OAuthCallbackClient = () => {
           <Loader size={"lg"} />
           <Space h={20} />
           <Text className="text-center" size="xl">
-            দয়া করে অপেক্ষা করুন। আপনি কিছুক্ষণের মধ্যে লগইন হয়ে যাবেন।
+            {_t("Please wail, you are being redirected to the home page")}
           </Text>
         </div>
       </div>

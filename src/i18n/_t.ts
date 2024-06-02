@@ -6,7 +6,7 @@ const dictionaries: {
 } = { bn };
 
 const _t = (key: string) => {
-  const _lang = cookies().get("language")?.value || "bn";
+  const _lang = cookies().get("language")?.value || "en";
   return dictionaries[_lang]?.[key] || key;
 };
 

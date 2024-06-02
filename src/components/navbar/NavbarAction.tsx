@@ -63,7 +63,7 @@ const NavbarAction = () => {
 
         <button
           onClick={handleSwitchLanguage}
-          className="hidden cursor-pointer items-center gap-1 rounded border px-2 py-[2px] hover:bg-slate-50 md:flex"
+          className="hidden cursor-pointer items-center gap-1 rounded border app-border-color px-2 py-[2px] md:flex"
         >
           <svg
             className="hidden md:block"
@@ -199,6 +199,7 @@ const AuthenticatedMenu = () => {
 };
 
 const UnAuthenticatedMenu = () => {
+  const { _t } = useTranslation();
   const handleLogin = async (provider: string) => {
     window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/oauth/${provider}`;
   };
@@ -219,14 +220,14 @@ const UnAuthenticatedMenu = () => {
           }}
           leftSection={<AiFillGithub size={18} />}
         >
-          গিটহাব দিয়ে লগইন
+          {_t("Login with Github")}
         </Menu.Item>
         <Menu.Item
           component="button"
           onClick={() => handleLogin("google")}
           leftSection={<AiOutlineGoogle size={18} />}
         >
-          গুগল দিয়ে লগইন
+          {_t("Login with Google")}
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
