@@ -1,15 +1,23 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { ssrGetMe } from "./utils/ssr-user";
+import { cookies } from "next/headers";
 
 export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith("/dashboard")) {
-    const { status } = await ssrGetMe();
-    console.log("calling middleware", request.nextUrl.pathname);
+    // const { status } = await ssrGetMe();
+    // console.log("calling middleware", request.nextUrl.pathname);
 
-    if (status !== 200) {
+    // if (status !== 200) {
+    //   return NextResponse.redirect(new URL("/", request.url));
+    // }
+
+    const _cookies = cookies().getAll();
+
+    if (_cookies.length === 0) {
       return NextResponse.redirect(new URL("/", request.url));
     }
+    return NextResponse.next();
   }
 
   return NextResponse.next();
