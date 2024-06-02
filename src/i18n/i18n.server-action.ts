@@ -3,9 +3,9 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
-export const setLanguage = (language: "en" | "bn") => {
+export const setLanguage = (language: "en" | "bn", path = "/") => {
   cookies().set("language", language);
-  revalidatePath("/", "page");
+  revalidatePath(path, "page");
 };
 
 export const toggleLanguage = () => {
