@@ -179,7 +179,11 @@ const AuthenticatedMenu = () => {
         >
           {_t("Bookmarks")}
         </Menu.Item>
-        <Menu.Item leftSection={<HiOutlineCog size={18} />}>
+        <Menu.Item
+          leftSection={<HiOutlineCog size={18} />}
+          component={Link}
+          href="/dashboard/settings"
+        >
           {_t("Settings")}
         </Menu.Item>
         <Menu.Item
