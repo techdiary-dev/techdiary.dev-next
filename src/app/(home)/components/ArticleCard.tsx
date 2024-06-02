@@ -33,6 +33,8 @@ import {
 import { fontBosonhoto } from "@/utils/fonts";
 import Image from "next/image";
 import { useTranslation } from "@/i18n/use-translation";
+import AppImage from "@/components/AppImage";
+import { IAppImage } from "@/http/models/AppImage.model";
 
 interface Props {
   article: IArticleFeedItem;
@@ -208,7 +210,14 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
         {article?.thumbnail ? (
           <Link href={`/@${article?.user?.username}/${article?.slug}`}>
             <div className="inline-block w-full overflow-hidden rounded-md">
-              <Image
+              <AppImage
+                imageSource={article.thumbnail as any}
+                alt={article?.title || ""}
+                width={620}
+                height={280}
+                sizes="(max-width: 900px) 100vw, 900px"
+              />
+              {/* <Image
                 width={620}
                 height={280}
                 src={article.thumbnail}
@@ -217,7 +226,7 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
                 className="w-full"
                 placeholder="blur"
                 blurDataURL="/thumbnail-placeholder.png"
-              />
+              /> */}
             </div>
           </Link>
         ) : null}
