@@ -8,7 +8,7 @@ import React, { PropsWithChildren } from "react";
 import DashboardNavbar from "./_components/DashboardNavbar";
 
 const DashboardLayout: React.FC<PropsWithChildren> = ({ children }) => {
-  const [opened, { toggle, close }] = useDisclosure(true);
+  const [opened, { toggle, close }] = useDisclosure(false);
 
   return (
     <>
@@ -23,14 +23,21 @@ const DashboardLayout: React.FC<PropsWithChildren> = ({ children }) => {
         withBorder={true}
       >
         <AppShell.Header>
-          <Navbar />
+          <Navbar
+            Trailing={
+              <Burger
+                size={"md"}
+                opened={opened}
+                onClick={toggle}
+                className=" sm:hidden"
+              />
+            }
+          />
         </AppShell.Header>
         <AppShell.Navbar p="md">
           <DashboardNavbar />
         </AppShell.Navbar>
-        <AppShell.Main>
-          <button onClick={() => toggle()}>clck</button>
-        </AppShell.Main>
+        <AppShell.Main>{children}</AppShell.Main>
       </AppShell>
     </>
   );

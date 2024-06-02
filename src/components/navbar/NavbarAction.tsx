@@ -165,10 +165,18 @@ const AuthenticatedMenu = () => {
         >
           {_t("My profile")}
         </Menu.Item>
-        <Menu.Item leftSection={<MdOutlineDashboard size={18} />}>
+        <Menu.Item
+          leftSection={<MdOutlineDashboard size={18} />}
+          component={Link}
+          href="/dashboard"
+        >
           {_t("Dashboard")}
         </Menu.Item>
-        <Menu.Item leftSection={<HiOutlineBookmark size={18} />}>
+        <Menu.Item
+          leftSection={<HiOutlineBookmark size={18} />}
+          component={Link}
+          href="/dashboard/bookmarks"
+        >
           {_t("Bookmarks")}
         </Menu.Item>
         <Menu.Item leftSection={<HiOutlineCog size={18} />}>
