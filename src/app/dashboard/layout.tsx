@@ -20,6 +20,7 @@ const DashboardLayout: React.FC<PropsWithChildren> = ({ children }) => {
         header={{ height: 49 }}
         navbar={{ width: 250, breakpoint: "xs", collapsed: { mobile: true } }}
         padding="md"
+        withBorder={true}
       >
         <AppShell.Header>
           <Navbar />

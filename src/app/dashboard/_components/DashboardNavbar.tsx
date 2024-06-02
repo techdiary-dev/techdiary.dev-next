@@ -1,15 +1,19 @@
-import { Skeleton } from "@mantine/core";
+import { NavLink, Skeleton } from "@mantine/core";
 import React from "react";
+
+const items = [
+  { name: "Dashboard", href: "#" },
+  { name: "Projects", href: "#" },
+  { name: "Team", href: "#" },
+  { name: "Settings", href: "#" },
+];
 
 const DashboardNavbar = () => {
   return (
     <div>
-      Navbar
-      {Array(15)
-        .fill(0)
-        .map((_, index) => (
-          <Skeleton key={index} h={28} mt="sm" animate={false} />
-        ))}
+      {items.map((item) => (
+        <NavLink key={item.name} href={item.href} label={item.name} />
+      ))}
     </div>
   );
 };

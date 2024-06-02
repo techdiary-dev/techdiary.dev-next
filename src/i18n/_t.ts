@@ -1,6 +1,4 @@
-import { i18nLangAtom } from "@/store/i18n-lang.atom";
-import { useAtomValue } from "jotai";
-
+import { cookies } from "next/headers";
 import bn from "@/i18n/bn.json";
 
 const dictionaries: {
@@ -8,7 +6,7 @@ const dictionaries: {
 } = { bn };
 
 const _t = (key: string) => {
-  const _lang = useAtomValue(i18nLangAtom) || "bn";
+  const _lang = cookies().get("language")?.value || "bn";
   return dictionaries[_lang]?.[key] || key;
 };
 

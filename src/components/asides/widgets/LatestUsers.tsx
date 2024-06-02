@@ -1,6 +1,6 @@
 import { http } from "@/http/http.client";
 import { PaginatedResponse } from "@/http/models/PaginatedResponse.model";
-import _ts from "@/i18n/_ts";
+import _t from "@/i18n/_t";
 import { relativeTime } from "@/utils/relativeTime";
 // import { relativeTime } from "@/utils/relativeTime";
 import Link from "next/link";
@@ -25,7 +25,7 @@ const LatestUsers = async () => {
   return (
     <div>
       <h3 className="mb-2 text-sm font-semibold text-gray-600 dark:text-slate-300">
-        {_ts("Latest registered users")}
+        {_t("Latest registered users")}
       </h3>
       <div className="flex flex-col gap-5">
         {/* {isFetching &&
