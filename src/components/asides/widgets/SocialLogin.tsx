@@ -53,14 +53,14 @@ const SocialLogin = () => {
             href={`/dashboard`}
           >
             <PersonIcon className="h-4 w-4" />
-            <p>প্রোফাইল</p>
+            <p>{_t("Profile")}</p>
           </Link>
           <Link
             className="text-forground flex gap-2 items-center"
             href={`/dashboard`}
           >
             <DashboardIcon className="h-4 w-4" />
-            <p>ড্যাসবোর্ড</p>
+            <p>{_t("Dashboard")}</p>
           </Link>
 
           <Link
@@ -68,7 +68,7 @@ const SocialLogin = () => {
             href={`/dashboard`}
           >
             <BookmarkIcon className="h-4 w-4" />
-            <p>বুকমার্ক</p>
+            <p>{_t("Bookmarks")}</p>
           </Link>
         </div>
       </div>
