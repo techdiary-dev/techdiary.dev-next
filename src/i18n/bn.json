@@ -22,8 +22,13 @@
   "Cancel": "না",
   "Sure to logout?": "লগআউট করতে চাচ্ছেন?",
   "You will be logged out after this": "একবার লগাউট করে ফেললে আপনাকে আবার নতুন করে লগইন করতে হবে",
+  "Please wail, you are being redirected to the home page": "একটু অপেক্ষা করুন, আপনাকে হোম পৃষ্ঠা পরিবেশ করা হবে",
   "My profile": "আমার প্রোফাইল",
   "Settings": "সেটিং",
   "Personal access token": "ব্যক্তিগত এক্সেস টোকেন",
-  "Notifications": "নোটিফিকেশন"
+  "Notifications": "নোটিফিকেশন",
+  "Copy link": "লিংক কপি করুন",
+  "Link copied": "লিংক কপি করা হয়েছে",
+  "Share on Facebook": "ফেসবুকে শেয়ার করুন",
+  "Share on Twitter": "টুইটার শেয়ার করুন"
 }

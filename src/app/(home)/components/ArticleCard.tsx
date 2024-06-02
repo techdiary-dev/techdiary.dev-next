@@ -9,7 +9,7 @@ import { relativeTime } from "@/utils/relativeTime";
 import { HoverCard, Menu, Text } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import React from "react";
+import React, { useTransition } from "react";
 import { AiFillFacebook } from "react-icons/ai";
 import { LiaCommentsSolid } from "react-icons/lia";
 import { FiCopy } from "react-icons/fi";
@@ -32,12 +32,14 @@ import {
 } from "@radix-ui/react-icons";
 import { fontBosonhoto } from "@/utils/fonts";
 import Image from "next/image";
+import { useTranslation } from "@/i18n/use-translation";
 
 interface Props {
   article: IArticleFeedItem;
 }
 
 const ArticleCard: React.FC<Props> = ({ article }) => {
+  const { _t } = useTranslation();
   const bookmarkRepository = new BookmarkRepository();
   const currentUser = useAtomValue(userAtom);
   const clipboard = useClipboard({ timeout: 100 });
@@ -156,7 +158,7 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
                 component="button"
                 onClick={() => share("facebook")}
               >
-                ফেসবুকে শেয়ার করুন
+                {_t("Share on Facebook")}
               </Menu.Item>
               <Menu.Item
                 leftSection={
@@ -165,7 +167,7 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
                 component="button"
                 onClick={() => share("twitter")}
               >
-                টুইটার শেয়ার করুন
+                {_t("Share on Twitter")}
               </Menu.Item>
               <Menu.Item
                 leftSection={<FiCopy size={22} className="text-forground" />}
@@ -173,12 +175,12 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
                 onClick={() => {
                   clipboard.copy(article.url);
                   notifications.show({
-                    message: "লিংক কপি করা হয়েছে",
+                    message: _t("Link copied"),
                     icon: <FiCopy size={18} />,
                   });
                 }}
               >
-                লিংক কপি করুন
+                {_t("Copy link")}
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>
