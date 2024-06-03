@@ -11,7 +11,7 @@ export interface IArticleFeedItem {
   thumbnail: string;
   tags: Tag[];
   excerpt: null;
-  isPublished: boolean;
+  is_published: boolean;
   user: UserReference;
   body: {
     html?: string;
@@ -20,6 +20,7 @@ export interface IArticleFeedItem {
     excerpt?: string;
   };
   created_at: Date;
+  published_at: Date;
 }
 
 export interface IArticleDetail {
