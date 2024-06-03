@@ -4,6 +4,7 @@ import { IArticleFeedItem } from "@/http/models/Article.model";
 import { PaginatedResponse } from "@/http/models/PaginatedResponse.model";
 import { ArticleRepository } from "@/http/repositories/article.repository";
 import { useTranslation } from "@/i18n/use-translation";
+import { relativeTime } from "@/utils/relativeTime";
 import { Loader, Menu } from "@mantine/core";
 import {
   CardStackIcon,
@@ -53,21 +54,25 @@ const DashboardPage: React.FC<IDashboardPageProps> = ({ initialArticles }) => {
       {/* <pre>{JSON.stringify(initialArticles, null, 2)}</pre> */}
       {data?.pages.map((page) => {
         return page.data.map((article, index) => (
-          <article key={article.id} className="flex justify-between py-3">
+          <article
+            key={article.id}
+            className="flex justify-between flex-col md:flex-row py-3 space-y-2"
+          >
             <div className="flex flex-col">
               <a className="text-forground text-lg" href={article.url}>
-                {index} -{article.title}
+                {article.title}
               </a>
-              {article.isPublished && (
+              {article.is_published && (
                 <p className="text-sm text-forground-muted">
-                  {_t("Published on")} {article.created_at?.toString()}
+                  {_t("Published on")}{" "}
+                  {relativeTime(new Date(article.published_at))}
                 </p>
               )}
             </div>
 
-            <div className="flex items-center gap-10">
+            <div className="flex items-center gap-10 justify-between">
               <div className="flex gap-4 items-center">
-                {!article.isPublished && (
+                {!article.is_published && (
                   <p className="bg-yellow-400/30 rounded-sm px-2 py-1 text-sm">
                     🚧 {_t("Draft")}
                   </p>
@@ -80,12 +85,13 @@ const DashboardPage: React.FC<IDashboardPageProps> = ({ initialArticles }) => {
 
                 <div className="text-forground-muted flex items-center gap-1">
                   <ThickArrowUpIcon className="h-4 w-4" />
-                  <p>{article?.comments_count || 0} </p>
+                  <p>{article?.votes?.score || 0} </p>
                 </div>
               </div>
               <Menu>
                 <Menu.Target>
-                  <button>
+                  <button className="flex items-center gap-2">
+                    <p className="text-sm md:hidden">{_t("Actions")}</p>
                     <DotsHorizontalIcon className="h-5 w-5" />
                   </button>
                 </Menu.Target>
