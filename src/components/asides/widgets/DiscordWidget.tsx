@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const DiscordWidget = () => {
   const { isLoading, data } = useQuery({

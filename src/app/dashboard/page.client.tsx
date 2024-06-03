@@ -14,6 +14,7 @@ import {
   ThickArrowUpIcon,
 } from "@radix-ui/react-icons";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import Link from "next/link";
 import React from "react";
 import { VisibilityObserver } from "reactjs-visibility";
 
@@ -53,15 +54,18 @@ const DashboardPage: React.FC<IDashboardPageProps> = ({ initialArticles }) => {
     <div className="flex flex-col divide-y divide-dashed divide-border-color">
       {/* <pre>{JSON.stringify(initialArticles, null, 2)}</pre> */}
       {data?.pages.map((page) => {
-        return page.data.map((article, index) => (
+        return page.data.map((article) => (
           <article
             key={article.id}
             className="flex justify-between flex-col md:flex-row py-3 space-y-2"
           >
             <div className="flex flex-col">
-              <a className="text-forground text-lg" href={article.url}>
+              <Link
+                className="text-forground text-lg"
+                href={`/dashboard/articles/${article?.id}`}
+              >
                 {article.title}
-              </a>
+              </Link>
               {article.is_published && (
                 <p className="text-sm text-forground-muted">
                   {_t("Published on")}{" "}
