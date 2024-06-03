@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const Dashboard = async () => {
   const apiRepo = new ArticleRepository();
-  const articles = await apiRepo.getMyArticles({ limit: 20 }, cookieHeaders());
+  const articles = await apiRepo.getMyArticles({ limit: 10 }, cookieHeaders());
 
   return (
     <div>
@@ -35,7 +35,6 @@ const Dashboard = async () => {
           <Text size={"35px"}>{articles?.meta?.counts.comments || 0}</Text>
         </Paper>
       </div>
-
       <DashboardPage initialArticles={articles} />
     </div>
   );

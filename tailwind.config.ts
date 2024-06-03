@@ -18,6 +18,7 @@ const config: Config = {
           foreground: "var(--primary-foreground)",
           variant: "var(--primary-variant)",
         },
+        "border-color": "var(--border)",
         light: "var(--theme-light)",
         surface: "var(--theme-surface)",
         "light-gray": "var(--light-gray)",

@@ -18,16 +18,6 @@
 
   --border: #e5e7eb;
 
-  // text
-  --text-base: #0a0a0a;
-  --text-gray: #9ca3af;
-  --text-muted: #d1d5db;
-
-  // Theme
-  --theme-light: #f1fada;
-  --theme-body: #f6fff8;
-  --theme-surface: #fff;
-
   // https://stackoverflow.com/a/55330103/3705299
 }
 
@@ -35,5 +25,6 @@ html[data-mantine-color-scheme="dark"] {
   --background: #0b1215;
   --muted: #1e272c;
   --forground: #fff;
+  --border: #464749;
   --forgroun-muted: #e1e4e8;
 }
