@@ -210,7 +210,6 @@ const ArticleCard: React.FC<Props> = ({ article }) => {
         {article?.thumbnail ? (
           <Link href={`/@${article?.user?.username}/${article?.slug}`}>
             <div className="inline-block w-full overflow-hidden rounded-md">
-              <pre>{JSON.stringify(article?.thumbnail, null, 2)}</pre>
               <AppImage
                 imageSource={article.thumbnail as any}
                 alt={article?.title || ""}
