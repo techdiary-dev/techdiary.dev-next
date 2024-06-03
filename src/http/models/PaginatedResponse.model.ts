@@ -13,6 +13,7 @@ export interface Meta {
   per_page: number;
   to: number;
   total: number;
+  [key: string]: any;
 }
 
 export interface Links {
