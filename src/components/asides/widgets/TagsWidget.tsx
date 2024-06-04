@@ -112,15 +112,17 @@ const TagsWidget = () => {
       <div className="flex flex-col gap-2">
         {tags.slice(0, count).map((tag, index) => (
           <div className="flex items-center gap-2" key={index}>
-            <Image src={tag.icon} width={20} height={10} alt={tag?.label} />
+            <Image
+              src={tag.icon}
+              width={20}
+              height={20}
+              sizes="20px"
+              alt={tag?.label}
+            />
             <p className="text-forground-muted">{tag?.label}</p>
           </div>
         ))}
       </div>
-
-      {/* <button className="mt-2 text-sm" onClick={() => setCount(tags.length)}>
-        {_t("All tags")}...
-      </button> */}
 
       {count === 10 && (
         <button className="mt-2 text-sm" onClick={() => setCount(tags.length)}>

@@ -44,6 +44,7 @@ const LoginPage = () => {
         <form
           className="flex flex-col gap-4"
           onSubmit={form.handleSubmit(onSubmit)}
+          method="post"
         >
           {loginMutation.isError && (
             <Alert color="red" title="কিছু ভুল হয়েছে">
