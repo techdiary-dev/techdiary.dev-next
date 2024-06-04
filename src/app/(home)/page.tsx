@@ -16,7 +16,6 @@ export default async function Home() {
 
   const api = await fetch(process.env.NEXT_PUBLIC_API_URL + "/api/articles", {
     method: "GET",
-    cache: "force-cache",
     next: { revalidate: 3600 },
   });
 
