@@ -9,20 +9,21 @@ import { relativeTime } from "@/utils/relativeTime";
 import { HoverCard, Menu, Text } from "@mantine/core";
 import { useMutation } from "@tanstack/react-query";
 import Link from "next/link";
-import React, { useTransition } from "react";
+import React from "react";
 import { AiFillFacebook } from "react-icons/ai";
-import { LiaCommentsSolid } from "react-icons/lia";
 import { FiCopy } from "react-icons/fi";
+import { LiaCommentsSolid } from "react-icons/lia";
 import { RiTwitterFill } from "react-icons/ri";
 
 import useVote from "@/hooks/useVote";
 import classNames from "clsx";
 
+import AppImage from "@/components/AppImage";
+import UserHoverCard from "@/components/UserHoverCard";
 import { IArticleFeedItem } from "@/http/models/Article.model";
 import { BookmarkRepository } from "@/http/repositories/bookmark.repository";
+import { useTranslation } from "@/i18n/use-translation";
 import { userAtom } from "@/store/user.atom";
-import { useAtomValue } from "jotai";
-import UserHoverCard from "@/components/UserHoverCard";
 import {
   BookmarkFilledIcon,
   BookmarkIcon,
@@ -30,11 +31,7 @@ import {
   ChevronUpIcon,
   Share2Icon,
 } from "@radix-ui/react-icons";
-import { fontBosonhoto } from "@/utils/fonts";
-import Image from "next/image";
-import { useTranslation } from "@/i18n/use-translation";
-import AppImage from "@/components/AppImage";
-import { IAppImage } from "@/http/models/AppImage.model";
+import { useAtomValue } from "jotai";
 
 interface Props {
   article: IArticleFeedItem;
