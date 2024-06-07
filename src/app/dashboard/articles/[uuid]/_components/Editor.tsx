@@ -27,14 +27,18 @@ import {
   Button,
   Drawer,
   Input,
+  Modal,
   MultiSelect,
   SegmentedControl,
   Space,
   Switch,
+  Text,
   Textarea,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { GearIcon } from "@radix-ui/react-icons";
+import { GearIcon, PlusIcon } from "@radix-ui/react-icons";
+import UnsplashImageGallery from "@/components/UnsplashImageGallery";
+import { IAppImage } from "@/http/models/AppImage.model";
 
 interface Prop {
   uuid: string;
@@ -44,7 +48,10 @@ interface Prop {
 const Editor = () => {
   const { _t } = useTranslation();
   const [mode, selectMode] = React.useState<"write" | "preview">("write");
+  const [thumbnail, setThumbnail] = React.useState<IAppImage | null>(null);
   const [drawerOpened, drawerOpenHandler] = useDisclosure(false);
+  const [unsplashPickerOpened, unsplashPickerOpenHandler] =
+    useDisclosure(false);
 
   const { ref, commandController } = useTextAreaMarkdownEditor({
     commandMap: {
@@ -92,14 +99,59 @@ const Editor = () => {
           <Switch label="Published" />
         </div>
       </Drawer>
+      <Modal
+        opened={unsplashPickerOpened}
+        onClose={unsplashPickerOpenHandler.close}
+        size={"100vw"}
+      >
+        <UnsplashImageGallery
+          onUploadImage={(image) => {
+            setThumbnail(image);
+            unsplashPickerOpenHandler.close();
+          }}
+        />
+      </Modal>
 
-      <div>
+      <div className="flex gap-2 justify-between items-center mb-10">
+        <div className="text-forground-muted text-sm">(Saved 3 mins ago)</div>
+        <div className="flex gap-4">
+          <button>Preview</button>
+          <button className="text-green-500 bg-muted px-4 py-1">Publish</button>
+          <button onClick={() => drawerOpenHandler.toggle()}>
+            <GearIcon className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+
+      <div className="max-w-[750px] mx-auto">
         <input
           placeholder={_t("Title")}
           className=" w-full text-2xl focus:outline-none"
         />
 
-        <div className=" flex items-center justify-between flex-col md:flex-row">
+        {/* Thumbnail Section */}
+        <div>
+          {thumbnail ? (
+            <div>{thumbnail?.key}</div>
+          ) : (
+            <div className="flex items-center gap-4">
+              <button className="flex items-center gap-2 my-4 text-forground-muted">
+                <PlusIcon className="w-3 h-3" />
+                <Text size="sm">Upload article cover</Text>
+              </button>
+
+              <button
+                className="flex items-center gap-2 my-4 text-forground-muted"
+                onClick={unsplashPickerOpenHandler.open}
+              >
+                <PlusIcon className="w-3 h-3" />
+                <Text size="sm">Pick cover from unsplash</Text>
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div className="flex items-center justify-between flex-col md:flex-row">
           <div className="my-2 flex gap-6">
             <EditorCommandButton
               onClick={() => commandController.executeCommand("h2")}
@@ -134,23 +186,6 @@ const Editor = () => {
             <EditorCommandButton
               onClick={() => commandController.executeCommand("image")}
               Icon={<RiImageAddFill size={20} />}
-            />
-          </div>
-
-          <div className="flex items-center gap-2">
-            <p className="text-sm text-forground-muted">(Saved 3 mins ago)</p>
-            <button type="button" onClick={() => drawerOpenHandler.toggle()}>
-              <GearIcon className="w-5 h-5" />
-            </button>
-            <SegmentedControl
-              className="my-2"
-              onChange={(value) => {
-                console.log(value);
-              }}
-              data={[
-                { label: _t("Write"), value: "write" },
-                { label: _t("Preview"), value: "preview" },
-              ]}
             />
           </div>
         </div>
