@@ -7,7 +7,6 @@ cloudinary.config({ secure: true });
 export const POST = async (request: NextRequest) => {
   try {
     const body = await request.json();
-
     const result = await cloudinary.uploader.upload(body.url, {
       public_id: body?.public_id,
       folder: body?.folder,
