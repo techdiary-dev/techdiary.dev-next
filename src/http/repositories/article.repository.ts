@@ -79,4 +79,23 @@ export class ArticleApiRepository extends ApiRepository {
     );
     return data;
   }
+
+  public async createArticle(payload: CreateOrUpdateArticlePayload) {
+    const { data } = await this.http.post(`/api/articles/`, payload);
+    return data;
+  }
+
+  /**
+   * Check if slug is unique
+   * @param slug - slug to check
+   * @returns
+   */
+  public async getUniqueSlug(slug: string) {
+    const { data } = await this.http.post<{ slug: string }>(
+      `/api/articles/get-unique-slug`,
+      { slug }
+    );
+
+    return data;
+  }
 }

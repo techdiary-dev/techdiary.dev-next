@@ -100,9 +100,8 @@ const NavbarAction = () => {
       <Button
         className="hidden md:inline-block"
         leftSection={<PlusIcon height={22} width={22} />}
-        onClick={() => {
-          alert("not implemented");
-        }}
+        component={Link}
+        href={"/dashboard/articles/new"}
       >
         {_t("New diary")}
       </Button>

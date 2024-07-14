@@ -1,5 +1,5 @@
 import React from "react";
-import ArticleEditor from "./_components/Editor";
+import ArticleEditor from "../_components/ArticleEditor";
 import { NextPage } from "next";
 import { ArticleApiRepository } from "@/http/repositories/article.repository";
 

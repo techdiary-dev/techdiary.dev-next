@@ -6,6 +6,8 @@ import { cookieHeaders } from "@/utils/ssr-user";
 import { Paper, Text } from "@mantine/core";
 import _t from "@/i18n/_t";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
   title: "Dashboard",
 };

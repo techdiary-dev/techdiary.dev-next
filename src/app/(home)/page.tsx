@@ -6,6 +6,7 @@ import ThreeColumnLayout from "@/components/layout/ThreeColumnLayout";
 import { IArticleFeedItem } from "@/http/models/Article.model";
 import { PaginatedResponse } from "@/http/models/PaginatedResponse.model";
 import ArticleFeed from "./components/ArticleFeed";
+import axios from "axios";
 
 // export const revalidate = 3600; // revalidate at most every hour
 
@@ -16,7 +17,7 @@ export default async function Home() {
 
   const api = await fetch(process.env.NEXT_PUBLIC_API_URL + "/api/articles", {
     method: "GET",
-    next: { revalidate: 3600 },
+    cache: "no-store",
   });
 
   const articles = await api.json();
