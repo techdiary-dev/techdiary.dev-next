@@ -23,7 +23,7 @@ import {
   Text,
   Textarea,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
+import { useDebouncedCallback, useDisclosure } from "@mantine/hooks";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import {
@@ -61,10 +61,10 @@ import {
 import * as Yup from "yup";
 import EditorCommandButton from "./EditorCommandButton";
 import { markdownToHtml } from "@/utils/markdoc-parser";
-import { revalidatePath } from "next/cache";
+import { useClickAway } from "@/hooks/useClickAway";
 
 interface Prop {
-  uuid: string;
+  uuid?: string;
   article?: IArticleDetail;
 }
 
@@ -73,17 +73,6 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
   const api = new ArticleApiRepository();
   const api__files = new FileApiRepository();
   const router = useRouter();
-
-  const { _t } = useTranslation();
-  const [editorMode, selectEditorMode] = React.useState<"write" | "preview">(
-    "write"
-  );
-  const [thumbnail, setThumbnail] = React.useState<IServerFile | null>(
-    article?.thumbnail ? JSON.parse(article?.thumbnail as any) : null
-  );
-  const [drawerOpened, drawerOpenHandler] = useDisclosure(false);
-  const [unsplashPickerOpened, unsplashPickerOpenHandler] =
-    useDisclosure(false);
 
   const articleUpdateMutation = useMutation({
     mutationFn: (data: {
@@ -94,7 +83,6 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     },
     onSuccess: () => {
       router.refresh();
-      revalidatePath("/");
       showNotification({
         message: _t("Article updated"),
         color: "green",
@@ -107,9 +95,41 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     },
   });
 
+  const articleCreateMutation = useMutation({
+    mutationFn: (payload: CreateOrUpdateArticlePayload) => {
+      return api.createArticle(payload);
+    },
+    onSuccess: (res) => {
+      router.push(`/dashboard/articles/${res?.data?.id}`);
+    },
+    onError(error: AppAxiosException) {
+      const msg = error.response?.data?.message || "Failed to update article";
+      setErrorMsg(msg);
+    },
+  });
+
+  const titleRef = useClickAway(() => {
+    if (!uuid) {
+      articleCreateMutation.mutate({
+        title: watch("title"),
+      });
+    }
+  });
+
+  const { _t } = useTranslation();
+  const [editorMode, selectEditorMode] = React.useState<"write" | "preview">(
+    "write"
+  );
+  const [thumbnail, setThumbnail] = React.useState<IServerFile | null>(
+    article?.thumbnail ? JSON.parse(article?.thumbnail as any) : null
+  );
+  const [drawerOpened, drawerOpenHandler] = useDisclosure(false);
+  const [unsplashPickerOpened, unsplashPickerOpenHandler] =
+    useDisclosure(false);
+
   const { register, handleSubmit, setValue, watch } = useForm<IEditorForm>({
     defaultValues: {
-      title: article?.title || " ",
+      title: article?.title || "",
       body: article?.body?.markdown || "",
       slug: article?.slug || "",
       excerpt: article?.excerpt || " ",
@@ -142,10 +162,13 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
       onConfirm: async () => {
         if (thumbnail) {
           await api__files.deleteFile([thumbnail?.key]);
-          await articleUpdateMutation.mutateAsync({
-            uuid,
-            payload: { thumbnail: null },
-          });
+          if (uuid) {
+            await articleUpdateMutation.mutateAsync({
+              uuid,
+              payload: { thumbnail: null },
+            });
+          }
+
           setThumbnail(null);
         }
       },
@@ -154,10 +177,12 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
 
   const handleSave: SubmitHandler<IEditorForm> = async (data) => {
     console.log(data);
-    articleUpdateMutation.mutate({
-      uuid,
-      payload: data,
-    });
+    if (uuid) {
+      articleUpdateMutation.mutate({
+        uuid,
+        payload: data,
+      });
+    }
   };
 
   const handleTogglePublish = async () => {
@@ -175,10 +200,12 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         cancel: _t("Cancel"),
       },
       onConfirm: async () => {
-        articleUpdateMutation.mutate({
-          uuid,
-          payload: { is_published: !article?.is_published },
-        });
+        if (uuid) {
+          articleUpdateMutation.mutate({
+            uuid,
+            payload: { is_published: !article?.is_published },
+          });
+        }
       },
     });
   };
@@ -245,108 +272,119 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
 
       {/* Top Ribon */}
       <div className="flex bg-background gap-2 items-start justify-between top-[48px] mb-10 sticky z-30 -mt-[17px] pt-[17px]">
-        <div className="text-forground-muted text-sm flex flex-col gap-2">
-          {articleUpdateMutation.isPending ? (
-            <p>{_t("Saving")}...</p>
-          ) : (
-            <p>
-              {article?.updated_at && (
-                <span>(Saved {formatDistanceToNow(article?.updated_at)})</span>
+        {uuid && (
+          <div className="flex items-center gap-2 text-sm text-forground-muted">
+            {articleUpdateMutation.isPending ? (
+              <p>{_t("Saving")}...</p>
+            ) : (
+              <p>
+                {article?.updated_at && (
+                  <span>
+                    (Saved {formatDistanceToNow(article?.updated_at)})
+                  </span>
+                )}
+              </p>
+            )}
+
+            <p
+              className={clsx("px-2 py-1", {
+                "bg-green-100": article?.is_published,
+                "bg-red-100": !article?.is_published,
+              })}
+            >
+              {article?.is_published ? (
+                <span className="text-success">{_t("Published")}</span>
+              ) : (
+                <span className="text-destructive">{_t("Draft")}</span>
               )}
             </p>
-          )}
+          </div>
+        )}
 
-          <p
-            className={clsx("px-2 py-1", {
-              "bg-green-100": article?.is_published,
-              "bg-red-100": !article?.is_published,
-            })}
-          >
-            {article?.is_published ? (
-              <span className="text-success">{_t("Published")}</span>
-            ) : (
-              <span className="text-destructive">{_t("Draft")}</span>
-            )}
-          </p>
-        </div>
-
-        <div className="flex gap-2">
-          <button
-            onClick={() =>
-              selectEditorMode(editorMode === "write" ? "preview" : "write")
-            }
-            className="hover:bg-muted font-semibold transition-colors duration-200 px-4 py-1 rounded-sm"
-          >
-            {editorMode === "write" ? _t("Preview") : _t("Editor")}
-          </button>
-          <button
-            onClick={handleSubmit(handleSave)}
-            className="hover:bg-muted transition-colors font-semibold duration-200 px-4 py-1 rounded-sm"
-          >
-            <span>{_t("Save")}</span>
-          </button>
-
-          <button
-            onClick={handleTogglePublish}
-            className={clsx(
-              "hover:bg-muted transition-colors duration-200 px-4 py-1 font-semibold",
-              {
-                "text-success": !article?.is_published,
-                "text-destructive": article?.is_published,
+        {uuid && (
+          <div className="flex gap-2">
+            <button
+              onClick={() =>
+                selectEditorMode(editorMode === "write" ? "preview" : "write")
               }
-            )}
-          >
-            {article?.is_published ? _t("Unpublish") : _t("Publish")}
-          </button>
-          <button onClick={() => drawerOpenHandler.toggle()}>
-            <GearIcon className="w-5 h-5" />
-          </button>
-        </div>
+              className="px-4 py-1 font-semibold transition-colors duration-200 rounded-sm hover:bg-muted"
+            >
+              {editorMode === "write" ? _t("Preview") : _t("Editor")}
+            </button>
+            <button
+              onClick={handleSubmit(handleSave)}
+              className="px-4 py-1 font-semibold transition-colors duration-200 rounded-sm hover:bg-muted"
+            >
+              <span>{_t("Save")}</span>
+            </button>
+
+            <button
+              onClick={handleTogglePublish}
+              className={clsx(
+                "hover:bg-muted transition-colors duration-200 px-4 py-1 font-semibold",
+                {
+                  "text-success": !article?.is_published,
+                  "text-destructive": article?.is_published,
+                }
+              )}
+            >
+              {article?.is_published ? _t("Unpublish") : _t("Publish")}
+            </button>
+            <button onClick={() => drawerOpenHandler.toggle()}>
+              <GearIcon className="w-5 h-5" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Editor */}
       <div className="max-w-[750px] mx-auto">
         {/* Thumbnail Section */}
-        <div className="mb-10">
-          {thumbnail ? (
-            <div className="rounded-md overflow-hidden relative">
-              <AppImage imageSource={thumbnail} width={1200} height={630} />
-              <button
-                onClick={handleDeleteFile}
-                className="flex items-center rounded bg-destructive text-destructive-foreground absolute top-10 right-10 p-2"
-              >
-                <TrashIcon className="w-6 h-6" />
-                <p>{_t("Delete")}</p>
-              </button>
-            </div>
-          ) : (
-            <div className="flex md:items-center gap-4 flex-col md:flex-row">
-              {/* Cover uploader button group */}
-              <button className="flex items-center gap-2 text-forground-muted hover:underline hover:text-primary">
-                <PlusIcon className="w-3 h-3" />
-                <Text size="sm">{_t("Upload article cover")}</Text>
-              </button>
+        {uuid && (
+          <div className="mb-10">
+            {thumbnail ? (
+              <div className="relative overflow-hidden rounded-md">
+                <AppImage imageSource={thumbnail} width={1200} height={630} />
+                <button
+                  onClick={handleDeleteFile}
+                  className="absolute flex items-center p-2 rounded bg-destructive text-destructive-foreground top-10 right-10"
+                >
+                  <TrashIcon className="w-6 h-6" />
+                  <p>{_t("Delete")}</p>
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-4 md:items-center md:flex-row">
+                {/* Cover uploader button group */}
+                <button className="flex items-center gap-2 text-forground-muted hover:underline hover:text-primary">
+                  <PlusIcon className="w-3 h-3" />
+                  <Text size="sm">{_t("Upload article cover")}</Text>
+                </button>
 
-              <button
-                className="flex items-center gap-2 text-forground-muted hover:underline hover:text-primary"
-                onClick={unsplashPickerOpenHandler.open}
-              >
-                <PlusIcon className="w-3 h-3" />
-                <Text size="sm">{_t("Pick cover from unsplash")}</Text>
-              </button>
-            </div>
-          )}
-        </div>
+                <button
+                  className="flex items-center gap-2 text-forground-muted hover:underline hover:text-primary"
+                  onClick={unsplashPickerOpenHandler.open}
+                >
+                  <PlusIcon className="w-3 h-3" />
+                  <Text size="sm">{_t("Pick cover from unsplash")}</Text>
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
         <input
           placeholder={_t("Title")}
-          {...register("title")}
+          ref={titleRef}
+          autoFocus
+          value={watch("title") ?? ""}
+          onChange={(e) => setValue("title", e.target.value)}
           className="w-full text-2xl focus:outline-none bg-background"
         />
 
         {/* Editor Toolbar */}
-        <div className="flex md:items-center justify-between flex-col md:flex-row">
-          <div className="my-2 flex gap-6 bg-muted p-2 w-full">
+        <div className="flex flex-col justify-between md:items-center md:flex-row">
+          <div className="flex w-full gap-6 p-2 my-2 bg-muted">
             <EditorCommandButton
               onClick={() => commandController.executeCommand("h2")}
               Icon={<RiHeading size={20} />}
