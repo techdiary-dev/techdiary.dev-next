@@ -46,6 +46,7 @@ export interface IArticleDetail {
   seo: null;
   settings: null;
   created_at: Date;
+  updated_at: Date;
 }
 
 export interface Tag {

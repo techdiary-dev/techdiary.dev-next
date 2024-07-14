@@ -1,5 +1,5 @@
-import { NextRequest } from "next/server";
 import { v2 as cloudinary } from "cloudinary";
+import { NextRequest } from "next/server";
 // const cloudinary = require("cloudinary").v2;
 
 cloudinary.config({ secure: true });
@@ -9,7 +9,7 @@ export const POST = async (request: NextRequest) => {
     const body = await request.json();
     const result = await cloudinary.uploader.upload(body.url, {
       public_id: body?.public_id,
-      folder: body?.folder,
+      preset: "techdiary-article-covers",
     });
 
     return Response.json(result);

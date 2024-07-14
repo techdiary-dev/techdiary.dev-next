@@ -53,7 +53,8 @@
   "Unpublish": "অপ্রকাশিত করুন",
   "Publish": "প্রকাশিত করুন",
   "Published": "প্রকাশিত হয়েছে",
-  "Unpublished": "অপ্রকাশিত হয়েছে",
+  "Unpublished": "অপ্রকাশিত রয়েছে",
   "Are you sure you want to publish this article?": "আপনি কি নিশ্চিত যে এই নিবন্ধিত আর্টিকেল প্রকাশিত করতে চান?",
-  "Save": "সংরক্ষণ করুন"
+  "Save": "সংরক্ষণ করুন",
+  "Article updated": "নিবন্ধিত আপডেট করা হয়েছে"
 }

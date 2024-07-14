@@ -38,6 +38,10 @@ const config: Config = {
           DEFAULT: "var(--success)",
           foreground: "var(--success-foreground)",
         },
+        muted: {
+          DEFAULT: "var(--muted)",
+          foreground: "var(--muted-foreground)",
+        },
       },
       fontFamily: {
         KohinoorBangla: ["KohinoorBangla", "Nunito", "Arial"],
