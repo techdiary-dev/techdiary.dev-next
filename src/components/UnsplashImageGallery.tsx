@@ -1,4 +1,4 @@
-import { IAppImage } from "@/http/models/AppImage.model";
+import { IServerFile } from "@/http/models/AppImage.model";
 import { useTranslation } from "@/i18n/use-translation";
 import {
   Button,
@@ -16,7 +16,7 @@ import axios from "axios";
 import { FiUpload } from "react-icons/fi";
 
 interface IProp {
-  onUploadImage: (image: IAppImage) => void;
+  onUploadImage: (image: IServerFile) => void;
 }
 
 const UnsplashImageGallery: React.FC<IProp> = ({ onUploadImage }) => {
@@ -86,7 +86,7 @@ const UnsplashImageGallery: React.FC<IProp> = ({ onUploadImage }) => {
             >
               <Image src={image.urls.regular} alt={image.description!} />
               <div className="bg-black/45 opacity-0 absolute top-0 right-0 bottom-0 left-0 transition-all duration-300 group-hover:opacity-100 flex items-center justify-center">
-                <UploadIcon className="w-10 h-10 z-50" />
+                <UploadIcon className="w-10 h-10 z-50 text-white" />
               </div>
             </div>
           ))}
