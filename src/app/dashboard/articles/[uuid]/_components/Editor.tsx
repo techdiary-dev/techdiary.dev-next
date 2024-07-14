@@ -73,7 +73,9 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
   const router = useRouter();
 
   const { _t } = useTranslation();
-  const [mode, selectMode] = React.useState<"write" | "preview">("write");
+  const [editorMode, selectEditorMode] = React.useState<"write" | "preview">(
+    "write"
+  );
   const [thumbnail, setThumbnail] = React.useState<IServerFile | null>(
     article?.thumbnail ? JSON.parse(article?.thumbnail) : null
   );
@@ -81,7 +83,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
   const [unsplashPickerOpened, unsplashPickerOpenHandler] =
     useDisclosure(false);
 
-  const updateMutation = useMutation({
+  const articleUpdateMutation = useMutation({
     mutationFn: (data: {
       uuid: string;
       payload: CreateOrUpdateArticlePayload;
@@ -137,7 +139,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
       onConfirm: async () => {
         if (thumbnail) {
           await api__files.deleteFile([thumbnail?.key]);
-          await updateMutation.mutateAsync({
+          await articleUpdateMutation.mutateAsync({
             uuid,
             payload: { thumbnail: null },
           });
@@ -145,15 +147,11 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         }
       },
     });
-    // if (thumbnail) {
-    //   await deleteFile(thumbnail.key);
-    //   setThumbnail(null);
-    // }
   };
 
   const handleSave: SubmitHandler<IEditorForm> = async (data) => {
     console.log(data);
-    updateMutation.mutate({
+    articleUpdateMutation.mutate({
       uuid,
       payload: data,
     });
@@ -174,7 +172,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         cancel: _t("Cancel"),
       },
       onConfirm: async () => {
-        updateMutation.mutate({
+        articleUpdateMutation.mutate({
           uuid,
           payload: { is_published: !article?.is_published },
         });
@@ -219,7 +217,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
           <div className="flex-1 h-10"></div>
           <Button
             onClick={handleSubmit(handleSave)}
-            loading={updateMutation.isPending}
+            loading={articleUpdateMutation.isPending}
           >
             <span>{_t("Save")}</span>
           </Button>
@@ -233,7 +231,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         <UnsplashImageGallery
           onUploadImage={async (image) => {
             setThumbnail(image);
-            await updateMutation.mutateAsync({
+            await articleUpdateMutation.mutateAsync({
               uuid,
               payload: { thumbnail: image },
             });
@@ -243,34 +241,44 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
       </Modal>
 
       {/* Top Ribon */}
-      <div className="flex gap-2 justify-between items-center mb-10">
-        <div className="text-forground-muted text-sm">
-          <p>
-            {article?.updated_at && (
-              <span>(Saved {formatDistanceToNow(article?.updated_at)})</span>
+      <div className="flex bg-background gap-2 items-start justify-between top-[48px] mb-10 sticky z-30 -mt-[17px] pt-[17px]">
+        <div className="text-forground-muted text-sm flex flex-col gap-2">
+          {articleUpdateMutation.isPending ? (
+            <p>{_t("Saving")}...</p>
+          ) : (
+            <p>
+              {article?.updated_at && (
+                <span>(Saved {formatDistanceToNow(article?.updated_at)})</span>
+              )}
+            </p>
+          )}
+
+          <p
+            className={clsx("px-2 py-1", {
+              "bg-green-100": article?.is_published,
+              "bg-red-100": !article?.is_published,
+            })}
+          >
+            {article?.is_published ? (
+              <span className="text-success">{_t("Published")}</span>
+            ) : (
+              <span className="text-destructive">{_t("Draft")}</span>
             )}
           </p>
         </div>
 
-        <p
-          className={clsx("px-2 py-1", {
-            "bg-green-100": article?.is_published,
-            "bg-red-100": !article?.is_published,
-          })}
-        >
-          {article?.is_published ? (
-            <span className="text-success">{_t("Published")}</span>
-          ) : (
-            <span className="text-destructive">{_t("Draft")}</span>
-          )}
-        </p>
-        <div className="flex gap-4">
-          <button className="hover:bg-muted transition-colors duration-200 px-4 py-1 rounded-sm">
+        <div className="flex gap-2">
+          <button
+            onClick={() =>
+              selectEditorMode(editorMode === "write" ? "preview" : "write")
+            }
+            className="hover:bg-muted font-semibold transition-colors duration-200 px-4 py-1 rounded-sm"
+          >
             {_t("Preview")}
           </button>
           <button
             onClick={handleSubmit(handleSave)}
-            className="hover:bg-muted transition-colors duration-200 px-4 py-1 rounded-sm"
+            className="hover:bg-muted transition-colors font-semibold duration-200 px-4 py-1 rounded-sm"
           >
             <span>{_t("Save")}</span>
           </button>
@@ -278,7 +286,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
           <button
             onClick={handleTogglePublish}
             className={clsx(
-              "hover:bg-muted transition-colors duration-200 px-4 py-1",
+              "hover:bg-muted transition-colors duration-200 px-4 py-1 font-semibold",
               {
                 "text-success": !article?.is_published,
                 "text-destructive": article?.is_published,
@@ -293,6 +301,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         </div>
       </div>
 
+      {/* Editor */}
       <div className="max-w-[750px] mx-auto">
         {/* Thumbnail Section */}
         <div className="mb-10">
@@ -301,14 +310,14 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
               <AppImage imageSource={thumbnail} width={1200} height={630} />
               <button
                 onClick={handleDeleteFile}
-                className="flex items-center rounded bg-destructive text-destructive-foreground z-30 absolute top-10 right-10 p-2"
+                className="flex items-center rounded bg-destructive text-destructive-foreground absolute top-10 right-10 p-2"
               >
                 <TrashIcon className="w-6 h-6" />
                 <p>{_t("Delete")}</p>
               </button>
             </div>
           ) : (
-            <div className="flex items-center gap-4">
+            <div className="flex md:items-center gap-4 flex-col md:flex-row">
               {/* Cover uploader button group */}
               <button className="flex items-center gap-2 text-forground-muted hover:underline hover:text-primary">
                 <PlusIcon className="w-3 h-3" />
@@ -329,11 +338,12 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         <input
           placeholder={_t("Title")}
           {...register("title")}
-          className=" w-full text-2xl focus:outline-none"
+          className="w-full text-2xl focus:outline-none bg-background"
         />
 
-        <div className="flex items-center justify-between flex-col md:flex-row">
-          <div className="my-2 flex gap-6">
+        {/* Editor Toolbar */}
+        <div className="flex md:items-center justify-between flex-col md:flex-row">
+          <div className="my-2 flex gap-6 bg-muted p-2 w-full">
             <EditorCommandButton
               onClick={() => commandController.executeCommand("h2")}
               Icon={<RiHeading size={20} />}
@@ -370,12 +380,21 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
             />
           </div>
         </div>
-        <textarea
-          className="h-[calc(100vh-120px)] w-full focus:outline-none"
-          value={watch("body") || ""}
-          onChange={(e) => setValue("body", e.target.value)}
-          ref={editorTextareaRef}
-        ></textarea>
+
+        <div className="w-full">
+          {editorMode === "write" ? (
+            <textarea
+              className="focus:outline-none h-[calc(100vh-120px)] bg-background w-full"
+              value={watch("body") || ""}
+              onChange={(e) => setValue("body", e.target.value)}
+              ref={editorTextareaRef}
+            ></textarea>
+          ) : (
+            <div>
+              <h1>Hello</h1>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

@@ -11,11 +11,7 @@ const ArticleEditPage: NextPage<Props> = async ({ params }) => {
   const api = new ArticleApiRepository();
   const data = await api.getArticleByUUID(params.uuid);
 
-  return (
-    <div>
-      <ArticleEditor uuid={params.uuid} article={data} />
-    </div>
-  );
+  return <ArticleEditor uuid={params.uuid} article={data} />;
 };
 
 export default ArticleEditPage;
