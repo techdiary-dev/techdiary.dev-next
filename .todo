@@ -1,3 +1,6 @@
+- [] revalidate cache after update, home page and article details page
+- [] upload files in laravel
+
 - [] tag diye article filter korar somoy case insensitive vabe filter korte hobe
 - [] jemnon `time & space complexity` ke `time-space-complexity` slug diye filter e aste hobe
 - [] redesign global loading page with brand logo

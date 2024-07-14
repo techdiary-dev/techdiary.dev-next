@@ -60,6 +60,8 @@ import {
 } from "react-mde";
 import * as Yup from "yup";
 import EditorCommandButton from "./EditorCommandButton";
+import { markdownToHtml } from "@/utils/markdoc-parser";
+import { revalidatePath } from "next/cache";
 
 interface Prop {
   uuid: string;
@@ -77,7 +79,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     "write"
   );
   const [thumbnail, setThumbnail] = React.useState<IServerFile | null>(
-    article?.thumbnail ? JSON.parse(article?.thumbnail) : null
+    article?.thumbnail ? JSON.parse(article?.thumbnail as any) : null
   );
   const [drawerOpened, drawerOpenHandler] = useDisclosure(false);
   const [unsplashPickerOpened, unsplashPickerOpenHandler] =
@@ -92,6 +94,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     },
     onSuccess: () => {
       router.refresh();
+      revalidatePath("/");
       showNotification({
         message: _t("Article updated"),
         color: "green",
@@ -274,7 +277,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
             }
             className="hover:bg-muted font-semibold transition-colors duration-200 px-4 py-1 rounded-sm"
           >
-            {_t("Preview")}
+            {editorMode === "write" ? _t("Preview") : _t("Editor")}
           </button>
           <button
             onClick={handleSubmit(handleSave)}
@@ -390,9 +393,12 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
               ref={editorTextareaRef}
             ></textarea>
           ) : (
-            <div>
-              <h1>Hello</h1>
-            </div>
+            <div
+              className="content-typography"
+              dangerouslySetInnerHTML={{
+                __html: markdownToHtml(watch("body") || ""),
+              }}
+            ></div>
           )}
         </div>
       </div>
