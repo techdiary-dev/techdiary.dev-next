@@ -1,11 +1,13 @@
 import { ApiRepository } from "./repository";
 
-interface FileUploadQuery {
+export type TCloudinaryPreset =
+  | "techdiary-user-profile-photos"
+  | "techdiary-article-covers"
+  | "techdiary-article-assets";
+
+export interface FileUploadQuery {
   file: File;
-  preset?:
-    | "techdiary-user-profile-photos"
-    | "techdiary-article-covers"
-    | "techdiary-article-assets";
+  preset?: TCloudinaryPreset;
 }
 
 export class FileApiRepository extends ApiRepository {
@@ -25,8 +27,10 @@ export class FileApiRepository extends ApiRepository {
     return data;
   }
 
-  public async deleteFile(key: string) {
-    const { data } = await this.http.delete<any>(`/api/files/${key}`);
+  public async deleteFile(keys: string[]) {
+    const { data } = await this.http.delete(`/api/files`, {
+      data: { keys },
+    });
     return data;
   }
 }

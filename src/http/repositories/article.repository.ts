@@ -9,13 +9,16 @@ interface ArticleListQuery extends BasePaginationQuery {
   user?: string;
 }
 
-interface CreateOrUpdateArticlePayload {
+export interface CreateOrUpdateArticlePayload {
   title?: string | null;
   slug?: string | null;
   excerpt?: string | null;
   is_published?: boolean | null;
   seriesName?: string | null;
-  thumbnail?: string | null;
+  thumbnail?: {
+    key?: string | null | undefined;
+    provider?: string | null | undefined;
+  } | null;
   body?: string | null;
   tags?: any[] | null;
 

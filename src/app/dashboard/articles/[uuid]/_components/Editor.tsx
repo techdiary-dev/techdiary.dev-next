@@ -4,23 +4,39 @@ import AppImage from "@/components/AppImage";
 import UnsplashImageGallery from "@/components/UnsplashImageGallery";
 import { IServerFile } from "@/http/models/AppImage.model";
 import { IArticleDetail } from "@/http/models/Article.model";
-import { ArticleApiRepository } from "@/http/repositories/article.repository";
+import {
+  ArticleApiRepository,
+  CreateOrUpdateArticlePayload,
+} from "@/http/repositories/article.repository";
+import { FileApiRepository } from "@/http/repositories/file.repository";
 import { useTranslation } from "@/i18n/use-translation";
+import AppAxiosException from "@/utils/AppAxiosException";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
+  Alert,
+  Button,
+  CheckIcon,
   Drawer,
   Input,
   Modal,
   MultiSelect,
-  Switch,
   Text,
   Textarea,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { openConfirmModal } from "@mantine/modals";
-import { GearIcon, PlusIcon, TrashIcon } from "@radix-ui/react-icons";
+import { showNotification } from "@mantine/notifications";
+import {
+  GearIcon,
+  Link2Icon,
+  PlusIcon,
+  TrashIcon,
+} from "@radix-ui/react-icons";
+import { useMutation } from "@tanstack/react-query";
+import clsx from "clsx";
+import { formatDistanceToNow } from "date-fns";
 import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import {
   RiBold,
@@ -44,7 +60,6 @@ import {
 } from "react-mde";
 import * as Yup from "yup";
 import EditorCommandButton from "./EditorCommandButton";
-import clsx from "clsx";
 
 interface Prop {
   uuid: string;
@@ -52,24 +67,47 @@ interface Prop {
 }
 
 const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const api = new ArticleApiRepository();
+  const api__files = new FileApiRepository();
   const router = useRouter();
 
   const { _t } = useTranslation();
   const [mode, selectMode] = React.useState<"write" | "preview">("write");
-  const [thumbnail, setThumbnail] = React.useState<IServerFile | null>(null);
+  const [thumbnail, setThumbnail] = React.useState<IServerFile | null>(
+    article?.thumbnail ? JSON.parse(article?.thumbnail) : null
+  );
   const [drawerOpened, drawerOpenHandler] = useDisclosure(false);
   const [unsplashPickerOpened, unsplashPickerOpenHandler] =
     useDisclosure(false);
+
+  const updateMutation = useMutation({
+    mutationFn: (data: {
+      uuid: string;
+      payload: CreateOrUpdateArticlePayload;
+    }) => {
+      return api.updateArticleByUUID(data.uuid, data.payload);
+    },
+    onSuccess: () => {
+      router.refresh();
+      showNotification({
+        message: _t("Article updated"),
+        color: "green",
+        icon: <CheckIcon />,
+      });
+    },
+    onError(error: AppAxiosException) {
+      const msg = error.response?.data?.message || "Failed to update article";
+      setErrorMsg(msg);
+    },
+  });
 
   const { register, handleSubmit, setValue, watch } = useForm<IEditorForm>({
     defaultValues: {
       title: article?.title || " ",
       body: article?.body?.markdown || "",
-      // excerpt: article?.excerpt || " ",
-      // isPublished: article?.isPublished || false,
-      // // seriesName: article?.seriesName || " ",
-      // thumbnail: article?.thumbnail || " ",
+      slug: article?.slug || "",
+      excerpt: article?.excerpt || " ",
       // tags: article?.tags || [],
       // seo: article?.seo || {},
       // settings: article?.settings || {},
@@ -96,10 +134,14 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
       title: _t("Delete file"),
       children: _t("Are you sure you want to delete this file?"),
       labels: { confirm: _t("Delete"), cancel: _t("Cancel") },
-      onConfirm: () => {
+      onConfirm: async () => {
         if (thumbnail) {
-          // deleteFile(thumbnail.key);
-          // setThumbnail(null);
+          await api__files.deleteFile([thumbnail?.key]);
+          await updateMutation.mutateAsync({
+            uuid,
+            payload: { thumbnail: null },
+          });
+          setThumbnail(null);
         }
       },
     });
@@ -111,7 +153,10 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
 
   const handleSave: SubmitHandler<IEditorForm> = async (data) => {
     console.log(data);
-    await api.updateArticleByUUID(uuid, data);
+    updateMutation.mutate({
+      uuid,
+      payload: data,
+    });
   };
 
   const handleTogglePublish = async () => {
@@ -129,10 +174,10 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         cancel: _t("Cancel"),
       },
       onConfirm: async () => {
-        await api.updateArticleByUUID(uuid, {
-          is_published: !article?.is_published,
+        updateMutation.mutate({
+          uuid,
+          payload: { is_published: !article?.is_published },
         });
-        router.refresh();
       },
     });
   };
@@ -146,20 +191,24 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         position="right"
       >
         <div className="flex flex-col gap-2">
-          {/* <ThumbnailUploader
-            url={watch("thumbnail") || ""}
-            onChange={function (url: string) {
-              setValueHook("thumbnail", url, { shouldValidate: true });
-              console.log({ url });
-            }}
-          /> */}
+          {errorMsg && (
+            <Alert variant="filled" color="red">
+              {errorMsg}
+            </Alert>
+          )}
 
-          <Input.Wrapper label="Handle">
-            <Input />
+          <Input.Wrapper
+            label="Slug"
+            description={`https://www.techdiary.dev/@${
+              article?.user?.username
+            }/${watch("slug")}`}
+            inputWrapperOrder={["label", "input", "description"]}
+          >
+            <Input leftSection={<Link2Icon />} {...register("slug")} />
           </Input.Wrapper>
 
           <Input.Wrapper label="Excerpt">
-            <Textarea />
+            <Textarea {...register("excerpt")} />
           </Input.Wrapper>
 
           <MultiSelect
@@ -167,8 +216,13 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
             label="Categories"
             placeholder="Select categories"
           />
-
-          <Switch label="Published" />
+          <div className="flex-1 h-10"></div>
+          <Button
+            onClick={handleSubmit(handleSave)}
+            loading={updateMutation.isPending}
+          >
+            <span>{_t("Save")}</span>
+          </Button>
         </div>
       </Drawer>
       <Modal
@@ -177,8 +231,12 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         size={"100vw"}
       >
         <UnsplashImageGallery
-          onUploadImage={(image) => {
+          onUploadImage={async (image) => {
             setThumbnail(image);
+            await updateMutation.mutateAsync({
+              uuid,
+              payload: { thumbnail: image },
+            });
             unsplashPickerOpenHandler.close();
           }}
         />
@@ -186,26 +244,49 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
 
       {/* Top Ribon */}
       <div className="flex gap-2 justify-between items-center mb-10">
-        <div className="text-forground-muted text-sm">(Saved 3 mins ago)</div>
+        <div className="text-forground-muted text-sm">
+          <p>
+            {article?.updated_at && (
+              <span>(Saved {formatDistanceToNow(article?.updated_at)})</span>
+            )}
+          </p>
+        </div>
+
+        <p
+          className={clsx("px-2 py-1", {
+            "bg-green-100": article?.is_published,
+            "bg-red-100": !article?.is_published,
+          })}
+        >
+          {article?.is_published ? (
+            <span className="text-success">{_t("Published")}</span>
+          ) : (
+            <span className="text-destructive">{_t("Draft")}</span>
+          )}
+        </p>
         <div className="flex gap-4">
-          <button>{_t("Preview")}</button>
+          <button className="hover:bg-muted transition-colors duration-200 px-4 py-1 rounded-sm">
+            {_t("Preview")}
+          </button>
           <button
             onClick={handleSubmit(handleSave)}
-            className="text-green-500 bg-muted px-4 py-1"
+            className="hover:bg-muted transition-colors duration-200 px-4 py-1 rounded-sm"
           >
-            {_t("Save")}
+            <span>{_t("Save")}</span>
           </button>
 
           <button
             onClick={handleTogglePublish}
-            className={clsx("bg-muted px-4 py-1", {
-              "text-success": !article?.is_published,
-              "text-destructive": article?.is_published,
-            })}
+            className={clsx(
+              "hover:bg-muted transition-colors duration-200 px-4 py-1",
+              {
+                "text-success": !article?.is_published,
+                "text-destructive": article?.is_published,
+              }
+            )}
           >
             {article?.is_published ? _t("Unpublish") : _t("Publish")}
           </button>
-
           <button onClick={() => drawerOpenHandler.toggle()}>
             <GearIcon className="w-5 h-5" />
           </button>
@@ -290,7 +371,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
           </div>
         </div>
         <textarea
-          className="h-[calc(100vh-120px)] w-full border p-3 focus:outline-none"
+          className="h-[calc(100vh-120px)] w-full focus:outline-none"
           value={watch("body") || ""}
           onChange={(e) => setValue("body", e.target.value)}
           ref={editorTextareaRef}
@@ -311,20 +392,24 @@ const ArticleEditorFormValidator = Yup.object().shape({
     .nullable()
     .max(255, "Slug cannot exceed 255 characters")
     .label("Slug"),
-  excerpt: Yup.string()
-    .nullable()
-    .min(5, "Excerpt must be at least 5 characters")
-    .max(255, "Excerpt cannot exceed 255 characters")
-    .label("Excerpt"),
+  excerpt: Yup.string().nullable().label("Excerpt"),
   // seriesName: Yup.string()
   //   .nullable()
   //   .min(5, "Series Name must be at least 5 characters")
   //   .max(255, "Series Name cannot exceed 255 characters")
   //   .label("Series Name"),
-  // thumbnail: Yup.string()
+  // thumbnail: Yup.object()
   //   .nullable()
-  //   .url("Thumbnail must be a valid URL")
-  //   .max(255, "Thumbnail URL cannot exceed 255 characters")
+  //   .shape({
+  //     key: Yup.string()
+  //       .nullable()
+  //       .max(255, "Thumbnail URL cannot exceed 255 characters")
+  //       .label("Thumbnail"),
+  //     provider: Yup.string()
+  //       .nullable()
+  //       .max(255, "Thumbnail alt cannot exceed 255 characters")
+  //       .label("Thumbnail alt"),
+  //   })
   //   .label("Thumbnail"),
   body: Yup.string().nullable().label("Body"),
   // tags: Yup.array().nullable().label("Tags"),
