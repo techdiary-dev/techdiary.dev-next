@@ -6,6 +6,7 @@ import { IArticleDetail } from "@/http/models/Article.model";
 import { markdownToHtml } from "@/utils/markdoc-parser";
 import { Metadata, NextPage } from "next";
 import LatestArticles from "./LatestArticles";
+import AppImage from "@/components/AppImage";
 
 interface ArticleDetailsPageProps {
   params: {
@@ -42,8 +43,13 @@ const ArticleDetailsPage: NextPage<ArticleDetailsPageProps> = async ({
       <div className="relative overflow-hidden">
         <div className="relative">
           {article?.thumbnail && (
-            <div>
-              <img src={article?.thumbnail} className="rounded-lg w-full" />
+            <div className="rounded-lg w-full bg-red-200">
+              <AppImage
+                alt="App Image"
+                imageSource={JSON.parse(article?.thumbnail as any)}
+                width={1200}
+                height={630}
+              />
             </div>
           )}
 

@@ -1,3 +1,4 @@
+import { IServerFile } from "./AppImage.model";
 import { UserReference } from "./User.model";
 
 export interface IArticleFeedItem {
@@ -28,7 +29,7 @@ export interface IArticleDetail {
   title: string;
   slug: string;
   url: string;
-  thumbnail: string;
+  thumbnail?: IServerFile;
   body: {
     html?: string;
     markdown?: string;
