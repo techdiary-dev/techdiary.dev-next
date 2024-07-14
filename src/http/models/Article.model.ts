@@ -39,8 +39,8 @@ export interface IArticleDetail {
   bookmarked_users: string[];
   comments_count: null;
   excerpt: null;
-  isPublished: boolean;
-  isApproved: boolean;
+  is_published: boolean;
+  is_approved: boolean;
   tags: any[];
   user: UserReference;
   seo: null;

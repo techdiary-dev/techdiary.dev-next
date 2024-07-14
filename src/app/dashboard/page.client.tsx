@@ -2,7 +2,7 @@
 
 import { IArticleFeedItem } from "@/http/models/Article.model";
 import { PaginatedResponse } from "@/http/models/PaginatedResponse.model";
-import { ArticleRepository } from "@/http/repositories/article.repository";
+import { ArticleApiRepository } from "@/http/repositories/article.repository";
 import { useTranslation } from "@/i18n/use-translation";
 import { relativeTime } from "@/utils/relativeTime";
 import { Loader, Menu } from "@mantine/core";
@@ -24,7 +24,7 @@ interface IDashboardPageProps {
 
 const DashboardPage: React.FC<IDashboardPageProps> = ({ initialArticles }) => {
   const { _t } = useTranslation();
-  const apiRepo = new ArticleRepository();
+  const apiRepo = new ArticleApiRepository();
 
   const { data, fetchNextPage, hasNextPage } = useInfiniteQuery<
     PaginatedResponse<IArticleFeedItem>

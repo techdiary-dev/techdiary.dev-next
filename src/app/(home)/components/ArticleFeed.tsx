@@ -2,7 +2,7 @@
 
 import { IArticleFeedItem } from "@/http/models/Article.model";
 import { PaginatedResponse } from "@/http/models/PaginatedResponse.model";
-import { ArticleRepository } from "@/http/repositories/article.repository";
+import { ArticleApiRepository } from "@/http/repositories/article.repository";
 import { Loader } from "@mantine/core";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import React from "react";
@@ -13,7 +13,7 @@ interface ArticleFeedProps {
   initialData: PaginatedResponse<IArticleFeedItem>;
 }
 const ArticleFeed: React.FC<ArticleFeedProps> = ({ initialData }) => {
-  const articleRepository = new ArticleRepository();
+  const articleRepository = new ArticleApiRepository();
 
   const { data, fetchNextPage } = useInfiniteQuery<
     PaginatedResponse<IArticleFeedItem>

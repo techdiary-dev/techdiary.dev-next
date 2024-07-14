@@ -1,10 +1,19 @@
 import React from "react";
-import Editor from "./_components/Editor";
+import ArticleEditor from "./_components/Editor";
+import { NextPage } from "next";
+import { ArticleApiRepository } from "@/http/repositories/article.repository";
 
-const ArticleEditPage = () => {
+interface Props {
+  params: { uuid: string };
+}
+
+const ArticleEditPage: NextPage<Props> = async ({ params }) => {
+  const api = new ArticleApiRepository();
+  const data = await api.getArticleByUUID(params.uuid);
+
   return (
     <div>
-      <Editor />
+      <ArticleEditor uuid={params.uuid} article={data} />
     </div>
   );
 };

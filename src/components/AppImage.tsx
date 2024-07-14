@@ -1,8 +1,6 @@
-import { IAppImage } from "@/http/models/AppImage.model";
-import { AdvancedImage } from "@cloudinary/react";
-import Image from "next/image";
+import { IServerFile } from "@/http/models/AppImage.model";
 import { blur } from "@cloudinary/url-gen/actions/effect";
-import { auto } from "@cloudinary/url-gen/actions/resize";
+import Image from "next/image";
 
 import { Cloudinary } from "@cloudinary/url-gen";
 import React from "react";
@@ -12,7 +10,7 @@ interface AppImageProps {
   sizes?: string;
   width?: number | `${number}` | undefined;
   height?: number | `${number}` | undefined;
-  imageSource?: IAppImage;
+  imageSource?: IServerFile;
 }
 
 const AppImage: React.FC<AppImageProps> = ({

@@ -30,6 +30,14 @@ const config: Config = {
           secondary: "var(--neutral-secondary)",
           muted: "var(--neutral-muted)",
         },
+        destructive: {
+          DEFAULT: "var(--destructive)",
+          foreground: "var(--destructive-foreground)",
+        },
+        success: {
+          DEFAULT: "var(--success)",
+          foreground: "var(--success-foreground)",
+        },
       },
       fontFamily: {
         KohinoorBangla: ["KohinoorBangla", "Nunito", "Arial"],

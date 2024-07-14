@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import React from "react";
 import DashboardPage from "./page.client";
-import { ArticleRepository } from "@/http/repositories/article.repository";
+import { ArticleApiRepository } from "@/http/repositories/article.repository";
 import { cookieHeaders } from "@/utils/ssr-user";
 import { Paper, Text } from "@mantine/core";
 import _t from "@/i18n/_t";
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 const Dashboard = async () => {
-  const apiRepo = new ArticleRepository();
+  const apiRepo = new ArticleApiRepository();
   const articles = await apiRepo.getMyArticles({ limit: 10 }, cookieHeaders());
 
   return (

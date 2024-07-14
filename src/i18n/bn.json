@@ -43,5 +43,17 @@
   "Published on": "প্রকাশিত হয়েছে",
   "Actions": "আরও অপশন",
   "Title": "শিরোনাম",
-  "Failed to upload image": "ছবি আপলোড করা যায়নি"
+  "Failed to upload image": "ছবি আপলোড করা যায়নি",
+  "Upload article cover": "কভার ছবি আপলোড করুন",
+  "Pick cover from unsplash": "Unsplash থেকে কভার নির্বাচন করুন",
+  "Delete": "মুছুন",
+  "Delete file": "ফাইল মুছুন",
+  "Are you sure you want to delete this file?": "আপনি কি নিশ্চিত যে এই ফাইল মুছে ফেলতে চান?",
+  "Are you sure you want to unpublish this article?": "আপনি কি নিশ্চিত যে এই নিবন্ধিত আর্টিকেল অপ্রকাশিত করতে চান?",
+  "Unpublish": "অপ্রকাশিত করুন",
+  "Publish": "প্রকাশিত করুন",
+  "Published": "প্রকাশিত হয়েছে",
+  "Unpublished": "অপ্রকাশিত হয়েছে",
+  "Are you sure you want to publish this article?": "আপনি কি নিশ্চিত যে এই নিবন্ধিত আর্টিকেল প্রকাশিত করতে চান?",
+  "Save": "সংরক্ষণ করুন"
 }
