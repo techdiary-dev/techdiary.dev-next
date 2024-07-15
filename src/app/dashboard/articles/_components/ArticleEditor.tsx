@@ -261,10 +261,12 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         <UnsplashImageGallery
           onUploadImage={async (image) => {
             setThumbnail(image);
-            await articleUpdateMutation.mutateAsync({
-              uuid,
-              payload: { thumbnail: image },
-            });
+            if (uuid) {
+              await articleUpdateMutation.mutateAsync({
+                uuid,
+                payload: { thumbnail: image },
+              });
+            }
             unsplashPickerOpenHandler.close();
           }}
         />
