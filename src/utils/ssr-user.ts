@@ -20,7 +20,7 @@ export const ssrGetMe = async () => {
   const api = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/profile/me`, {
     method: "GET",
     headers: cookieHeaders() as any,
-    next: { revalidate: 60 },
+    // next: { revalidate: 60 },
   });
   const me = (await api.json()) as IUser;
 
