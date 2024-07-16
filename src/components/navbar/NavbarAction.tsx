@@ -135,6 +135,7 @@ const AuthenticatedMenu = () => {
       onConfirm: () => {
         authApi.logout().finally(() => {
           setCurrentUser(null);
+          window.location.href = "/";
         });
       },
       confirmProps: { color: "red" },

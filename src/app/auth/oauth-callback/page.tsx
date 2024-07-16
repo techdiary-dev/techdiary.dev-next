@@ -21,7 +21,7 @@ const OAuthCallbackClient = () => {
               res,
               _res,
             });
-            window.location.href = "/";
+            window.location.href = localStorage.getItem("redirect_uri") || "/";
           });
         });
     });
