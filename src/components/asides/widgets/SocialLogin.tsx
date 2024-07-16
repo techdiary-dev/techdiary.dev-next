@@ -14,6 +14,7 @@ const SocialLogin = () => {
   const [loadingGoogle, setLoadingGoogle] = React.useState(false);
 
   const socialLogin = (service: "github" | "google") => {
+    localStorage.setItem("redirect_uri", window.location.href);
     if (service == "google") {
       setLoadingGoogle(true);
     }
