@@ -35,7 +35,7 @@ const DashboardPage: React.FC<IDashboardPageProps> = ({ initialArticles }) => {
       pages: [initialArticles],
     },
     initialPageParam: initialArticles?.meta?.current_page || 1,
-    refetchOnMount: false,
+    // refetchOnMount: false,
     getNextPageParam: (lastPage, allPages) => {
       console.log("allPages", allPages.length);
       return allPages.length < lastPage.meta.last_page
