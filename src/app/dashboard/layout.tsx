@@ -1,9 +1,8 @@
+import { ssrGetMe } from "@/utils/ssr-user";
+import { redirect } from "next/navigation";
 import React, { PropsWithChildren } from "react";
 import DashboardLayout from "./_components/DashboardLayout";
-import { ssrGetMe } from "@/utils/ssr-user";
-import { Title } from "@mantine/core";
-import SocialLogin from "@/components/asides/widgets/SocialLogin";
-import { redirect } from "next/navigation";
+import Image from "next/image";
 
 const layout: React.FC<PropsWithChildren> = async ({ children }) => {
   const { status } = await ssrGetMe();
