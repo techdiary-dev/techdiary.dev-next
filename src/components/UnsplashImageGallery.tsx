@@ -1,19 +1,11 @@
 import { IServerFile } from "@/http/models/AppImage.model";
 import { useTranslation } from "@/i18n/use-translation";
-import {
-  Button,
-  Image,
-  Input,
-  LoadingOverlay,
-  Skeleton,
-  Title,
-} from "@mantine/core";
+import { Image, Input, LoadingOverlay, Skeleton, Title } from "@mantine/core";
 import { useDebouncedState } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { UploadIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { FiUpload } from "react-icons/fi";
 
 interface IProp {
   onUploadImage: (image: IServerFile) => void;
@@ -70,7 +62,7 @@ const UnsplashImageGallery: React.FC<IProp> = ({ onUploadImage }) => {
         }}
       />
       <div className="flex flex-col gap-3 mb-4">
-        <Title order={3}>Unsplash</Title>
+        <Title order={3}>{_t("Pick cover from unsplash")}</Title>
         <Input
           placeholder="Search for an image"
           onChange={(e) => setQ(e.target.value)}

@@ -119,6 +119,24 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     }
   });
 
+  const debouncedState__title = useDebouncedCallback(async (title: string) => {
+    if (uuid) {
+      articleUpdateMutation.mutate({
+        uuid,
+        payload: { title },
+      });
+    }
+  }, 500);
+
+  const debouncedState__body = useDebouncedCallback(async (body: string) => {
+    if (uuid) {
+      articleUpdateMutation.mutate({
+        uuid,
+        payload: { body },
+      });
+    }
+  }, 500);
+
   const { _t } = useTranslation();
   const [editorMode, selectEditorMode] = React.useState<"write" | "preview">(
     "write"
@@ -176,16 +194,6 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         }
       },
     });
-  };
-
-  const handleSave: SubmitHandler<IEditorForm> = async (data) => {
-    console.log(data);
-    if (uuid) {
-      articleUpdateMutation.mutate({
-        uuid,
-        payload: data,
-      });
-    }
   };
 
   const handleTogglePublish = async () => {
@@ -261,12 +269,6 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
             >
               {editorMode === "write" ? _t("Preview") : _t("Editor")}
             </button>
-            <button
-              onClick={handleSubmit(handleSave)}
-              className="px-4 py-1 font-semibold transition-colors duration-200 rounded-sm hover:bg-muted"
-            >
-              <span>{_t("Save")}</span>
-            </button>
 
             <button
               onClick={handleTogglePublish}
@@ -329,7 +331,10 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
           tabIndex={1}
           autoFocus
           value={watch("title") ?? ""}
-          onChange={(e) => setValue("title", e.target.value)}
+          onChange={(e) => {
+            setValue("title", e.target.value);
+            debouncedState__title(e.target.value);
+          }}
           className="w-full text-2xl focus:outline-none bg-background"
         />
 
@@ -381,7 +386,10 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
               className="focus:outline-none h-[calc(100vh-120px)] bg-background w-full"
               value={watch("body") || ""}
               placeholder={_t("Write something stunning...")}
-              onChange={(e) => setValue("body", e.target.value)}
+              onChange={(e) => {
+                setValue("body", e.target.value);
+                debouncedState__body(e.target.value);
+              }}
               ref={editorTextareaRef}
             ></textarea>
           ) : (
