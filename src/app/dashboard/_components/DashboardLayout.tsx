@@ -33,7 +33,7 @@ const DashboardLayout: React.FC<PropsWithChildren> = ({ children }) => {
                 size={"md"}
                 opened={opened}
                 onClick={toggle}
-                className=" sm:hidden"
+                className="sm:hidden"
               />
             }
           />

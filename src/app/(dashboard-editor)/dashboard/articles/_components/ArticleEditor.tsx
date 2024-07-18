@@ -390,11 +390,13 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
           </div>
         </div>
 
+        {/* Editor Textarea */}
         <div className="w-full">
           {editorMode === "write" ? (
             <textarea
               className="focus:outline-none h-[calc(100vh-120px)] bg-background w-full"
               value={watch("body") || ""}
+              placeholder={_t("Write something stunning...")}
               onChange={(e) => setValue("body", e.target.value)}
               ref={editorTextareaRef}
             ></textarea>

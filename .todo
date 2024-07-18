@@ -3,8 +3,13 @@
 
 - [] tag diye article filter korar somoy case insensitive vabe filter korte hobe
 - [] jemnon `time & space complexity` ke `time-space-complexity` slug diye filter e aste hobe
-- [] redesign global loading page with brand logo
 - [x] learn about nextjs page middleware
-- [] og image
-- [] seo meta tags
-- [] article details
+
+## Editor
+
+- [] Article tags
+- [] Fixed save button of drawer
+- [] 🔥 meta uuid not autometically creating
+- [] Article cover upload
+- [] toggleable sidebar
+- [] Make mobile friendly
