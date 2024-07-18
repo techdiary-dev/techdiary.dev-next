@@ -62,6 +62,7 @@ import * as Yup from "yup";
 import EditorCommandButton from "./EditorCommandButton";
 import { markdownToHtml } from "@/utils/markdoc-parser";
 import { useClickAway } from "@/hooks/useClickAway";
+import EditorDrawer from "./EditorDrawer";
 
 interface Prop {
   uuid?: string;
@@ -69,7 +70,6 @@ interface Prop {
 }
 
 const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const api = new ArticleApiRepository();
   const api__files = new FileApiRepository();
   const router = useRouter();
@@ -91,7 +91,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     },
     onError(error: AppAxiosException) {
       const msg = error.response?.data?.message || "Failed to update article";
-      setErrorMsg(msg);
+      // setErrorMsg(msg);
     },
   });
 
@@ -104,24 +104,6 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     },
     onError(error: AppAxiosException) {
       const msg = error.response?.data?.message || "Failed to update article";
-      setErrorMsg(msg);
-    },
-  });
-
-  const generateSlugMutation = useMutation({
-    mutationFn: (data: { slug: string }) => {
-      return api.getUniqueSlug(data.slug);
-    },
-    onSuccess: () => {
-      // router.refresh();
-      // showNotification({
-      //   message: _t("Article slug updated"),
-      //   color: "green",
-      //   icon: <CheckIcon />,
-      // });
-    },
-    onError(error: AppAxiosException) {
-      // const msg = error.response?.data?.message || "Failed to update article";
       // setErrorMsg(msg);
     },
   });
@@ -145,7 +127,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
   const [unsplashPickerOpened, unsplashPickerOpenHandler] =
     useDisclosure(false);
 
-  const { register, handleSubmit, setValue, watch } = useForm<IEditorForm>({
+  const { handleSubmit, setValue, watch } = useForm<IEditorForm>({
     defaultValues: {
       title: article?.title || "",
       body: article?.body?.markdown || "",
@@ -228,79 +210,14 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     });
   };
 
-  const handleOnChangeSlugDebounce = useDebouncedCallback(
-    async (query: string) => {
-      await generateSlugMutation.mutateAsync({ slug: query }).then((res) => {
-        if (res.slug) {
-          setValue("slug", res.slug);
-        }
-      });
-    },
-    2000
-  );
-
-  // const handleOnChangeSlug = async (
-  //   event: React.ChangeEvent<HTMLInputElement>
-  // ) => {
-  //   setValue("slug", event.target.value);
-  //   await generateSlugMutation
-  //     .mutateAsync({ slug: event.target.value })
-  //     .then((res) => {
-  //       if (res.slug) {
-  //         setValue("slug", res.slug);
-  //       }
-  //     });
-  // };
-
   return (
     <>
-      {/* <pre>{JSON.stringify(article, null, 2)}</pre> */}
       <Drawer
         opened={drawerOpened}
         onClose={() => drawerOpenHandler.close()}
         position="right"
       >
-        <div className="flex flex-col gap-2">
-          {errorMsg && (
-            <Alert variant="filled" color="red">
-              {errorMsg}
-            </Alert>
-          )}
-
-          <Input.Wrapper
-            label="Slug"
-            description={`https://www.techdiary.dev/@${
-              article?.user?.username
-            }/${watch("slug")}`}
-            inputWrapperOrder={["label", "input", "description"]}
-          >
-            <Input
-              leftSection={<Link2Icon />}
-              value={watch("slug") || ""}
-              onChange={(e) => {
-                setValue("slug", e.target.value);
-                handleOnChangeSlugDebounce(e.target.value);
-              }}
-            />
-          </Input.Wrapper>
-
-          <Input.Wrapper label="Excerpt">
-            <Textarea {...register("excerpt")} />
-          </Input.Wrapper>
-
-          <MultiSelect
-            data={[]}
-            label="Categories"
-            placeholder="Select categories"
-          />
-          <div className="flex-1 h-10"></div>
-          <Button
-            onClick={handleSubmit(handleSave)}
-            loading={articleUpdateMutation.isPending}
-          >
-            <span>{_t("Save")}</span>
-          </Button>
-        </div>
+        <EditorDrawer article={article} uuid={uuid} />
       </Drawer>
       <Modal
         opened={unsplashPickerOpened}
