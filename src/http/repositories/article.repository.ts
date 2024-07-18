@@ -99,14 +99,29 @@ export class ArticleApiRepository extends ApiRepository {
     return data;
   }
 
-  /**
-   * Check if slug is unique
-   * @param slug - slug to check
-   * @returns
-   */
   public async makeArchive(uuid: string) {
     const { data } = await this.http.delete<{ uuid: string }>(
       `/api/articles/uuid/archive/${uuid}`
+    );
+
+    return data;
+  }
+
+  public async makePermanentDelete(uuid: string) {
+    const { data } = await this.http.delete<{ uuid: string }>(
+      `/api/articles/uuid/${uuid}`
+    );
+
+    return data;
+  }
+
+  public async getMyArchivedArticles(
+    params: BasePaginationQuery,
+    headers?: any
+  ) {
+    const { data } = await this.http.get<PaginatedResponse<IArticleFeedItem>>(
+      `/api/articles/mine/archived`,
+      { params, headers }
     );
 
     return data;
