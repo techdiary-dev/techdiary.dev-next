@@ -148,15 +148,10 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
   const [unsplashPickerOpened, unsplashPickerOpenHandler] =
     useDisclosure(false);
 
-  const { handleSubmit, setValue, watch } = useForm<IEditorForm>({
+  const { setValue, watch } = useForm<IEditorForm>({
     defaultValues: {
       title: article?.title || "",
       body: article?.body?.markdown || "",
-      slug: article?.slug || "",
-      excerpt: article?.excerpt || "",
-      // tags: article?.tags || [],
-      // seo: article?.seo || {},
-      // settings: article?.settings || {},
     },
     resolver: yupResolver(ArticleEditorFormValidator),
   });
@@ -440,57 +435,7 @@ const ArticleEditorFormValidator = Yup.object().shape({
     .nullable()
     .max(255, "Title cannot exceed 255 characters")
     .label("Title"),
-  slug: Yup.string()
-    .nullable()
-    .max(255, "Slug cannot exceed 255 characters")
-    .label("Slug"),
-  excerpt: Yup.string().nullable().label("Excerpt"),
-  // seriesName: Yup.string()
-  //   .nullable()
-  //   .min(5, "Series Name must be at least 5 characters")
-  //   .max(255, "Series Name cannot exceed 255 characters")
-  //   .label("Series Name"),
-  // thumbnail: Yup.object()
-  //   .nullable()
-  //   .shape({
-  //     key: Yup.string()
-  //       .nullable()
-  //       .max(255, "Thumbnail URL cannot exceed 255 characters")
-  //       .label("Thumbnail"),
-  //     provider: Yup.string()
-  //       .nullable()
-  //       .max(255, "Thumbnail alt cannot exceed 255 characters")
-  //       .label("Thumbnail alt"),
-  //   })
-  //   .label("Thumbnail"),
   body: Yup.string().nullable().label("Body"),
-  // tags: Yup.array().nullable().label("Tags"),
-  // seo: Yup.object()
-  //   .shape({
-  //     og_image: Yup.string()
-  //       .nullable()
-  //       .url("OG Image must be a valid URL")
-  //       .label("OG Image"),
-  //     seo_title: Yup.string()
-  //       .nullable()
-  //       .max(255, "SEO Title cannot exceed 255 characters")
-  //       .label("SEO Title"),
-  //     seo_description: Yup.string()
-  //       .nullable()
-  //       .max(255, "SEO Description cannot exceed 255 characters")
-  //       .label("SEO Description"),
-  //     canonical_url: Yup.string()
-  //       .nullable()
-  //       .url("Canonical URL must be a valid URL")
-  //       .max(255, "Canonical URL cannot exceed 255 characters")
-  //       .label("Canonical URL"),
-  //   })
-  //   .nullable(),
-  // settings: Yup.object()
-  //   .shape({
-  //     disabled_comments: Yup.boolean().nullable().label("Disabled Comments"),
-  //   })
-  //   .nullable(),
 });
 
 type IEditorForm = Yup.InferType<typeof ArticleEditorFormValidator>;
