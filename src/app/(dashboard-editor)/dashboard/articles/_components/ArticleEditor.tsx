@@ -326,6 +326,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         <input
           placeholder={_t("Title")}
           ref={titleRef}
+          tabIndex={1}
           autoFocus
           value={watch("title") ?? ""}
           onChange={(e) => setValue("title", e.target.value)}
@@ -376,6 +377,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         <div className="w-full">
           {editorMode === "write" ? (
             <textarea
+              tabIndex={2}
               className="focus:outline-none h-[calc(100vh-120px)] bg-background w-full"
               value={watch("body") || ""}
               placeholder={_t("Write something stunning...")}
