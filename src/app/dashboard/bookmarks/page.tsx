@@ -1,8 +1,12 @@
 import { Metadata } from "next";
-import React from "react";
+import BookmarksPage from "./page.client";
+
+export const metadata: Metadata = {
+  title: "Bookmarks",
+};
 
 const BookmarkPage = () => {
-  return <div>BookmarkPage</div>;
+  return <BookmarksPage />;
 };
 
 export default BookmarkPage;
