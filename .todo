@@ -7,12 +7,17 @@
 
 ## Dashboard
 
+- [] Cache issue
 - [] Delete/Archieve articles
 
 ## Editor
 
 - [] Article tags
 - [] Fixed save button of drawer
-- [] 🔥 meta uuid not autometically creating
 - [] Article cover upload
 - [] Make mobile friendly
+
+## Backend Specific
+
+- [] 🔥 meta uuid not autometically creating
+- [] Article feed sort by published_at and also discuss about this with shoaib vai
