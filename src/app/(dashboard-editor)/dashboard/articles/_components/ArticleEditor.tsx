@@ -290,7 +290,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
       </div>
 
       {/* Editor */}
-      <div className="max-w-[750px] mx-auto">
+      <div className="max-w-[750px] mx-auto p-4 md:p-0">
         {/* Thumbnail Section */}
         {uuid && (
           <div className="mb-10">

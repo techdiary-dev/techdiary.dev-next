@@ -100,7 +100,11 @@ const DashboardPage: React.FC<IDashboardPageProps> = ({ initialArticles }) => {
                   </button>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item leftSection={<Pencil1Icon />}>
+                  <Menu.Item
+                    leftSection={<Pencil1Icon />}
+                    component={Link}
+                    href={`/dashboard/articles/${article?.id}`}
+                  >
                     {_t("Edit")}
                   </Menu.Item>
                   <Menu.Item leftSection={<CardStackIcon />}>

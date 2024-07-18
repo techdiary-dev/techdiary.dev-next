@@ -5,11 +5,14 @@
 - [] jemnon `time & space complexity` ke `time-space-complexity` slug diye filter e aste hobe
 - [x] learn about nextjs page middleware
 
+## Dashboard
+
+- [] Delete/Archieve articles
+
 ## Editor
 
 - [] Article tags
 - [] Fixed save button of drawer
 - [] 🔥 meta uuid not autometically creating
 - [] Article cover upload
-- [] toggleable sidebar
 - [] Make mobile friendly
