@@ -22,13 +22,15 @@ import {
   MultiSelect,
   Text,
   Textarea,
+  UnstyledButton,
 } from "@mantine/core";
 import { useDebouncedCallback, useDisclosure } from "@mantine/hooks";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import {
   GearIcon,
-  Link2Icon,
+  ArrowLeftIcon,
+  PinLeftIcon,
   PlusIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
@@ -63,6 +65,7 @@ import EditorCommandButton from "./EditorCommandButton";
 import { markdownToHtml } from "@/utils/markdoc-parser";
 import { useClickAway } from "@/hooks/useClickAway";
 import EditorDrawer from "./EditorDrawer";
+import Link from "next/link";
 
 interface Prop {
   uuid?: string;
@@ -212,47 +215,26 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
 
   return (
     <>
-      <Drawer
-        opened={drawerOpened}
-        onClose={() => drawerOpenHandler.close()}
-        position="right"
-      >
-        <EditorDrawer article={article} uuid={uuid} />
-      </Drawer>
-      <Modal
-        opened={unsplashPickerOpened}
-        onClose={unsplashPickerOpenHandler.close}
-        size={"100vw"}
-      >
-        <UnsplashImageGallery
-          onUploadImage={async (image) => {
-            setThumbnail(image);
-            if (uuid) {
-              await articleUpdateMutation.mutateAsync({
-                uuid,
-                payload: { thumbnail: image },
-              });
-            }
-            unsplashPickerOpenHandler.close();
-          }}
-        />
-      </Modal>
-
       {/* Top Ribon */}
-      <div className="flex bg-background gap-2 items-start justify-between top-[48px] mb-10 sticky z-30 -mt-[17px] pt-[17px]">
+      <div className="flex bg-background gap-2 items-start justify-between mt-2 mb-10 sticky z-30 p-5">
         {uuid && (
           <div className="flex items-center gap-2 text-sm text-forground-muted">
-            {articleUpdateMutation.isPending ? (
-              <p>{_t("Saving")}...</p>
-            ) : (
-              <p>
-                {article?.updated_at && (
-                  <span>
-                    (Saved {formatDistanceToNow(article?.updated_at)})
-                  </span>
-                )}
-              </p>
-            )}
+            <div className="flex gap-4 items-center">
+              <Link href={"/dashboard"} className=" text-forground">
+                <ArrowLeftIcon width={20} height={20} />
+              </Link>
+              {articleUpdateMutation.isPending ? (
+                <p>{_t("Saving")}...</p>
+              ) : (
+                <p>
+                  {article?.updated_at && (
+                    <span>
+                      (Saved {formatDistanceToNow(article?.updated_at)})
+                    </span>
+                  )}
+                </p>
+              )}
+            </div>
 
             <p
               className={clsx("px-2 py-1", {
@@ -410,6 +392,33 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
           )}
         </div>
       </div>
+
+      {/* Drawer and modal */}
+      <Drawer
+        opened={drawerOpened}
+        onClose={() => drawerOpenHandler.close()}
+        position="right"
+      >
+        <EditorDrawer article={article} uuid={uuid} />
+      </Drawer>
+      <Modal
+        opened={unsplashPickerOpened}
+        onClose={unsplashPickerOpenHandler.close}
+        size={"100vw"}
+      >
+        <UnsplashImageGallery
+          onUploadImage={async (image) => {
+            setThumbnail(image);
+            if (uuid) {
+              await articleUpdateMutation.mutateAsync({
+                uuid,
+                payload: { thumbnail: image },
+              });
+            }
+            unsplashPickerOpenHandler.close();
+          }}
+        />
+      </Modal>
     </>
   );
 };
