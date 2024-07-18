@@ -6,6 +6,7 @@ import { ArticleApiRepository } from "@/http/repositories/article.repository";
 import { useTranslation } from "@/i18n/use-translation";
 import { relativeTime } from "@/utils/relativeTime";
 import { Loader, Menu } from "@mantine/core";
+import { openConfirmModal } from "@mantine/modals";
 import {
   CardStackIcon,
   ChatBubbleIcon,
@@ -15,6 +16,7 @@ import {
 } from "@radix-ui/react-icons";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { VisibilityObserver } from "reactjs-visibility";
 
@@ -25,6 +27,7 @@ interface IDashboardPageProps {
 const DashboardPage: React.FC<IDashboardPageProps> = ({ initialArticles }) => {
   const { _t } = useTranslation();
   const apiRepo = new ArticleApiRepository();
+  const router = useRouter();
 
   const { data, fetchNextPage, hasNextPage } = useInfiniteQuery<
     PaginatedResponse<IArticleFeedItem>
@@ -107,7 +110,24 @@ const DashboardPage: React.FC<IDashboardPageProps> = ({ initialArticles }) => {
                   >
                     {_t("Edit")}
                   </Menu.Item>
-                  <Menu.Item leftSection={<CardStackIcon />}>
+                  <Menu.Item
+                    leftSection={<CardStackIcon />}
+                    component="button"
+                    onClick={() => {
+                      openConfirmModal({
+                        title: _t("Sure to archive?"),
+                        children: _t("No worries, This can be undone anytime."),
+                        labels: {
+                          confirm: _t("Yes"),
+                          cancel: _t("Cancel"),
+                        },
+                        onConfirm() {
+                          apiRepo.makeArchive(article?.id);
+                          router.refresh();
+                        },
+                      });
+                    }}
+                  >
                     {_t("Make archive")}
                   </Menu.Item>
                 </Menu.Dropdown>
