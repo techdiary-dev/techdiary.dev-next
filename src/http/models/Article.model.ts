@@ -24,6 +24,13 @@ export interface IArticleFeedItem {
   published_at: Date;
 }
 
+export interface IBookmarkArticle {
+  id: string;
+  title: string;
+  slug: string;
+  user: UserReference;
+}
+
 export interface IArticleDetail {
   id: string;
   title: string;

@@ -108,6 +108,24 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     },
   });
 
+  const generateSlugMutation = useMutation({
+    mutationFn: (data: { slug: string }) => {
+      return api.getUniqueSlug(data.slug);
+    },
+    onSuccess: () => {
+      // router.refresh();
+      // showNotification({
+      //   message: _t("Article slug updated"),
+      //   color: "green",
+      //   icon: <CheckIcon />,
+      // });
+    },
+    onError(error: AppAxiosException) {
+      // const msg = error.response?.data?.message || "Failed to update article";
+      // setErrorMsg(msg);
+    },
+  });
+
   const titleRef = useClickAway(() => {
     if (!uuid) {
       articleCreateMutation.mutate({
@@ -132,7 +150,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
       title: article?.title || "",
       body: article?.body?.markdown || "",
       slug: article?.slug || "",
-      excerpt: article?.excerpt || " ",
+      excerpt: article?.excerpt || "",
       // tags: article?.tags || [],
       // seo: article?.seo || {},
       // settings: article?.settings || {},
@@ -210,6 +228,30 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     });
   };
 
+  const handleOnChangeSlugDebounce = useDebouncedCallback(
+    async (query: string) => {
+      await generateSlugMutation.mutateAsync({ slug: query }).then((res) => {
+        if (res.slug) {
+          setValue("slug", res.slug);
+        }
+      });
+    },
+    2000
+  );
+
+  // const handleOnChangeSlug = async (
+  //   event: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   setValue("slug", event.target.value);
+  //   await generateSlugMutation
+  //     .mutateAsync({ slug: event.target.value })
+  //     .then((res) => {
+  //       if (res.slug) {
+  //         setValue("slug", res.slug);
+  //       }
+  //     });
+  // };
+
   return (
     <>
       {/* <pre>{JSON.stringify(article, null, 2)}</pre> */}
@@ -232,7 +274,14 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
             }/${watch("slug")}`}
             inputWrapperOrder={["label", "input", "description"]}
           >
-            <Input leftSection={<Link2Icon />} {...register("slug")} />
+            <Input
+              leftSection={<Link2Icon />}
+              value={watch("slug") || ""}
+              onChange={(e) => {
+                setValue("slug", e.target.value);
+                handleOnChangeSlugDebounce(e.target.value);
+              }}
+            />
           </Input.Wrapper>
 
           <Input.Wrapper label="Excerpt">
