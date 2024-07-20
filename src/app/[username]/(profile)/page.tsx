@@ -17,6 +17,7 @@ import { IUser } from "@/http/models/User.model";
 import { Link2Icon } from "@radix-ui/react-icons";
 import { NextPage } from "next";
 import React from "react";
+import { markdownToHtml } from "@/utils/markdoc-parser";
 
 interface UserProfilePageProps {
   params: { username: string };
@@ -250,7 +251,7 @@ const UserProfilePage: NextPage<UserProfilePageProps> = async ({ params }) => {
           <main className="border rounded app-border-color md:col-span-9 col-span-full">
             <div
               dangerouslySetInnerHTML={{
-                __html: profile?.profile_readme_html || "",
+                __html: markdownToHtml(profile?.profile_readme) || "",
               }}
               className="p-4 content-typography"
             ></div>
