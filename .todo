@@ -9,6 +9,7 @@
 
 - [] Cache issue
 - [] Delete/Archieve articles
+- [] Make dashboard navlinks bold on active
 
 ## Editor
 
@@ -21,3 +22,4 @@
 
 - [] 🔥 meta uuid not autometically creating
 - [] Article feed sort by published_at and also discuss about this with shoaib vai
+- [] PATCH /api/profile: db error on empty string
