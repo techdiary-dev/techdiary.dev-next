@@ -8,6 +8,7 @@ import AppAxiosException from "@/utils/AppAxiosException";
 import { ErrorMessage } from "@hookform/error-message";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Alert, Button, Input, Textarea } from "@mantine/core";
+import { useDebouncedCallback } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { useMutation } from "@tanstack/react-query";
 import { useAtomValue } from "jotai";
@@ -42,6 +43,8 @@ const SettingGeneralTab = () => {
     register,
     handleSubmit,
     formState: { errors },
+    setValue,
+    watch,
   } = useForm<ISettingsForm>({
     defaultValues: {
       name: authUser?.name || "",
@@ -55,6 +58,22 @@ const SettingGeneralTab = () => {
     },
     resolver: yupResolver(SettingsFormValidationSchema),
   });
+
+  const handleOnChangeUsernameDebounce = useDebouncedCallback(
+    async (username: string) => {
+      await api
+        .getUniqueUsername(username)
+        .then((res) => {
+          if (res?.data?.username) {
+            setValue("username", res?.data?.username);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    2000
+  );
 
   const handleOnSubmit: SubmitHandler<ISettingsForm> = (data) => {
     updateProfileMutation.mutate(data);
@@ -81,7 +100,14 @@ const SettingGeneralTab = () => {
         label={_t("Username")}
         error={<ErrorMessage name={"username"} errors={errors} />}
       >
-        <Input placeholder={_t("Your username")} {...register("username")} />
+        <Input
+          placeholder={_t("Your username")}
+          value={watch("username") || ""}
+          onChange={(e) => {
+            setValue("username", e.target.value);
+            handleOnChangeUsernameDebounce(e.target.value);
+          }}
+        />
       </Input.Wrapper>
 
       <Input.Wrapper

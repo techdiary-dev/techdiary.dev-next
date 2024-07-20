@@ -34,6 +34,15 @@ export class ProfileApiRepository extends ApiRepository {
   updateProfile(payload: UpdateProfilePayload) {
     return this.http.patch("/api/profile", payload);
   }
+
+  getUniqueUsername(username: string) {
+    return this.http.post<{ username: string }>(
+      "/api/profile/unique-username",
+      {
+        username,
+      }
+    );
+  }
 }
 
 export interface UpdateProfilePayload {
