@@ -85,7 +85,6 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
       return api.updateArticleByUUID(data.uuid, data.payload);
     },
     onSuccess: () => {
-      router.refresh();
       showNotification({
         message: _t("Article updated"),
         color: "green",
@@ -207,10 +206,14 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
       },
       onConfirm: async () => {
         if (uuid) {
-          articleUpdateMutation.mutate({
-            uuid,
-            payload: { is_published: !article?.is_published },
-          });
+          articleUpdateMutation
+            .mutateAsync({
+              uuid,
+              payload: { is_published: !article?.is_published },
+            })
+            .finally(() => {
+              router.refresh();
+            });
         }
       },
     });

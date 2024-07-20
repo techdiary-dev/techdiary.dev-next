@@ -3,7 +3,7 @@ import { PaginatedResponse } from "../models/PaginatedResponse.model";
 import { IUser, UserReference } from "../models/User.model";
 import { ApiRepository } from "./repository";
 
-export class UserRepository extends ApiRepository {
+export class ProfileApiRepository extends ApiRepository {
   /**
    * Get a list of users
    * @param limit - number of users to return
@@ -28,6 +28,22 @@ export class UserRepository extends ApiRepository {
    * @returns
    */
   userProfileByUserName(userName: string) {
-    return this.http.get<{ data: IUser }>("/profile/username/" + userName);
+    return this.http.get<{ data: IUser }>("/api/profile/username/" + userName);
   }
+
+  updateProfile(payload: UpdateProfilePayload) {
+    return this.http.patch("/api/profile", payload);
+  }
+}
+
+export interface UpdateProfilePayload {
+  name?: string;
+  username?: string;
+  email?: string;
+  education?: string;
+  designation?: string;
+  website_url?: string;
+  location?: string;
+  profilePhoto?: string;
+  social_links?: string;
 }

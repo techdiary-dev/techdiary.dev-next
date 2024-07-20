@@ -44,7 +44,6 @@ const DashboardNavbar = () => {
 
   const getIsActive = (path: string) => {
     const _routerPath = routerPath.replace("/dashboard", "").replace("/", "");
-    console.log({ _routerPath, path });
     return _routerPath === path;
   };
 
