@@ -2,6 +2,7 @@
 
 import AppImage from "@/components/AppImage";
 import UnsplashImageGallery from "@/components/UnsplashImageGallery";
+import { useClickAway } from "@/hooks/useClickAway";
 import { IServerFile } from "@/http/models/AppImage.model";
 import { IArticleDetail } from "@/http/models/Article.model";
 import {
@@ -11,35 +12,25 @@ import {
 import { FileApiRepository } from "@/http/repositories/file.repository";
 import { useTranslation } from "@/i18n/use-translation";
 import AppAxiosException from "@/utils/AppAxiosException";
+import { markdownToHtml } from "@/utils/markdoc-parser";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Alert,
-  Button,
-  CheckIcon,
-  Drawer,
-  Input,
-  Modal,
-  MultiSelect,
-  Text,
-  Textarea,
-  UnstyledButton,
-} from "@mantine/core";
+import { CheckIcon, Drawer, Modal, Text } from "@mantine/core";
 import { useDebouncedCallback, useDisclosure } from "@mantine/hooks";
 import { openConfirmModal } from "@mantine/modals";
 import { showNotification } from "@mantine/notifications";
 import {
-  GearIcon,
   ArrowLeftIcon,
-  PinLeftIcon,
+  GearIcon,
   PlusIcon,
   TrashIcon,
 } from "@radix-ui/react-icons";
 import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import { formatDistanceToNow } from "date-fns";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { SubmitHandler, useForm } from "react-hook-form";
+import React from "react";
+import { useForm } from "react-hook-form";
 import {
   RiBold,
   RiHeading,
@@ -62,10 +53,7 @@ import {
 } from "react-mde";
 import * as Yup from "yup";
 import EditorCommandButton from "./EditorCommandButton";
-import { markdownToHtml } from "@/utils/markdoc-parser";
-import { useClickAway } from "@/hooks/useClickAway";
 import EditorDrawer from "./EditorDrawer";
-import Link from "next/link";
 
 interface Prop {
   uuid?: string;

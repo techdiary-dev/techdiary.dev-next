@@ -152,9 +152,13 @@ const PersonalAccessTokenPage = () => {
       <Modal
         opened={formModalOpened}
         onClose={formModalHandler.toggle}
-        size={"100vw"}
+        size={"lg"}
       >
-        <PersonalAccessTokenForm />
+        <PersonalAccessTokenForm
+          onSave={function (): void {
+            tokenListQuery.refetch();
+          }}
+        />
       </Modal>
     </div>
   );
