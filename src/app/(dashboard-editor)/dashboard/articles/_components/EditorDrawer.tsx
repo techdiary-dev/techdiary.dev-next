@@ -5,7 +5,7 @@ import {
 } from "@/http/repositories/article.repository";
 import { useTranslation } from "@/i18n/use-translation";
 import AppAxiosException from "@/utils/AppAxiosException";
-import * as Yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Alert,
   Button,
@@ -13,19 +13,17 @@ import {
   Divider,
   Input,
   MultiSelect,
-  Space,
   Text,
   Textarea,
-  Tooltip,
 } from "@mantine/core";
+import { useDebouncedCallback } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
-import { Link2Icon, QuestionMarkCircledIcon } from "@radix-ui/react-icons";
+import { Link2Icon } from "@radix-ui/react-icons";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useDebouncedCallback } from "@mantine/hooks";
+import * as Yup from "yup";
 
 interface Prop {
   article?: IArticleDetail;

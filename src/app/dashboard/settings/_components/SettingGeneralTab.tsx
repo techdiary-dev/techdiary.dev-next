@@ -4,22 +4,37 @@ import {
 } from "@/http/repositories/profile.repository";
 import { useTranslation } from "@/i18n/use-translation";
 import { userAtom } from "@/store/user.atom";
+import AppAxiosException from "@/utils/AppAxiosException";
 import { ErrorMessage } from "@hookform/error-message";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Input, Textarea } from "@mantine/core";
+import { Alert, Button, Input, Textarea } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 import { useMutation } from "@tanstack/react-query";
 import { useAtomValue } from "jotai";
-import React from "react";
+import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import * as Yup from "yup";
 
 const SettingGeneralTab = () => {
   const authUser = useAtomValue(userAtom);
   const { _t } = useTranslation();
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
   const api = new ProfileApiRepository();
+
   const updateProfileMutation = useMutation({
     mutationFn: (payload: UpdateProfilePayload) => {
       return api.updateProfile(payload);
+    },
+    onSuccess(data, variables, context) {
+      showNotification({
+        title: "Updated successfully",
+        message: "",
+      });
+    },
+    onError(error: AppAxiosException) {
+      const msg = error.response?.data?.message || "Failed to update article";
+      setErrorMsg(msg);
     },
   });
 
@@ -50,6 +65,11 @@ const SettingGeneralTab = () => {
       onSubmit={handleSubmit(handleOnSubmit)}
       className="flex flex-col gap-3"
     >
+      {errorMsg && (
+        <Alert variant="filled" color="red">
+          {errorMsg}
+        </Alert>
+      )}
       <Input.Wrapper
         label={_t("Name")}
         error={<ErrorMessage name={"name"} errors={errors} />}
