@@ -72,31 +72,21 @@ const SettingGeneralTab = () => {
       </Input.Wrapper>
 
       <Input.Wrapper
-        label={_t("Education Background")}
+        label={_t("Educational qualification")}
         error={<ErrorMessage name={"education"} errors={errors} />}
       >
         <Input
-          placeholder={_t("Education Background")}
+          placeholder={_t("Your education qualification")}
           {...register("education")}
         />
       </Input.Wrapper>
 
       <Input.Wrapper
-        label={_t("Designation or job title")}
-        error={<ErrorMessage name={"education"} errors={errors} />}
+        label={_t("Designation or mental title")}
+        error={<ErrorMessage name={"designation"} errors={errors} />}
       >
         <Input
-          placeholder={_t("Your designation or job title")}
-          {...register("designation")}
-        />
-      </Input.Wrapper>
-
-      <Input.Wrapper
-        label={_t("Designation or job title")}
-        error={<ErrorMessage name={"education"} errors={errors} />}
-      >
-        <Input
-          placeholder={_t("Your designation or job title")}
+          placeholder={_t("Your designation or mental title")}
           {...register("designation")}
         />
       </Input.Wrapper>
