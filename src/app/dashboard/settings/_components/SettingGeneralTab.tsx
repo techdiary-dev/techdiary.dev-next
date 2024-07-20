@@ -22,7 +22,6 @@ const SettingGeneralTab = () => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const api = new ProfileApiRepository();
-
   const updateProfileMutation = useMutation({
     mutationFn: (payload: UpdateProfilePayload) => {
       return api.updateProfile(payload);
