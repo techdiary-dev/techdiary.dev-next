@@ -2,14 +2,18 @@
 import { PersonalAccessTokenApiRepository } from "@/http/repositories/personal-access-token.repository";
 import { useTranslation } from "@/i18n/use-translation";
 import { relativeTime } from "@/utils/relativeTime";
-import { Button, Paper, Text } from "@mantine/core";
+import { Button, Modal, Paper, Text } from "@mantine/core";
 import { openConfirmModal } from "@mantine/modals";
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import React from "react";
+import PersonalAccessTokenForm from "./_components/PersonalAccessTokenForm";
+import { useDisclosure } from "@mantine/hooks";
 
 const PersonalAccessTokenPage = () => {
+  const [formModalOpened, formModalHandler] = useDisclosure(false);
+
   const { _t } = useTranslation();
   const api = new PersonalAccessTokenApiRepository();
   const tokenListQuery = useQuery({
@@ -19,7 +23,6 @@ const PersonalAccessTokenPage = () => {
       return data;
     },
   });
-
   const deleteTokenMutation = useMutation({
     mutationFn: async (tokenId: string) => {
       const { data } = await api.deleteToken(tokenId);
@@ -52,7 +55,7 @@ const PersonalAccessTokenPage = () => {
             <span>Api Documentation</span>
           </a>
         </div>
-        <Button>{_t("New token")}</Button>
+        <Button onClick={formModalHandler.toggle}>{_t("New token")}</Button>
       </div>
 
       {tokenListQuery.isFetched && tokenListQuery.data?.length == 0 && (
@@ -86,7 +89,10 @@ const PersonalAccessTokenPage = () => {
               </svg>
               <span>Api Documentation</span>
             </a>
-            <button className="flex items-center px-2 py-1 space-x-1 text-white rounded bg-slate-800">
+            <button
+              onClick={formModalHandler.toggle}
+              className="flex items-center px-2 py-1 space-x-1 text-white rounded bg-slate-800"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="w-5 h-5"
@@ -99,7 +105,7 @@ const PersonalAccessTokenPage = () => {
                   clip-rule="evenodd"
                 />
               </svg>
-              <span>নতুন টোকেন</span>
+              <span>{_t("New token")}</span>
             </button>
           </div>
         </div>
@@ -142,6 +148,14 @@ const PersonalAccessTokenPage = () => {
           </Paper>
         ))}
       </div>
+
+      <Modal
+        opened={formModalOpened}
+        onClose={formModalHandler.toggle}
+        size={"100vw"}
+      >
+        <PersonalAccessTokenForm />
+      </Modal>
     </div>
   );
 };
