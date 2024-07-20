@@ -58,5 +58,19 @@
   "Save": "সংরক্ষণ করুন",
   "Article updated": "নিবন্ধিত আপডেট করা হয়েছে",
   "Saving": "সংরক্ষিত হচ্ছে",
-  "Seo Settings": "Seo সেটিংস সমূহ"
+  "Seo Settings": "Seo সেটিংস সমূহ",
+  "Name": "নাম",
+  "Your name": "আপনার নাম",
+  "Username": "ইউজারনেম",
+  "Your username": "আপনার ইউজারনেম",
+  "Educational qualification": "শিক্ষাগত যোগ্যতা",
+  "Your education qualification": "আপনার শিক্ষাগত যোগ্যতা",
+  "Designation or mental title": "পেশাগত বা মনস্তাত্বিক উপাধি",
+  "Your designation or mental title": "আপনার পেশাগত বা মনস্তাত্বিক উপাধি",
+  "Website url": "ওয়েবসাইট এড্রেস",
+  "Your website url": "আপনার ওয়েবসাইট এড্রেস",
+  "Location": "ঠিকানা",
+  "Your location": "আপনার ঠিকানা",
+  "Bio": "সংক্ষিপ্ত জীবন বিত্যান্ত",
+  "Your short bio": "আপনার সংক্ষিপ্ত জীবন বিত্যান্ত"
 }
