@@ -1,6 +1,6 @@
 import { BasePaginationQuery } from "../models/BasePaginationQuery.mode";
 import { PaginatedResponse } from "../models/PaginatedResponse.model";
-import { IUser, UserReference } from "../models/User.model";
+import { IUser, SocialLinks, UserReference } from "../models/User.model";
 import { ApiRepository } from "./repository";
 
 export class ProfileApiRepository extends ApiRepository {
@@ -54,5 +54,6 @@ export interface UpdateProfilePayload {
   website_url?: string;
   location?: string;
   profilePhoto?: string;
-  social_links?: string;
+  profile_readme?: string;
+  social_links?: SocialLinks;
 }

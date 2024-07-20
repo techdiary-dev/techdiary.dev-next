@@ -17,12 +17,18 @@ export const ssrGetMe = async () => {
     return { status: 401, me: null };
   }
 
-  const api = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/profile/me`, {
-    method: "GET",
-    headers: cookieHeaders() as any,
-    // next: { revalidate: 60 },
-  });
-  const me = (await api.json()) as IUser;
+  try {
+    const api = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/profile/me`,
+      {
+        method: "GET",
+        headers: cookieHeaders() as any,
+      }
+    );
+    const me = (await api.json()) as IUser;
 
-  return { me, status: api.status };
+    return { me, status: api.status };
+  } catch (error) {
+    throw new Error("Failed to fetch");
+  }
 };
