@@ -3,8 +3,9 @@ import { PersonalAccessTokenApiRepository } from "@/http/repositories/personal-a
 import { useTranslation } from "@/i18n/use-translation";
 import { relativeTime } from "@/utils/relativeTime";
 import { Button, Paper, Text } from "@mantine/core";
+import { openConfirmModal } from "@mantine/modals";
 import { ExternalLinkIcon } from "@radix-ui/react-icons";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import React from "react";
 
@@ -16,6 +17,16 @@ const PersonalAccessTokenPage = () => {
     queryFn: async () => {
       const { data } = await api.getMyTokens();
       return data;
+    },
+  });
+
+  const deleteTokenMutation = useMutation({
+    mutationFn: async (tokenId: string) => {
+      const { data } = await api.deleteToken(tokenId);
+      return data;
+    },
+    onSuccess() {
+      tokenListQuery.refetch();
     },
   });
 
@@ -110,7 +121,22 @@ const PersonalAccessTokenPage = () => {
               </Text>
             )}
 
-            <button className="text-destructive hover:underline decoration-2">
+            <button
+              onClick={() => {
+                openConfirmModal({
+                  title: _t("Sure to delete?"),
+                  children: _t("No worries, This can be undone anytime."),
+                  labels: {
+                    confirm: _t("Yes"),
+                    cancel: _t("Cancel"),
+                  },
+                  onConfirm() {
+                    deleteTokenMutation.mutate(token.id!);
+                  },
+                });
+              }}
+              className="text-destructive hover:underline decoration-2"
+            >
               {_t("Delete")}
             </button>
           </Paper>

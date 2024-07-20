@@ -18,6 +18,14 @@ export class PersonalAccessTokenApiRepository extends ApiRepository {
 
     return data;
   }
+
+  public async deleteToken(id: string) {
+    const { data } = await this.http.delete(
+      `/api/auth/personal-access-tokens/${id}`
+    );
+
+    return data;
+  }
 }
 
 // curl \
