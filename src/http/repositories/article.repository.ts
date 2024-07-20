@@ -92,7 +92,7 @@ export class ArticleApiRepository extends ApiRepository {
    */
   public async getUniqueSlug(slug: string) {
     const { data } = await this.http.post<{ slug: string }>(
-      `/api/articles/get-unique-slug`,
+      `/api/articles/unique-slug`,
       { slug }
     );
 
