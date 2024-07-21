@@ -68,7 +68,7 @@ const PersonalAccessTokenForm: React.FC<Prop> = ({ onSave }) => {
 export default PersonalAccessTokenForm;
 
 const formValidationSchema = Yup.object().shape({
-  name: Yup.string().required().max(255).label("Name"),
+  name: Yup.string().required().min(5).max(255).label("Name"),
 });
 
 type IForm = Yup.InferType<typeof formValidationSchema>;
