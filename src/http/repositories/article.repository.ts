@@ -100,11 +100,9 @@ export class ArticleApiRepository extends ApiRepository {
   }
 
   public async makeArchive(uuid: string) {
-    const { data } = await this.http.delete<{ uuid: string }>(
+    return this.http.delete<{ uuid: string }>(
       `/api/articles/uuid/archive/${uuid}`
     );
-
-    return data;
   }
 
   public async makePermanentDelete(uuid: string) {
