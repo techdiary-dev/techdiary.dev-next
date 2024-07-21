@@ -17,8 +17,10 @@ import {
   getHookFormErrorMessage,
   getServerErrorMessage,
 } from "@/utils/form-error";
+import { useTranslation } from "@/i18n/use-translation";
 
 const LoginPage = () => {
+  const { _t } = useTranslation();
   const api = new AuthRepository();
   const loginMutation = useMutation({
     mutationFn: (payload: ILoginFormPayload) => api.login(payload),
@@ -40,14 +42,14 @@ const LoginPage = () => {
 
   return (
     <BaseLayout>
-      <div className="max-w-96 mx-auto my-10">
+      <div className="max-w-96 mx-auto my-10 px-2">
         <form
           className="flex flex-col gap-4"
           onSubmit={form.handleSubmit(onSubmit)}
           method="post"
         >
           {loginMutation.isError && (
-            <Alert color="red" title="কিছু ভুল হয়েছে">
+            <Alert color="red" title={_t("Hands Up")}>
               {getServerErrorMessage(loginMutation.error)}
             </Alert>
           )}
@@ -56,36 +58,38 @@ const LoginPage = () => {
             error={getHookFormErrorMessage("email", form?.formState?.errors)}
           >
             <Input
-              placeholder="Email"
+              placeholder={_t("Email")}
               type="email"
               size="lg"
               variant="filled"
               {...form.register("email")}
             />
           </Input.Wrapper>
+
           <Input.Wrapper
             error={getHookFormErrorMessage("password", form?.formState?.errors)}
           >
             <Input
-              placeholder="Password"
+              placeholder={_t("Password")}
               type="password"
               size="lg"
               variant="filled"
               {...form.register("password")}
             />
           </Input.Wrapper>
+
           <Button type="submit" size="lg" loading={loginMutation?.isPending}>
-            লগইন
+            {_t("Login")}
           </Button>
         </form>
 
         <div className="mt-10 flex flex-col gap-3">
           <Link className="text-lg" href={"/auth/forgot-password"}>
-            পাসসোয়ার্ড ভুলে গেছেন?
+            {_t("Forgot password?")}
           </Link>
 
           <Link className="text-lg" href={"/auth/register"}>
-            একাউন্ট নিবন্ধন করুন
+            {_t("Create an account")}
           </Link>
         </div>
       </div>

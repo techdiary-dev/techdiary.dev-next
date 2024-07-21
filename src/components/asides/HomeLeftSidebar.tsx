@@ -8,17 +8,20 @@ const HomeLeftSidebar = () => {
   return (
     <div className="flex flex-col gap-3">
       <div className="mb-2 mt-4 flex flex-col gap-4">
-        <Link href={"/"} className="flex items-center gap-2">
+        <Link href={"/"} className="flex items-center gap-2 text-forground">
           <AiOutlineHome />
           <span className="text-sm">{_t("Home")}</span>
         </Link>
-        <Link href={"/dashboard/bookmarks"} className="flex items-center gap-2">
+        <Link
+          href={"/dashboard/bookmarks"}
+          className="flex items-center gap-2 text-forground"
+        >
           <HiOutlineBookmark />
           <span className="text-sm">{_t("Bookmarks")}</span>
         </Link>
         <Link
           href={"/dashboard/articles/new"}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 text-forground"
         >
           <HiPlus />
           <span className="text-sm">{_t("New diary")}</span>
