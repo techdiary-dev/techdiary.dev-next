@@ -1,9 +1,8 @@
 - [] revalidate cache after update, home page and article details page
-- [x] upload files in laravel
+- [] upload files in laravel
 
 - [] tag diye article filter korar somoy case insensitive vabe filter korte hobe
 - [] jemnon `time & space complexity` ke `time-space-complexity` slug diye filter e aste hobe
-- [x] learn about nextjs page middleware
 
 ## Dashboard
 
@@ -24,3 +23,4 @@
 - [] Article feed sort by published_at and also discuss about this with shoaib vai
 - [] PATCH /api/profile: db error on empty string
 - [] Study about token previleages
+- [] Check cascade behabour of tags
