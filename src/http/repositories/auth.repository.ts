@@ -11,6 +11,15 @@ export class AuthRepository extends ApiRepository {
   }
 
   /**
+   * Login user by email and password
+   * @param payload
+   * @returns
+   */
+  register(payload: IRegistrationPayload) {
+    return this.http.post("/api/auth/register", payload);
+  }
+
+  /**
    * Forgot password
    * @param payload
    * @returns
@@ -40,4 +49,12 @@ export class AuthRepository extends ApiRepository {
   logout() {
     return this.http.post("/api/auth/logout");
   }
+}
+
+interface IRegistrationPayload {
+  name?: string;
+  username?: string;
+  email?: string;
+  password?: string;
+  password_confirmation?: string;
 }

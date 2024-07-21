@@ -43,6 +43,13 @@ export class ProfileApiRepository extends ApiRepository {
       }
     );
   }
+
+  getPublicUniqueUsername(username: string) {
+    return this.http.post<{ username: string }>(
+      "/api/profile/public-unique-username",
+      { username }
+    );
+  }
 }
 
 export interface UpdateProfilePayload {

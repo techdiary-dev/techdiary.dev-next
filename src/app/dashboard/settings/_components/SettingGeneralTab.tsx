@@ -26,7 +26,7 @@ const SettingGeneralTab = () => {
     mutationFn: (payload: UpdateProfilePayload) => {
       return api.updateProfile(payload);
     },
-    onSuccess(data, variables, context) {
+    onSuccess() {
       showNotification({
         title: "Updated successfully",
         message: "",
