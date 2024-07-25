@@ -3,7 +3,6 @@
 
 - [] tag diye article filter korar somoy case insensitive vabe filter korte hobe
 - [] jemnon `time & space complexity` ke `time-space-complexity` slug diye filter e aste hobe
-
 - [] Show a email is not verified yet ribbon under navbar. Make email verified during oauth signup
 
 ## Dashboard
@@ -22,9 +21,10 @@
 
 ## Backend Specific
 
-- [] 🔥 meta uuid not autometically creating
+- [x] 🔥 meta uuid not autometically creating
 - [] Article feed sort by published_at and also discuss about this with shoaib vai
 - [] PATCH /api/profile: db error on empty string
 - [] Study about token previleages
 - [] Check cascade behabour of tags
 - [] Check for fortify with latest version
+- [] make unsplash proxy api with auth middleware
