@@ -72,16 +72,10 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     }) => {
       return api.updateArticleByUUID(data.uuid, data.payload);
     },
-    onSuccess: () => {
-      showNotification({
-        message: _t("Article updated"),
-        color: "green",
-        icon: <CheckIcon />,
-      });
-    },
+    onSuccess: () => {},
     onError(error: AppAxiosException) {
-      const msg = error.response?.data?.message || "Failed to update article";
-      // setErrorMsg(msg);
+      alert("Failed to update article");
+      console.log(error.response?.data);
     },
   });
 
