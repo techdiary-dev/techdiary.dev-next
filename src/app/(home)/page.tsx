@@ -5,10 +5,14 @@ import ThreeColumnLayout from "@/components/layout/ThreeColumnLayout";
 
 export default async function Home() {
   return (
-    <ThreeColumnLayout>
-      <FakeEditor />
-      <div className="mt-8">{/* <ArticleFeed initialData={articles} /> */}</div>
-      <div className="my-20"></div>
-    </ThreeColumnLayout>
+    <>
+      <h1>hh</h1>
+    </>
   );
 }
+
+// {/* <ThreeColumnLayout>
+//   <FakeEditor />
+//   <div className="mt-8">{/* <ArticleFeed initialData={articles} /> */}</div>
+//   <div className="my-20"></div>
+// </ThreeColumnLayout>; */}
