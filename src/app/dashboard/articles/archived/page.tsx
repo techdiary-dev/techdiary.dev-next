@@ -71,7 +71,7 @@ const ArchievedArticlesPage = () => {
             <div className="flex items-center gap-10 justify-between">
               <div className="flex gap-4 items-center">
                 {!article.is_published && (
-                  <p className="bg-yellow-400/30 rounded-sm px-2 py-1 text-sm">
+                  <p className="bg-yellow-400/30 rounded-xs px-2 py-1 text-sm">
                     🚧 {_t("Draft")}
                   </p>
                 )}

@@ -131,7 +131,7 @@ const SettingProfileReadmeTab = () => {
           onClick={() =>
             selectEditorMode(editorMode === "write" ? "preview" : "write")
           }
-          className="px-4 font-semibold duration-200 rounded-sm"
+          className="px-4 font-semibold duration-200 rounded-xs"
         >
           {editorMode === "write" ? _t("Preview") : _t("Editor")}
         </button>
@@ -142,7 +142,7 @@ const SettingProfileReadmeTab = () => {
         {editorMode === "write" ? (
           <textarea
             tabIndex={2}
-            className="focus:outline-none h-[calc(100vh-120px)] bg-background w-full"
+            className="focus:outline-hidden h-[calc(100vh-120px)] bg-background w-full"
             value={watch("profile_readme") || ""}
             placeholder={_t("Write something stunning...")}
             onChange={(e) => {

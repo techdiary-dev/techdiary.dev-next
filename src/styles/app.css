@@ -1,6 +1,127 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@custom-variant dark (&:is([data-mantine-color-scheme="dark"] *));
+
+@theme {
+  --animate-reverse-spin: reverse-spin 1s linear infinite;
+
+  --color-background: var(--background);
+
+  --color-forground: var(--forground);
+  --color-forground-muted: var(--forgroun-muted);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-variant: var(--primary-variant);
+
+  --color-border-color: var(--border);
+  --color-light: var(--theme-light);
+  --color-surface: var(--theme-surface);
+  --color-light-gray: var(--light-gray);
+  --color-text-gray: var(--text-gray);
+  --color-text-muted: var(--text-muted);
+  --color-card-header: var(--card-header);
+
+  --color-neutral-primary: var(--neutral-primary);
+  --color-neutral-secondary: var(--neutral-secondary);
+  --color-neutral-muted: var(--neutral-muted);
+
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --font-Kohinoor-bangla: KohinoorBangla, Nunito, Arial;
+  --font-siliguri: Hind Siliguri, Nunito, Arial;
+  --font-mono: Fira Code, techdiary-bangla, monospace;
+  --font-boshonto: Boshonto, Kohinoor Bangla;
+
+  --z-index--1: -1;
+
+  @keyframes reverse-spin {
+    from {
+      transform: rotate(360deg);
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentColor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@utility text-gradient {
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@utility wrapper {
+  max-width: 1300px;
+  width: 98%;
+  margin: auto;
+  position: relative;
+}
+
+@utility app-border-color {
+  @apply border-slate-200 dark:border-slate-600;
+}
+
+@utility text-dark {
+  @apply text-slate-900 dark:text-slate-200;
+}
+
+@utility text-dark-secondary {
+  @apply text-slate-600 dark:text-slate-300;
+}
+
+@utility text-dark-tertiary {
+  @apply text-slate-400 dark:text-gray-600;
+}
+
+@utility bg-dark {
+  @apply bg-gray-900 dark:bg-gray-200;
+}
+
+@utility bg-dark-secondary {
+  @apply bg-gray-600 dark:bg-gray-300;
+}
+
+@utility bg-dark-tertiary {
+  @apply bg-gray-100 dark:bg-gray-600;
+}
+
+@utility debug {
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border: 5px solid transparent;
+    animation: blink 1000ms;
+    animation-iteration-count: infinite;
+  }
+}
+
 @layer base {
   html {
     @apply scroll-smooth;
@@ -19,56 +140,10 @@
     background-color: var(--muted);
   }
 }
-body {
-  background-color: var(--background);
-  color: var(--forground);
-}
-
 @layer utilities {
-  .text-gradient {
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  .wrapper {
-    max-width: 1300px;
-    width: 98%;
-    margin: auto;
-    position: relative;
-  }
-  .app-border-color {
-    @apply border-slate-200 dark:border-slate-600;
-  }
-  .text-dark {
-    @apply text-slate-900 dark:text-slate-200;
-  }
-  .text-dark-secondary {
-    @apply text-slate-600 dark:text-slate-300;
-  }
-  .text-dark-tertiary {
-    @apply text-slate-400 dark:text-gray-600;
-  }
-  .bg-dark {
-    @apply bg-gray-900 dark:bg-gray-200;
-  }
-  .bg-dark-secondary {
-    @apply bg-gray-600 dark:bg-gray-300;
-  }
-  .bg-dark-tertiary {
-    @apply bg-gray-100 dark:bg-gray-600;
-  }
-  .debug {
-    position: relative;
-  }
-  .debug::before {
-    content: "";
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    border: 5px solid transparent;
-    animation: blink 1000ms;
-    animation-iteration-count: infinite;
+  body {
+    background-color: var(--background);
+    color: var(--forground);
   }
 }
 @keyframes blink {
@@ -114,12 +189,12 @@ img {
 }
 
 button {
-  @apply focus:outline-none;
+  @apply focus:outline-hidden;
 }
 
 .layout {
   @apply grid grid-cols-12 overflow-hidden;
-  height: calc(100vh - theme("spacing.14"));
+  height: calc(100vh - (--spacing(14)));
 }
 .layout__main {
   @apply overflow-y-auto px-3 pt-3 md:pt-6;
@@ -165,7 +240,7 @@ button {
 }
 
 .article-card__thumbnail {
-  @apply overflow-hidden rounded-sm;
+  @apply overflow-hidden rounded-xs;
 }
 .article-card__title {
   @apply mb-[10px] block text-xl font-semibold text-gray-700 dark:text-gray-300;
@@ -206,12 +281,12 @@ button {
   @apply absolute left-0 top-0 z-50 w-full max-w-none;
 }
 .search--popup .search__input {
-  @apply h-full w-full rounded border border-slate-200 bg-slate-100 py-4 pl-8 focus:outline-none focus:ring-primary;
+  @apply h-full w-full rounded-sm border border-slate-200 bg-slate-100 py-4 pl-8 focus:outline-hidden focus:ring-primary;
 }
 .search__input {
   @apply w-full;
-  @apply border-slate-200 bg-slate-100 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-600 dark:bg-slate-800;
-  @apply rounded border;
+  @apply border-slate-200 bg-slate-100 focus:outline-hidden focus:ring-2 focus:ring-primary dark:border-slate-600 dark:bg-slate-800;
+  @apply rounded-sm border;
 }
 .search__icon {
   @apply absolute h-5 w-5 translate-y-[-50%] text-slate-400;
@@ -238,7 +313,7 @@ button {
   @apply prose-h4:text-base md:prose-h4:text-xl;
 }
 .content-typography iframe {
-  @apply w-full aspect-[16/9];
+  @apply w-full aspect-16/9;
 }
 .content-typography .table-of-contents {
   @apply bg-slate-100 py-2 dark:bg-slate-700 prose-sm md:prose-base;
@@ -292,13 +367,13 @@ button {
   @apply text-base border-l-4 border-gray-300 pl-4 pr-4;
 }
 .markdown code {
-  @apply font-mono text-sm inline bg-gray-200 rounded px-1 py-1;
+  @apply font-mono text-sm inline bg-gray-200 rounded-sm px-1 py-1;
 }
 .markdown img {
   @apply inline-block;
 }
 .markdown pre {
-  @apply bg-gray-100 rounded p-4;
+  @apply bg-gray-100 rounded-sm p-4;
 }
 .markdown pre code {
   @apply block bg-transparent p-0 overflow-visible rounded-none;
@@ -316,7 +391,7 @@ button {
   @apply text-base pl-8 list-decimal;
 }
 .markdown kbd {
-  @apply text-xs inline-block rounded border px-1 py-1 align-middle font-normal font-mono shadow;
+  @apply text-xs inline-block rounded-sm border px-1 py-1 align-middle font-normal font-mono shadow-sm;
 }
 .markdown table {
   @apply text-base border-gray-600;
@@ -335,7 +410,7 @@ button {
   @apply transition-all duration-150;
   @apply bg-gray-200 hover:bg-white dark:bg-slate-700 dark:hover:bg-slate-600;
   @apply border border-gray-300 dark:border-gray-600;
-  @apply flex cursor-pointer rounded p-5;
+  @apply flex cursor-pointer rounded-sm p-5;
 }
 .fake-editor__icon {
   @apply h-6 w-6;
@@ -603,7 +678,7 @@ button {
 }
 .login__button {
   @apply flex items-center justify-center space-x-2;
-  @apply w-full py-1 rounded-sm hover:opacity-95;
+  @apply w-full py-1 rounded-xs hover:opacity-95;
   @apply transition duration-150;
   @apply py-2;
 }

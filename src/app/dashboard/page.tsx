@@ -98,7 +98,7 @@ const Dashboard = async () => {
           <div className="flex justify-center space-x-4">
             <Link
               href={"/dashboard/articles/new"}
-              className="flex items-center px-2 py-1 space-x-1 text-white rounded bg-slate-800"
+              className="flex items-center px-2 py-1 space-x-1 text-white rounded-sm bg-slate-800"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
