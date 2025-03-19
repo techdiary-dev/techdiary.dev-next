@@ -17,7 +17,7 @@ const ArticleBookmarks = () => {
     queryKey: ["dashboard:bookmarks"],
     queryFn: async () => {
       const { data } = await api.getBookmarks({
-        limit: -1,
+        limit: 3,
         model_name: "ARTICLE",
       });
       return data;

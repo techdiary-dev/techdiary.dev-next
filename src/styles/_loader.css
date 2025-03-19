@@ -16,7 +16,7 @@
 
 .sk-chase-dot:before {
   @apply bg-gray-800 dark:bg-gray-100;
-  content: '';
+  content: "";
   display: block;
   width: 25%;
   height: 25%;
@@ -77,20 +77,16 @@
     transform: rotate(360deg);
   }
 }
-
 @keyframes sk-chase-dot {
-  80%,
-  100% {
+  80%, 100% {
     transform: rotate(360deg);
   }
 }
-
 @keyframes sk-chase-dot-before {
   50% {
     transform: scale(0.4);
   }
-  100%,
-  0% {
+  100%, 0% {
     transform: scale(1);
   }
 }

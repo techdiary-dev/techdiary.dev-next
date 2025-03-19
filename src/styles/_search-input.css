@@ -1,0 +1,22 @@
+.search--popup {
+  display: block !important;
+  @apply absolute left-0 top-0 z-50 w-full max-w-none;
+}
+.search--popup .search__input {
+  @apply h-full w-full rounded border border-slate-200 bg-slate-100 py-4 pl-8 focus:outline-none focus:ring-primary;
+}
+.search__input {
+  @apply w-full;
+  @apply border-slate-200 bg-slate-100 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-600 dark:bg-slate-800;
+  @apply rounded border;
+}
+.search__icon {
+  @apply absolute h-5 w-5 translate-y-[-50%] text-slate-400;
+  @apply inline-block md:hidden;
+}
+.search__icon--magnify {
+  @apply left-2 top-[50%];
+}
+.search__icon--x {
+  @apply right-2 top-[50%] cursor-pointer;
+}
