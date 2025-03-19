@@ -245,7 +245,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
               onClick={() =>
                 selectEditorMode(editorMode === "write" ? "preview" : "write")
               }
-              className="px-4 py-1 font-semibold transition-colors duration-200 rounded-sm hover:bg-muted"
+              className="px-4 py-1 font-semibold transition-colors duration-200 rounded-xs hover:bg-muted"
             >
               {editorMode === "write" ? _t("Preview") : _t("Editor")}
             </button>
@@ -279,7 +279,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
                 <AppImage imageSource={thumbnail} width={1200} height={630} />
                 <button
                   onClick={handleDeleteFile}
-                  className="absolute flex items-center p-2 rounded bg-destructive text-destructive-foreground top-10 right-10"
+                  className="absolute flex items-center p-2 rounded-sm bg-destructive text-destructive-foreground top-10 right-10"
                 >
                   <TrashIcon className="w-6 h-6" />
                   <p>{_t("Delete")}</p>
@@ -315,7 +315,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
             setValue("title", e.target.value);
             debouncedState__title(e.target.value);
           }}
-          className="w-full text-2xl focus:outline-none bg-background"
+          className="w-full text-2xl focus:outline-hidden bg-background"
         />
 
         {/* Editor Toolbar */}
@@ -363,7 +363,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
           {editorMode === "write" ? (
             <textarea
               tabIndex={2}
-              className="focus:outline-none h-[calc(100vh-120px)] bg-background w-full"
+              className="focus:outline-hidden h-[calc(100vh-120px)] bg-background w-full"
               value={watch("body") || ""}
               placeholder={_t("Write something stunning...")}
               onChange={(e) => {

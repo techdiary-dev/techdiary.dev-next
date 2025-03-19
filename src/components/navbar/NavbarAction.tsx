@@ -63,7 +63,7 @@ const NavbarAction = () => {
 
         <button
           onClick={handleSwitchLanguage}
-          className="hidden cursor-pointer items-center gap-1 rounded border app-border-color px-2 py-[2px] md:flex"
+          className="hidden cursor-pointer items-center gap-1 rounded-sm border app-border-color px-2 py-[2px] md:flex"
         >
           <svg
             className="hidden md:block"

@@ -50,7 +50,7 @@ const UserProfilePage: NextPage<UserProfilePageProps> = async ({ params }) => {
           <aside className="md:col-span-3 col-span-full">
             <div>
               <img
-                className="w-full rounded"
+                className="w-full rounded-sm"
                 src={
                   profile?.profilePhoto ||
                   `https://api.dicebear.com/8.x/initials/svg?seed=${profile?.username}`
@@ -248,7 +248,7 @@ const UserProfilePage: NextPage<UserProfilePageProps> = async ({ params }) => {
             </div>
           </aside>
 
-          <main className="border rounded app-border-color md:col-span-9 col-span-full">
+          <main className="border rounded-sm app-border-color md:col-span-9 col-span-full">
             <div
               dangerouslySetInnerHTML={{
                 __html: markdownToHtml(profile?.profile_readme) || "",
