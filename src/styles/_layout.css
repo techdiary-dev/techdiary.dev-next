@@ -1,0 +1,23 @@
+.layout {
+  @apply grid grid-cols-12 overflow-hidden;
+  height: calc(100vh - theme("spacing.14"));
+}
+.layout__main {
+  @apply overflow-y-auto px-3 pt-3 md:pt-6;
+  @apply col-span-12 md:col-span-9 lg:col-span-6;
+  @apply md:border-l lg:border-r;
+}
+.layout__aside {
+  @apply max-h-screen overflow-y-hidden px-6;
+}
+.layout__aside__inner {
+  @apply h-full overflow-y-auto;
+}
+.layout__aside--left {
+  @apply hidden md:block;
+  @apply col-span-3 pt-6 lg:col-span-2;
+}
+.layout__aside--right {
+  @apply hidden lg:block;
+  @apply col-span-3 pt-6 lg:col-span-3;
+}
