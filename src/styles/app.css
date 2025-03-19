@@ -1,4 +1,5 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is([data-mantine-color-scheme="dark"] *));
 
@@ -110,7 +111,7 @@
 @utility debug {
   position: relative;
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     width: 100%;
     height: 100%;
@@ -176,7 +177,7 @@
   --border: #e5e7eb;
 }
 
-html[data-mantine-color-scheme=dark] {
+html[data-mantine-color-scheme="dark"] {
   --background: #0b1215;
   --muted: #1e272c;
   --forground: #fff;
@@ -531,7 +532,8 @@ button {
   }
 }
 @keyframes sk-chase-dot {
-  80%, 100% {
+  80%,
+  100% {
     transform: rotate(360deg);
   }
 }
@@ -539,13 +541,15 @@ button {
   50% {
     transform: scale(0.4);
   }
-  100%, 0% {
+  100%,
+  0% {
     transform: scale(1);
   }
 }
 @font-face {
   font-family: "Boshonto";
-  src: url("/fonts/Boshonto.woff") format("woff"), url("/fonts/Boshonto.woff2") format("woff2");
+  src: url("/fonts/Boshonto.woff") format("woff"),
+    url("/fonts/Boshonto.woff2") format("woff2");
 }
 @font-face {
   font-family: "KohinoorBangla";
@@ -652,7 +656,8 @@ button {
   }
 }
 @keyframes sk-chase-dot {
-  80%, 100% {
+  80%,
+  100% {
     transform: rotate(360deg);
   }
 }
@@ -660,7 +665,8 @@ button {
   50% {
     transform: scale(0.4);
   }
-  100%, 0% {
+  100%,
+  0% {
     transform: scale(1);
   }
 }
@@ -705,5 +711,9 @@ button {
 }
 
 .profile-card-ribon {
-  background: linear-gradient(0deg, rgba(18, 29, 34, 0.95) 9%, rgba(255, 255, 255, 0) 100%);
+  background: linear-gradient(
+    0deg,
+    rgba(18, 29, 34, 0.95) 9%,
+    rgba(255, 255, 255, 0) 100%
+  );
 }

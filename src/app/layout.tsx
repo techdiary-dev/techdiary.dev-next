@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 
 import "@mantine/core/styles.css";
 import "@mantine/notifications/styles.css";
-import "../styles/app.scss";
 
-import { ColorSchemeScript } from "@mantine/core";
+import "../styles/app.css";
+
+import { ColorSchemeScript, mantineHtmlProps } from "@mantine/core";
 
 export const metadata: Metadata = {
   title: "Techdiary - %s",
@@ -19,9 +20,9 @@ import RootWrapper from "../providers/RootWrapper";
 
 const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
   return (
-    <html lang="en">
+    <html lang="en" {...mantineHtmlProps}>
       <head>
-        <ColorSchemeScript key={"techdiary-color-scheme"} />
+        <ColorSchemeScript defaultColorScheme="auto" />
       </head>
       <body style={fontKohinoorBanglaRegular.style}>
         <RootWrapper>
