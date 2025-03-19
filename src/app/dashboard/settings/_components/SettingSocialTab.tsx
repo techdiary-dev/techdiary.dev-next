@@ -68,12 +68,12 @@ const SettingSocialTab = () => {
       onSubmit={handleSubmit(handleOnSubmit)}
       className="flex flex-col gap-3"
     >
-      {Object.keys(formSchema.fields).map((key) => (
+      {Object.keys(formSchema.fields).map((key: any) => (
         <Input.Wrapper
           key={key}
           label={key}
           className="capitalize"
-          error={<ErrorMessage name={key as any} errors={errors} />}
+          error={<ErrorMessage name={key} errors={errors} />}
         >
           <Input
             placeholder={`Your ${key} link`}
