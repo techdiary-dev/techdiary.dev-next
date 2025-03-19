@@ -7,6 +7,7 @@ import { Paper, Text } from "@mantine/core";
 import _t from "@/i18n/_t";
 import Image from "next/image";
 import Link from "next/link";
+import { revalidateTag, unstable_cache, unstable_noStore } from "next/cache";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 1;
@@ -15,9 +16,44 @@ export const metadata: Metadata = {
   title: "Dashboard",
 };
 
+const getArticles = unstable_cache(
+  async (headers: any) => {
+    // const api = await fetch(
+    //   process.env.NEXT_PUBLIC_API_URL + "/api/articles/mine",
+    //   {
+    //     method: "GET",
+    //     headers,
+    //     cache: "no-store",
+    //   }
+    // );
+    // return api.json();
+    const apiRepo = new ArticleApiRepository();
+    const articles = await apiRepo.getMyArticles({ limit: 10 }, headers);
+    return articles.data;
+  },
+  ["dashboard-articles"],
+  { tags: ["dashboard-articles"] }
+);
+
 const Dashboard = async () => {
-  const apiRepo = new ArticleApiRepository();
-  const articles = await apiRepo.getMyArticles({ limit: 10 }, cookieHeaders());
+  // const apiRepo = new ArticleApiRepository();
+  // const articles = await apiRepo.getMyArticles({ limit: 10 }, cookieHeaders());
+  // const articles = await getArticles(cookieHeaders());
+
+  const api = await fetch(
+    process.env.NEXT_PUBLIC_API_URL + "/api/articles/mine",
+    {
+      method: "GET",
+      headers: cookieHeaders() as any,
+      cache: "no-store",
+    }
+  );
+  const articles = await api.json();
+
+  const refetch = async () => {
+    "use server";
+    revalidateTag("dashboard-articles");
+  };
 
   return (
     <div>
@@ -40,6 +76,10 @@ const Dashboard = async () => {
           <Text size={"35px"}>{articles?.meta?.counts.comments || 0}</Text>
         </Paper>
       </div>
+
+      <form action={refetch}>
+        <button className=" hover:underline text-primary">refetch</button>
+      </form>
 
       {!Boolean(articles?.meta?.total) && (
         <div className="p-4 mt-6 border-2 border-dashed app-border-color">
@@ -67,9 +107,9 @@ const Dashboard = async () => {
                 fill="currentColor"
               >
                 <path
-                  fill-rule="evenodd"
+                  fillRule="evenodd"
                   d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                  clip-rule="evenodd"
+                  clipRule="evenodd"
                 />
               </svg>
               <span>{_t("New diary")}</span>

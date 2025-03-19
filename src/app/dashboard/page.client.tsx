@@ -29,7 +29,7 @@ const DashboardPage: React.FC<IDashboardPageProps> = ({ initialArticles }) => {
   const apiRepo = new ArticleApiRepository();
   const router = useRouter();
 
-  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery<
+  const { data, fetchNextPage, hasNextPage, refetch } = useInfiniteQuery<
     PaginatedResponse<IArticleFeedItem>
   >({
     queryKey: ["dashboard-articles"],
@@ -38,9 +38,8 @@ const DashboardPage: React.FC<IDashboardPageProps> = ({ initialArticles }) => {
       pages: [initialArticles],
     },
     initialPageParam: initialArticles?.meta?.current_page || 1,
-    // refetchOnMount: false,
+    refetchOnMount: true,
     getNextPageParam: (lastPage, allPages) => {
-      console.log("allPages", allPages.length);
       return allPages.length < lastPage.meta.last_page
         ? lastPage.meta.current_page + 1
         : null;
@@ -130,7 +129,10 @@ const DashboardPage: React.FC<IDashboardPageProps> = ({ initialArticles }) => {
                             try {
                               apiRepo
                                 .makeArchive(article?.id)
-                                .finally(() => router.refresh());
+                                .finally(async () => {
+                                  router.refresh();
+                                  refetch();
+                                });
                             } catch (error) {}
                           },
                         });

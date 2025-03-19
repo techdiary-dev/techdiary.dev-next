@@ -1,6 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: false,
+  logging: {
+    fetches: { fullUrl: true },
+  },
   experimental: {
     optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
   },

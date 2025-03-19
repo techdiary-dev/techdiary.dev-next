@@ -19,7 +19,6 @@ import * as Yup from "yup";
 const SettingGeneralTab = () => {
   const authUser = useAtomValue(userAtom);
   const { _t } = useTranslation();
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const api = new ProfileApiRepository();
   const updateProfileMutation = useMutation({
@@ -34,7 +33,6 @@ const SettingGeneralTab = () => {
     },
     onError(error: AppAxiosException) {
       const msg = error.response?.data?.message || "Failed to update article";
-      setErrorMsg(msg);
     },
   });
 
@@ -83,9 +81,9 @@ const SettingGeneralTab = () => {
       onSubmit={handleSubmit(handleOnSubmit)}
       className="flex flex-col gap-3"
     >
-      {errorMsg && (
+      {updateProfileMutation.error?.message && (
         <Alert variant="filled" color="red">
-          {errorMsg}
+          {updateProfileMutation.error?.response?.data.message}
         </Alert>
       )}
       <Input.Wrapper
@@ -172,10 +170,7 @@ const SettingGeneralTab = () => {
 export default SettingGeneralTab;
 
 const SettingsFormValidationSchema = Yup.object().shape({
-  name: Yup.string()
-    .optional()
-    .max(50, "Name cannot exceed 255 characters")
-    .label("Name"),
+  name: Yup.string().required().max(50).label("Name"),
 
   username: Yup.string()
     .optional()
