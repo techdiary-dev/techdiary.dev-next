@@ -1,8 +1,8 @@
 import { UserReference } from "@/http/models/User.model";
-import { Image, Paper } from "@mantine/core";
 import Link from "next/link";
 import React from "react";
 import { AiFillGithub, AiFillTwitterCircle } from "react-icons/ai";
+import classes from "./UserHoverCard.module.css";
 
 interface Props {
   user: UserReference;
@@ -10,13 +10,12 @@ interface Props {
 
 const UserHoverCard: React.FC<Props> = ({ user }) => {
   return (
-    <Paper>
+    <div className={classes.card}>
       <div className="flex items-start gap-2">
-        <Image
-          radius={"md"}
+        <img
           src={user.profilePhoto}
           alt={user.username}
-          className="h-10 w-10 flex-none"
+          className="h-10 w-10 flex-none rounded-md"
         />
 
         <div className="flex flex-col">
@@ -34,20 +33,28 @@ const UserHoverCard: React.FC<Props> = ({ user }) => {
           </Link>
           <div className="mt-2 flex gap-1">
             {user?.social_links?.github && (
-              <a href={user?.social_links?.github} target="_blank">
-                <AiFillGithub />
+              <a
+                href={user?.social_links?.github}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <AiFillGithub className={classes.icon} />
               </a>
             )}
 
             {user.social_links.twitter && (
-              <a href={user?.social_links?.twitter} target="_blank">
-                <AiFillTwitterCircle />
+              <a
+                href={user?.social_links?.twitter}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <AiFillTwitterCircle className={classes.icon} />
               </a>
             )}
           </div>
         </div>
       </div>
-    </Paper>
+    </div>
   );
 };
 

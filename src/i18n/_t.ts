@@ -1,4 +1,3 @@
-import { cookies } from "next/headers";
 import bn from "@/i18n/bn.json";
 
 const dictionaries: {
@@ -6,9 +5,10 @@ const dictionaries: {
 } = { bn };
 
 const _t = async (key: string) => {
-  const cookiesManager = await cookies();
-  const _lang = cookiesManager.get("language")?.value || "en";
-  return dictionaries[_lang]?.[key] || key;
+  return key;
+  // const cookiesManager = await cookies();
+  // const _lang = cookiesManager.get("language")?.value || "en";
+  // return dictionaries[_lang]?.[key] || key;
 };
 
 export default _t;
