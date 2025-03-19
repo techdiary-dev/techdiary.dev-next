@@ -1,8 +1,7 @@
 import Link from "next/link";
-import DarkLogo from "../logos/DarkLogo";
-import NavbarAction from "./NavbarAction";
-import SearchInput from "./SearchInput";
 import React from "react";
+import DarkLogo from "../logos/DarkLogo";
+import SearchInput from "./SearchInput";
 
 interface NavbarProps {
   Trailing?: React.ReactNode;
@@ -20,7 +19,7 @@ const Navbar: React.FC<NavbarProps> = ({ Trailing }) => {
         </div>
 
         <SearchInput />
-        <NavbarAction />
+        {/* <NavbarAction /> */}
       </div>
     </div>
   );

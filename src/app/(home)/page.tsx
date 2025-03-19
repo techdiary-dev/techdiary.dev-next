@@ -1,18 +1,26 @@
+"use client";
+
+import HomeLeftSidebar from "@/components/asides/HomeLeftSidebar";
 import FakeEditor from "@/components/FakeEditor";
 import ThreeColumnLayout from "@/components/layout/ThreeColumnLayout";
+import { authClient } from "@/lib/auth-client";
 
 // export const revalidate = 3600; // revalidate at most every hour
 
-export default async function Home() {
+export default function Home() {
+  const githubLogin = async () => {
+    await authClient.signIn.social({
+      provider: "github",
+    });
+  };
+
   return (
-    <>
-      <h1>hh</h1>
-    </>
+    <ThreeColumnLayout LeftSidebar={<HomeLeftSidebar />}>
+      <FakeEditor />
+
+      <button onClick={githubLogin}>Github</button>
+      <div className="mt-8">{/* <ArticleFeed initialData={articles} /> */}</div>
+      <div className="my-20"></div>
+    </ThreeColumnLayout>
   );
 }
-
-// {/* <ThreeColumnLayout>
-//   <FakeEditor />
-//   <div className="mt-8">{/* <ArticleFeed initialData={articles} /> */}</div>
-//   <div className="my-20"></div>
-// </ThreeColumnLayout>; */}

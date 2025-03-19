@@ -1,6 +1,7 @@
 .root {
-  padding-top: rem(80px);
-  padding-bottom: rem(80px);
+  padding: 5rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .label {
@@ -24,14 +25,36 @@
 }
 
 .title {
-  font-family:
-    Greycliff CF,
-    var(--mantine-font-family);
   text-align: center;
   font-weight: 900;
-  font-size: rem(38px);
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: var(--foreground);
+}
 
-  @media (max-width: $mantine-breakpoint-sm) {
-    font-size: rem(32px);
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: var(--foreground);
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.button:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+@media (max-width: 640px) {
+  .title {
+    font-size: 2rem;
   }
 }
