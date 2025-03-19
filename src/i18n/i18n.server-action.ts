@@ -3,14 +3,16 @@
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
-export const setLanguage = (language: "en" | "bn", path = "/") => {
-  cookies().set("language", language);
+export const setLanguage = async (language: "en" | "bn", path = "/") => {
+  const cookieStore = await cookies();
+  cookieStore.set("language", language);
   revalidatePath(path, "page");
 };
 
-export const toggleLanguage = () => {
-  cookies().set(
+export const toggleLanguage = async () => {
+  const cookieStore = await cookies();
+  cookieStore.set(
     "language",
-    cookies().get("language")?.value === "en" ? "bn" : "en"
+    cookieStore.get("language")?.value === "en" ? "bn" : "en"
   );
 };
