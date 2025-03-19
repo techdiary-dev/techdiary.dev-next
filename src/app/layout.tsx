@@ -16,7 +16,6 @@ export const metadata: Metadata = {
 import AppProvider from "@/providers/AppProvider";
 import { fontKohinoorBanglaRegular } from "@/utils/fonts";
 import React, { PropsWithChildren } from "react";
-import RootWrapper from "../providers/RootWrapper";
 
 const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
   return (
@@ -25,9 +24,7 @@ const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
         <ColorSchemeScript defaultColorScheme="auto" />
       </head>
       <body style={fontKohinoorBanglaRegular.style}>
-        <RootWrapper>
-          <AppProvider>{children}</AppProvider>
-        </RootWrapper>
+        <AppProvider>{children}</AppProvider>
       </body>
     </html>
   );
