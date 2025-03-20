@@ -4,14 +4,16 @@ import BaseLayout from "./BaseLayout";
 interface Props {
   LeftSidebar?: React.ReactNode;
   RightSidebar?: React.ReactNode;
+  NavbarTrailing?: React.ReactNode;
 }
 const HomepageLayout: React.FC<PropsWithChildren<Props>> = ({
   children,
   LeftSidebar,
   RightSidebar,
+  NavbarTrailing,
 }) => {
   return (
-    <BaseLayout>
+    <BaseLayout NavbarTrailing={NavbarTrailing}>
       <div className="grid h-[calc(100vh-3.5rem)] grid-cols-12 overflow-hidden wrapper">
         {LeftSidebar && (
           <aside className="col-span-3 hidden max-h-screen overflow-y-hidden px-6 pt-6 md:block lg:col-span-2">
