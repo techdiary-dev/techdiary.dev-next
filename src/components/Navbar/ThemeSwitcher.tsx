@@ -12,6 +12,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { Button } from "../ui/button";
 
 const ThemeSwitcher = () => {
   const { _t } = useTranslation();
@@ -42,7 +43,9 @@ const ThemeSwitcher = () => {
   return (
     <>
       <DropdownMenu>
-        <DropdownMenuTrigger>{renderIcon()}</DropdownMenuTrigger>
+        <DropdownMenuTrigger asChild>
+          <Button variant={"ghost"}>{renderIcon()}</Button>
+        </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuLabel>{_t("Color Theme")}</DropdownMenuLabel>
           <DropdownMenuSeparator />

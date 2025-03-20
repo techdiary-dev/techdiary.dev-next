@@ -22,7 +22,7 @@ const Navbar: React.FC<NavbarProps> = async ({ Trailing }) => {
           {Trailing}
           <Link href="/" className="flex items-center gap-2">
             <TechdiaryLogo />
-            <span className="text-lg font-semibold text-foreground hidden md:block">
+            <span className="text-lg font-semibold text-foreground">
               Techdiary
             </span>
           </Link>
