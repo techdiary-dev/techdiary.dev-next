@@ -1,0 +1,25 @@
+@utility wrapper {
+  max-width: 1300px;
+  width: 98%;
+  margin: auto;
+  position: relative;
+}
+
+@utility debug {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border: 5px solid transparent;
+    animation: blink 1000ms;
+    animation-iteration-count: infinite;
+  }
+}
+
+@utility app-border-color {
+  @apply border-slate-200 dark:border-slate-600;
+}
