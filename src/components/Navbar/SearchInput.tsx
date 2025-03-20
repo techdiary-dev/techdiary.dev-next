@@ -5,7 +5,7 @@ const SearchInput = () => {
         <input
           type="text"
           placeholder="Type to search"
-          className="w-full rounded border border-slate-200 bg-slate-100 p-2 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-600 dark:bg-slate-800"
+          className="w-full rounded border border-border bg-muted p-2 focus:outline-none focus:ring-2 focus:ring-primary dark:border-slate-600 dark:bg-slate-800"
           v-model="query"
         />
       </div>

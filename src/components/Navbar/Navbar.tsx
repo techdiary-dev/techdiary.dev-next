@@ -1,29 +1,34 @@
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 import Link from "next/link";
-import ThemeSwitcher from "./ThemeSwitcher";
 import TechdiaryLogo from "../logos/TechdiaryLogo";
-import SearchInput from "./SearchInput";
 import NavbarActions from "./NavbarActions";
+import SearchInput from "./SearchInput";
+import { IAuthSession } from "@/lib/auth-client";
 
 interface NavbarProps {
   Trailing?: React.ReactNode;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ Trailing }) => {
+const Navbar: React.FC<NavbarProps> = async ({ Trailing }) => {
+  const session = await auth.api.getSession({
+    headers: await headers(), // you need to pass the headers object.
+  });
+
   return (
     <div className="sticky left-0 top-0 z-30 w-full border-b border-border bg-background">
-      <div className="h-12 flex items-center justify-between wrapper">
+      <div className="h-12 flex items-center justify-between wrapper gap-3">
         <div className="flex items-center gap-1">
           {Trailing}
           <Link href="/" className="flex items-center gap-2">
             <TechdiaryLogo />
-            <span className="text-lg font-semibold text-foreground">
+            <span className="text-lg font-semibold text-foreground hidden md:block">
               Techdiary
             </span>
           </Link>
         </div>
         <SearchInput />
-
-        <NavbarActions />
+        <NavbarActions authSession={session as IAuthSession} />
       </div>
     </div>
   );
