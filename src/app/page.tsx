@@ -1,3 +1,4 @@
+import BaseLayout from "@/components/layout/BaseLayout";
 import { Metadata } from "next";
 import React from "react";
 
@@ -7,9 +8,9 @@ export const metadata: Metadata = {
 
 const page = () => {
   return (
-    <div>
+    <BaseLayout>
       <h1>আমার নাম রায়হান</h1>
-    </div>
+    </BaseLayout>
   );
 };
 
