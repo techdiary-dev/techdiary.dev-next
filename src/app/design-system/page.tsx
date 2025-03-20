@@ -1,4 +1,5 @@
 import BaseLayout from "@/components/layout/BaseLayout";
+import { Button } from "@/components/ui/button";
 import React from "react";
 
 const DesignSystemPage = () => {
@@ -135,13 +136,11 @@ const DesignSystemPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Buttons</h3>
-              <div className="space-y-2">
-                <button className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:opacity-90">
-                  Primary Button
-                </button>
-                <button className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md hover:opacity-90">
-                  Secondary Button
-                </button>
+              <div className="space-y-2 flex gap-3">
+                <Button>Primary Button</Button>
+                <Button variant={"secondary"}>Secondary Button</Button>
+                <Button variant={"ghost"}>Secondary Button</Button>
+                <Button variant={"link"}>Secondary Button</Button>
               </div>
             </div>
             <div className="space-y-4">
