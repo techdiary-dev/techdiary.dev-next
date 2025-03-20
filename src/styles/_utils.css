@@ -19,7 +19,3 @@
     animation-iteration-count: infinite;
   }
 }
-
-@utility app-border-color {
-  @apply border-slate-200 dark:border-slate-600;
-}
