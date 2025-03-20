@@ -1,10 +1,17 @@
 import React, { PropsWithChildren } from "react";
 import Navbar from "../Navbar/Navbar";
 
-const BaseLayout: React.FC<PropsWithChildren> = ({ children }) => {
+interface Props {
+  NavbarTrailing?: React.ReactNode;
+}
+
+const BaseLayout: React.FC<PropsWithChildren<Props>> = ({
+  children,
+  NavbarTrailing,
+}) => {
   return (
     <>
-      <Navbar />
+      <Navbar Trailing={NavbarTrailing} />
       <main>{children}</main>
     </>
   );
