@@ -10,6 +10,7 @@ import {
 export const users = pgTable("users", {
   id: uuid().primaryKey().defaultRandom(),
   name: varchar("name").notNull(),
+  username: varchar("username").notNull(),
   email: varchar("email").notNull().unique(),
   emailVerified: boolean("email_verified").notNull(),
   image: varchar("image"),

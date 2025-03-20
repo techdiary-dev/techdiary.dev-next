@@ -8,6 +8,14 @@ export const auth = betterAuth({
   }),
   user: {
     modelName: "users",
+    additionalFields: {
+      username: {
+        type: "string",
+        required: false,
+        defaultValue: "user",
+        input: false,
+      },
+    },
   },
   session: {
     modelName: "sessions",
