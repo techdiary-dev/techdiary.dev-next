@@ -1,7 +1,7 @@
 "use client";
 
 import { useTranslation } from "@/i18n/use-translation";
-import { authClient, IAuthSession } from "@/lib/auth-client";
+import { IAuthSession } from "@/lib/auth-client";
 import { Search } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
@@ -23,7 +23,6 @@ interface NavbarActionsProps {
 
 const NavbarActions: React.FC<NavbarActionsProps> = ({ authSession }) => {
   const { toggle, lang, _t } = useTranslation();
-  const session = authClient.useSession();
 
   return (
     <div className="flex items-center gap-2">
@@ -70,7 +69,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ authSession }) => {
             />
           </g>
           <defs>
-            <clipPath id="clip0_9494_69309">
+            <clipPath>
               <rect
                 width={14}
                 height={14}
@@ -84,6 +83,7 @@ const NavbarActions: React.FC<NavbarActionsProps> = ({ authSession }) => {
       </button>
 
       <ThemeSwitcher />
+
       <Button className="hidden md:block">{_t("New diary")}</Button>
 
       {authSession ? (
