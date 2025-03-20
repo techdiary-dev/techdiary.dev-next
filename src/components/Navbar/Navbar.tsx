@@ -1,10 +1,30 @@
+import Link from "next/link";
 import ThemeSwitcher from "./ThemeSwitcher";
+import TechdiaryLogo from "../logos/TechdiaryLogo";
+import SearchInput from "./SearchInput";
+import NavbarActions from "./NavbarActions";
 
-const Navbar = () => {
+interface NavbarProps {
+  Trailing?: React.ReactNode;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ Trailing }) => {
   return (
-    <div>
-      Navbar
-      <ThemeSwitcher />
+    <div className="sticky left-0 top-0 z-30 w-full border-b border-border bg-background">
+      <div className="h-12 flex items-center justify-between wrapper">
+        <div className="flex items-center gap-1">
+          {Trailing}
+          <Link href="/" className="flex items-center gap-2">
+            <TechdiaryLogo />
+            <span className="text-lg font-semibold text-foreground">
+              Techdiary
+            </span>
+          </Link>
+        </div>
+        <SearchInput />
+
+        <NavbarActions />
+      </div>
     </div>
   );
 };
