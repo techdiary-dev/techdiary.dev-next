@@ -155,7 +155,6 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
   /**
    * Updates a record in the database based on where conditions.
    * @param payload Query conditions
-   * @param data Data to update
    */
   async updateOne(
     payload: IPersistentUpdatePayload<DOMAIN_MODEL_TYPE>
@@ -177,7 +176,7 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
     // Build final SQL query
     const sql = `
     UPDATE ${this.tableName}
-    ${setClause ? `SET ${setClause}` : ""} , "updated_at" = now()
+    ${setClause ? `SET ${setClause}` : ""},"updated_at" = now()
     ${whereClause ? `WHERE ${whereClause}` : ""}
     RETURNING ${columns};
   `;

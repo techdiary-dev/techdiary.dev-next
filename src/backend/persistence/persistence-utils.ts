@@ -4,121 +4,110 @@ import {
   WhereCondition,
 } from "./persistence-contracts";
 
+/**
+ * Builds a WHERE clause for SQL queries
+ * @param where Where condition or undefined
+ * @returns Object containing the WHERE clause and values array
+ */
 export const buildWhereClause = <T>(
-  where: WhereCondition<T> | undefined,
-  startValues: any[] = [],
-  logicalOperator: "AND" | "OR" = "AND"
+  where: WhereCondition<T> | undefined
 ): { whereClause: string; values: any[] } => {
   // If no where clause is provided, return empty
   if (!where) {
-    return { whereClause: "", values: startValues };
+    return { whereClause: "", values: [] };
   }
 
-  const conditions: string[] = [];
-  const values = [...startValues]; // Create a copy to avoid modifying the original array
+  const values: any[] = [];
 
-  if ("OR" in where || "AND" in where) {
-    // Process composite WHERE with OR/AND
-    if ("OR" in where && where.OR && where.OR.length > 0) {
-      const { whereClause: orClause, values: orValues } = processConditions(
-        where.OR,
-        values,
-        "OR"
-      );
-      if (orClause) {
-        conditions.push(`(${orClause})`);
-      }
-    }
-
-    if ("AND" in where && where.AND && where.AND.length > 0) {
-      const { whereClause: andClause, values: andValues } = processConditions(
-        where.AND,
-        values,
-        "AND"
-      );
-      if (andClause) {
-        conditions.push(`(${andClause})`);
-      }
-    }
-  } else if ("key" in where && "operator" in where) {
-    // Process a single condition
-    processSimpleCondition(where as SimpleWhere<T>, conditions, values);
-  }
+  // Process the where condition
+  const result = processWhereCondition(where, values);
 
   return {
-    whereClause:
-      conditions.length > 0 ? conditions.join(` ${logicalOperator} `) : "",
+    whereClause: result,
     values,
   };
 };
 
-const processConditions = <T>(
-  conditions: WhereCondition<T>[],
-  startValues: any[] = [],
-  operator: "AND" | "OR" = "AND"
-): { whereClause: string; values: any[] } => {
-  const clauses: string[] = [];
-  const values = [...startValues];
+/**
+ * Process a where condition recursively
+ */
+const processWhereCondition = <T>(
+  where: WhereCondition<T>,
+  values: any[]
+): string => {
+  // Handle composite conditions (AND/OR)
+  if (typeof where === "object") {
+    if ("AND" in where && Array.isArray(where.AND) && where.AND.length > 0) {
+      const conditions = where.AND.map((condition) =>
+        processWhereCondition(condition, values)
+      ).filter(Boolean);
 
-  for (const condition of conditions) {
-    if ("OR" in condition || "AND" in condition) {
-      // Recursive case for nested OR/AND
-      const nestedOperator = "OR" in condition ? "OR" : "AND";
-      const nestedConditions = condition.OR || condition.AND || [];
+      if (conditions.length === 0) return "";
+      if (conditions.length === 1) return conditions[0];
 
-      if (nestedConditions.length > 0) {
-        const { whereClause: nestedClause, values: nestedValues } =
-          processConditions(nestedConditions, values, nestedOperator);
+      return `(${conditions.join(" AND ")})`;
+    }
 
-        if (nestedClause) {
-          clauses.push(`(${nestedClause})`);
-        }
-      }
-    } else if ("key" in condition && "operator" in condition) {
-      // Base case for simple condition
-      processSimpleCondition(condition as SimpleWhere<T>, clauses, values);
+    if ("OR" in where && Array.isArray(where.OR) && where.OR.length > 0) {
+      const conditions = where.OR.map((condition) =>
+        processWhereCondition(condition, values)
+      ).filter(Boolean);
+
+      if (conditions.length === 0) return "";
+      if (conditions.length === 1) return conditions[0];
+
+      return `(${conditions.join(" OR ")})`;
+    }
+
+    // Handle simple conditions
+    if ("key" in where && "operator" in where) {
+      return processSimpleCondition(where as SimpleWhere<T>, values);
     }
   }
 
-  return {
-    whereClause: clauses.join(` ${operator} `),
-    values,
-  };
+  return "";
 };
 
-// Helper function to process a simple condition
+/**
+ * Process a simple condition
+ */
 const processSimpleCondition = <T>(
   condition: SimpleWhere<T>,
-  conditions: string[],
   values: any[]
-): void => {
+): string => {
   const { key, operator, value } = condition;
 
+  if (!key) return ""; // Skip if key is missing
+
+  // Handle arrays for IN and NOT IN operators
   if ((operator === "in" || operator === "not in") && Array.isArray(value)) {
     if (value.length === 0) {
-      conditions.push(operator === "in" ? "FALSE" : "TRUE");
-    } else {
-      const placeholders = value
-        .map((_, i) => `$${values.length + i + 1}`)
-        .join(", ");
-      conditions.push(`"${key.toString()}" ${operator} (${placeholders})`);
-      values.push(...value);
+      return operator === "in" ? "FALSE" : "TRUE";
     }
-  } else if (value === null) {
-    // Handle NULL values
-    if (operator === "=") {
-      conditions.push(`"${key.toString()}" IS NULL`);
-    } else if (operator === "<>") {
-      conditions.push(`"${key.toString()}" IS NOT NULL`);
-    } else {
-      conditions.push(`"${key.toString()}" IS NULL`);
-    }
-  } else {
-    // Standard case with non-null value
-    const placeholder = `$${values.length + 1}`;
-    conditions.push(`"${key.toString()}" ${operator} ${placeholder}`);
-    values.push(value);
+
+    const placeholders = value
+      .map(() => `$${values.length + 1}`)
+      .map((placeholder, index) => {
+        values.push(value[index]);
+        return placeholder;
+      })
+      .join(", ");
+
+    return `"${key.toString()}" ${operator} (${placeholders})`;
   }
+
+  // Handle NULL values
+  if (value === null) {
+    return operator === "="
+      ? `"${key.toString()}" IS NULL`
+      : operator === "<>"
+      ? `"${key.toString()}" IS NOT NULL`
+      : `"${key.toString()}" IS NULL`;
+  }
+
+  // Standard case with non-null value
+  values.push(value);
+  return `"${key.toString()}" ${operator} $${values.length}`;
 };
 
 /**
