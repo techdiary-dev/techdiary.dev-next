@@ -54,7 +54,7 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
+    @apply border-border;
   }
   html {
     @apply scroll-smooth;
@@ -85,13 +85,13 @@
     --popover-foreground: oklch(0.145 0 0);
     --primary: oklch(72.05% 0.1438 274.36);
     --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.97 0 0);
+    --secondary: oklch(86.9% 0.0999 70.72);
     --secondary-foreground: oklch(0.205 0 0);
     --muted: oklch(0.97 0 0);
     --muted-foreground: oklch(0.556 0 0);
-    --accent: oklch(0.97 0 0);
+    --accent: oklch(0.985 0.001 106.423);
     --accent-foreground: oklch(0.205 0 0);
-    --destructive: oklch(0.577 0.245 27.325);
+    --destructive: oklch(0.704 0.191 22.216);
     --destructive-foreground: oklch(0.985 0 0);
     --border: oklch(0.869 0.005 56.366);
     --input: oklch(0.922 0 0);
@@ -120,17 +120,17 @@
     --card-foreground: oklch(0.985 0 0);
     --popover: oklch(0.145 0 0);
     --popover-foreground: oklch(0.985 0 0);
-    --primary: oklch(72.05% 0.1438 274.36);
-    --primary-foreground: oklch(0.985 0 0);
-    --secondary: oklch(0.269 0 0);
-    --secondary-foreground: oklch(0.985 0 0);
+    /* --primary: oklch(72.05% 0.1438 274.36); */
+    /* --primary-foreground: oklch(0.985 0 0); */
+    /* --secondary: oklch(0.269 0 0); */
+    /* --secondary-foreground: oklch(0.985 0 0); */
     --muted: oklch(0.269 0 0);
     --muted-foreground: oklch(0.708 0 0);
-    --accent: oklch(0.269 0 0);
-    --accent-foreground: oklch(0.985 0 0);
-    --destructive: oklch(0.396 0.141 25.723);
-    --destructive-foreground: oklch(0.985 0 0);
-    --border: oklch(0.374 0.01 67.558);
+    --accent: oklch(0.268 0.007 34.298);
+    --accent-foreground: oklch(0.923 0.003 48.717);
+    /* --destructive: oklch(0.396 0.141 25.723); */
+    /* --destructive-foreground: oklch(0.985 0 0); */
+    --border: oklch(0.371 0 0);
     --input: oklch(0.269 0 0);
     --ring: oklch(0.556 0 0);
     --chart-1: oklch(0.488 0.243 264.376);
