@@ -58,7 +58,7 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
    */
   async findRows(payload: IPersistentPaginationPayload<DOMAIN_MODEL_TYPE>) {
     // Default columns to '*' if none are provided
-    const columns = toSnakeCase(payload?.columns as any);
+    const columns = toSnakeCase(payload?.columns as any) ?? "*";
     const { whereClause, values } = buildWhereClause(payload.where);
     const orderByClause = buildOrderByClause(payload?.orderBy);
 

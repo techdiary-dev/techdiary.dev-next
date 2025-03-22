@@ -20,6 +20,7 @@ export interface UserSocial {
   id: number;
   service: string;
   service_uid: string;
+
   user_id: string;
   created_at: Date;
   updated_at: Date;
@@ -29,5 +30,6 @@ export interface UserSession {
   id: string;
   user_id: string;
   token: string;
+  device?: string;
   created_at: Date;
 }

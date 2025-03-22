@@ -1,18 +1,14 @@
-import { headers } from "next/headers";
 import Link from "next/link";
 import TechdiaryLogo from "../logos/TechdiaryLogo";
 
 import SearchInput from "./SearchInput";
+import NavbarActions from "./NavbarActions";
 
 interface NavbarProps {
   Trailing?: React.ReactNode;
 }
 
 const Navbar: React.FC<NavbarProps> = async ({ Trailing }) => {
-  // const session = await auth.api.getSession({
-  //   headers: await headers(), // you need to pass the headers object.
-  // });
-
   return (
     <div className="sticky left-0 top-0 z-30 w-full border-b border-border bg-background">
       <div className="h-12 flex items-center justify-between wrapper gap-3">
@@ -26,7 +22,7 @@ const Navbar: React.FC<NavbarProps> = async ({ Trailing }) => {
           </Link>
         </div>
         <SearchInput />
-        {/* <NavbarActions authSession={session as IAuthSession} /> */}
+        <NavbarActions />
       </div>
     </div>
   );
