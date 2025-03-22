@@ -17,6 +17,8 @@ import SocialLoginCard from "../SocialLoginCard";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SearchIcon } from "lucide-react";
 import { useSession } from "@/store/session.atom";
+import { useAppConfirm } from "../app-confirm";
+import { deleteSession } from "@/auth/auth";
 
 const NavbarActions: React.FC = () => {
   const { toggle, lang, _t } = useTranslation();
@@ -77,24 +79,18 @@ export default NavbarActions;
 const AuthenticatedMenu = () => {
   const { _t } = useTranslation();
   const authSession = useSession();
+  const appConfirm = useAppConfirm();
 
-  // const handleLogout = async () => {
-  //   modals.openConfirmModal({
-  //     title: _t("Sure to logout?"),
-  //     children: (
-  //       <Text size="sm">{_t("You will be logged out after this")}</Text>
-  //     ),
-  //     labels: { confirm: _t("Logout"), cancel: _t("Cancel") },
-  //     onCancel: () => console.log("না"),
-  //     onConfirm: () => {
-  //       authApi.logout().finally(() => {
-  //         setCurrentUser(null);
-  //         window.location.href = "/";
-  //       });
-  //     },
-  //     confirmProps: { color: "red" },
-  //   });
-  // };
+  const handleLogout = async () => {
+    appConfirm.show({
+      title: _t("Sure to logout?"),
+      children: <p>{_t("You will be logged out after this")}</p>,
+      async onConfirm() {
+        await deleteSession();
+        window.location.reload();
+      },
+    });
+  };
 
   return (
     <DropdownMenu>
@@ -111,7 +107,9 @@ const AuthenticatedMenu = () => {
         <DropdownMenuItem>{_t("Dashboard")}</DropdownMenuItem>
         <DropdownMenuItem>{_t("Bookmarks")}</DropdownMenuItem>
         <DropdownMenuItem>{_t("Settings")}</DropdownMenuItem>
-        <DropdownMenuItem>{_t("Logout")}</DropdownMenuItem>
+        <DropdownMenuItem onClick={handleLogout}>
+          {_t("Logout")}
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
@@ -119,38 +117,6 @@ const AuthenticatedMenu = () => {
 
 const UnAuthenticatedMenu = () => {
   const { _t } = useTranslation();
-  const handleLogin = async (provider: string) => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/api/oauth/${provider}`;
-  };
-
-  // return (
-  //   <Menu shadow="md" width={200}>
-  //     <Menu.Target>
-  //       <UnstyledButton>
-  //         <Avatar radius={"sm"} />
-  //       </UnstyledButton>
-  //     </Menu.Target>
-
-  //     <Menu.Dropdown>
-  //       <Menu.Item
-  //         component="button"
-  //         onClick={() => {
-  //           handleLogin("github");
-  //         }}
-  //         leftSection={<AiFillGithub size={18} />}
-  //       >
-  //         {_t("Login with Github")}
-  //       </Menu.Item>
-  //       <Menu.Item
-  //         component="button"
-  //         onClick={() => handleLogin("google")}
-  //         leftSection={<AiOutlineGoogle size={18} />}
-  //       >
-  //         {_t("Login with Google")}
-  //       </Menu.Item>
-  //     </Menu.Dropdown>
-  //   </Menu>
-  // );
 
   return (
     <Popover>

@@ -1,3 +1,5 @@
+"use server";
+
 import { persistenceRepository } from "@/backend/persistence-repositories";
 import { eq } from "@/backend/persistence/database-drivers/persistence-where-operator";
 import { cookies } from "next/headers";
@@ -70,3 +72,20 @@ export const getSession = cache(async (): Promise<SessionResult> => {
 
   return result;
 });
+
+export const deleteSession = async () => {
+  const _cookies = await cookies();
+  const token = _cookies.get("session")?.value ?? null;
+  if (!token) {
+    return;
+  }
+
+  try {
+    await persistenceRepository.userSession.deleteRows({
+      where: eq("token", token),
+    });
+  } catch (error) {
+  } finally {
+    _cookies.delete("session");
+  }
+};

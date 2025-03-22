@@ -11,6 +11,7 @@ import { Provider as JotaiProvider } from "jotai";
 import { ThemeProvider } from "next-themes";
 import { SessionResult } from "@/auth/auth";
 import SessionProvider from "@/auth/SessionProvider";
+import { AppConfirmProvider } from "../app-confirm";
 
 interface Props {
   session: SessionResult;
@@ -24,7 +25,9 @@ const CommonProviders: React.FC<PropsWithChildren<Props>> = ({
     <JotaiProvider store={jotaiStore}>
       <QueryClientProvider client={tanstackQueryClient}>
         <SessionProvider session={session}>
-          <ThemeProvider attribute="data-theme">{children}</ThemeProvider>
+          <AppConfirmProvider>
+            <ThemeProvider attribute="data-theme">{children}</ThemeProvider>
+          </AppConfirmProvider>
         </SessionProvider>
       </QueryClientProvider>
       <JotaiDevtools />
