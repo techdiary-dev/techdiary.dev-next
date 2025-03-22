@@ -47,7 +47,7 @@ export async function GET(request: Request): Promise<Response> {
 
   const githubUserResponse = (await githubAPI.json()) as IGithubUser;
   const dbUser = await syncAuthenticatedGithubUser(githubUserResponse);
-  await createSession(dbUser.id);
+  await createSession(dbUser.id, request);
 
   return new Response(null, {
     status: 302,

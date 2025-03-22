@@ -32,8 +32,9 @@ export const syncAuthenticatedGithubUser = async (
     });
   }
 
-  // check user has social account
+  console.log({ payload });
 
+  // check user has social account
   const [userSocial] = await persistenceRepository.userSocial.findRows({
     where: and(
       eq("service", "github"),

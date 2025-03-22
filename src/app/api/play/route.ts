@@ -1,12 +1,23 @@
 import { persistenceRepository } from "@/backend/persistence-repositories";
 import {
+  and,
+  asc,
   desc,
+  eq,
   like,
+  or,
 } from "@/backend/persistence/database-drivers/persistence-where-operator";
+
 import { NextResponse } from "next/server";
 
 export async function GET() {
   // const users = await persistenceRepository.user.findRows({
+  //   where: and(
+  //     eq("id", "1"),
+  //     like("email", "%+test%"),
+  //     eq("name", "Rayhan"),
+  //     or(eq("id", "1"), eq("id", "2"))
+  //   ),
   //   columns: ["id", "name", "username", "email", "profile_photo", "created_at"],
   //   orderBy: [desc("created_at")],
   // });
@@ -23,7 +34,7 @@ export async function GET() {
   // });
 
   const updatedUser = await persistenceRepository.user.updateOne({
-    where: like("email", "+test"),
+    where: like("email", "%+test%"),
     data: {
       name: "Updated names",
     },
