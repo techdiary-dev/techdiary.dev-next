@@ -4,6 +4,7 @@ import {
   IPersistentDriver,
   IPersistentPaginationPayload,
   IPersistentQueryPayload,
+  IPersistentUpdatePayload,
 } from "./persistence-contracts";
 import {
   buildOrderByClause,
@@ -125,8 +126,8 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
 
     // Build the SQL query
     const sql = `
-      INSERT INTO ${this.tableName} (${columns})
-      VALUES (${placeholders})
+      INSERT INTO ${this.tableName} (${columns},created_at,updated_at)
+      VALUES (${placeholders}, now(), now())
       RETURNING *;
     `;
 
@@ -157,8 +158,7 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
    * @param data Data to update
    */
   async updateOne(
-    payload: IPersistentQueryPayload<DOMAIN_MODEL_TYPE>,
-    data: Partial<DOMAIN_MODEL_TYPE>
+    payload: IPersistentUpdatePayload<DOMAIN_MODEL_TYPE>
   ): Promise<DOMAIN_MODEL_TYPE> {
     // Build WHERE clause
     const { whereClause, values: whereValues } = buildWhereClause(
@@ -166,7 +166,10 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
     );
 
     // Build SET clause using the where values as starting point
-    const { setClause, values: allValues } = buildSetClause(data, whereValues);
+    const { setClause, values: allValues } = buildSetClause(
+      payload.data,
+      whereValues
+    );
 
     // Handle columns for RETURNING
     const columns = toSnakeCase((payload.columns as any) || ["*"]);
@@ -174,7 +177,7 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
     // Build final SQL query
     const sql = `
     UPDATE ${this.tableName}
-    ${setClause ? `SET ${setClause}` : ""}
+    ${setClause ? `SET ${setClause}` : ""} , "updated_at" = now()
     ${whereClause ? `WHERE ${whereClause}` : ""}
     RETURNING ${columns};
   `;
