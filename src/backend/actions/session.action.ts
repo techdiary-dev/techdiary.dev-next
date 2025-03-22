@@ -5,13 +5,13 @@ import { cookies } from "next/headers";
 import { UserSession } from "../models/domain-models";
 import { pgClient } from "../persistence/database-drivers/pg.client";
 import { PersistentRepository } from "../persistence/persistence.repository";
+import { persistenceRepository } from "../persistence-repositories";
 
 export const createSession = async (userId: string) => {
-  const repo = new PersistentRepository<UserSession>("user_sessions", pgClient);
   const _cookies = await cookies();
   const token = generateRandomString(50);
 
-  await repo.createOne({
+  await persistenceRepository.userSession.createOne({
     user_id: userId,
     token,
   });
@@ -20,7 +20,7 @@ export const createSession = async (userId: string) => {
     path: "/",
     secure: process.env.NODE_ENV === "production",
     httpOnly: true,
-    maxAge: 60 * 10,
+    maxAge: 60 * 60 * 24 * 30,
     sameSite: "lax",
   });
 };
