@@ -7,6 +7,7 @@ export interface ISession {
   id: string;
   user_id: string;
   token: string;
+  device?: string;
 }
 
 export interface ISessionUser {
@@ -17,7 +18,7 @@ export interface ISessionUser {
   profile_photo: string;
 }
 
-type SessionResult =
+export type SessionResult =
   | { session: ISession; user: ISessionUser }
   | { session: null; user: null };
 
@@ -27,6 +28,7 @@ export const validateSessionToken = async (
   const [session] = await persistenceRepository.userSession.findRows({
     limit: 1,
     where: eq("token", token),
+    columns: ["id", "user_id", "token", "device"],
   });
   if (!session) {
     return { session: null, user: null };

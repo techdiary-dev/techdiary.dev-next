@@ -8,14 +8,12 @@ import { persistenceRepository } from "../persistence-repositories";
 export const createSession = async (userId: string, request: Request) => {
   const _cookies = await cookies();
   const token = generateRandomString(50);
-
   const agent = userAgent(request);
 
-  console.log({ agent });
-
   await persistenceRepository.userSession.createOne({
-    user_id: userId,
     token,
+    user_id: userId,
+    device: `${agent.os.name} ${agent.browser.name} ${agent.browser.version}`,
   });
 
   _cookies.set("session", token, {
