@@ -1,0 +1,1 @@
+ALTER TABLE "user_sessions" ADD COLUMN "token" varchar NOT NULL;

@@ -11,38 +11,38 @@ const DesignSystemPage = () => {
           <h2 className="text-2xl font-bold mb-6">Colors</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Primary</h3>
-              <div className="bg-primary text-primary-foreground h-12 rounded-md grid place-items-center">
-                Primary
+              <h3 className="text-sm font-semibold">Primary Background</h3>
+              <div className="bg-primary text-primary-foreground h-32 rounded-md grid place-items-center">
+                Primary Foreground
               </div>
             </div>
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Secondary</h3>
-              <div className="bg-secondary text-secondary-foreground h-12 rounded-md grid place-items-center">
-                Secondary
+              <h3 className="text-sm font-semibold">Secondary Background</h3>
+              <div className="bg-secondary text-secondary-foreground h-32 rounded-md grid place-items-center">
+                Secondary Foreground
               </div>
             </div>
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Accent</h3>
-              <div className="bg-accent text-accent-foreground h-12 rounded-md grid place-items-center">
-                Accent
+              <h3 className="text-sm font-semibold">Accent Background</h3>
+              <div className="bg-accent text-accent-foreground h-32 rounded-md grid place-items-center">
+                Accent Foreground
               </div>
             </div>
             <div className="space-y-2">
-              <h3 className="text-lg font-semibold">Muted</h3>
-              <div className="bg-muted text-muted-foreground h-12 rounded-md grid place-items-center">
-                Muted
+              <h3 className="text-lg font-semibold">Muted Background</h3>
+              <div className="bg-muted text-muted-foreground h-32 rounded-md grid place-items-center">
+                Muted Foreground
               </div>
             </div>
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">Destructive</h3>
-              <div className="bg-destructive text-destructive-forground h-12 rounded-md grid place-items-center">
-                Destructive
+              <div className="bg-destructive text-destructive-forground h-32 rounded-md grid place-items-center">
+                Destructive Foreground
               </div>
             </div>
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">Border</h3>
-              <div className="border-2 border-border h-12 rounded-md grid place-items-center">
+              <div className="border-2 border-border h-32 rounded-md grid place-items-center">
                 Border
               </div>
             </div>
@@ -58,9 +58,7 @@ const DesignSystemPage = () => {
               <div className="space-y-2">
                 <p className="font-sans">Sans Font (Geist Sans)</p>
                 <p className="font-mono">Mono Font (Geist Mono)</p>
-                <p className="font-Kohinoor-bangla">Kohinoor Bangla</p>
-                <p className="font-siliguri">Hind Siliguri</p>
-                <p className="font-boshonto">Boshonto</p>
+                <p className="font-Kohinoor-bangla">কোহিনুর বাংলা</p>
               </div>
             </div>
             <div>
@@ -73,21 +71,6 @@ const DesignSystemPage = () => {
                 <p className="text-xl">Extra Large (text-xl)</p>
                 <p className="text-2xl">2XL (text-2xl)</p>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Spacing Section */}
-        <section>
-          <h2 className="text-2xl font-bold mb-6">Spacing</h2>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <div className="bg-muted h-4 w-1">1 (0.25rem)</div>
-              <div className="bg-muted h-4 w-2">2 (0.5rem)</div>
-              <div className="bg-muted h-4 w-4">4 (1rem)</div>
-              <div className="bg-muted h-4 w-8">8 (2rem)</div>
-              <div className="bg-muted h-4 w-12">12 (3rem)</div>
-              <div className="bg-muted h-4 w-16">16 (4rem)</div>
             </div>
           </div>
         </section>
@@ -117,15 +100,15 @@ const DesignSystemPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">Small</h3>
-              <div className="bg-card h-12 rounded-md shadow-sm"></div>
+              <div className="bg-card h-12 rounded-md border shadow-sm"></div>
             </div>
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">Medium</h3>
-              <div className="bg-card h-12 rounded-md shadow-md"></div>
+              <div className="bg-card h-12 rounded-md shadow-md border"></div>
             </div>
             <div className="space-y-2">
               <h3 className="text-lg font-semibold">Large</h3>
-              <div className="bg-card h-12 rounded-md shadow-lg"></div>
+              <div className="bg-card h-12 rounded-md shadow-lg border"></div>
             </div>
           </div>
         </section>
@@ -139,24 +122,23 @@ const DesignSystemPage = () => {
               <div className="space-y-2 flex gap-3">
                 <Button>Primary Button</Button>
                 <Button variant={"secondary"}>Secondary Button</Button>
-                <Button variant={"ghost"}>Secondary Button</Button>
-                <Button variant={"link"}>Secondary Button</Button>
+                <Button variant={"outline"}>Outline Button</Button>
+                <Button variant={"ghost"}>Ghost Button</Button>
+                <Button variant={"link"}>Link Button</Button>
               </div>
             </div>
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Links</h3>
-              <div className="space-y-2">
-                <a href="#" className="text-primary hover:underline">
-                  Primary Link
-                </a>
-                <a
-                  href="#"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  Muted Link
-                </a>
-              </div>
-            </div>
+          </div>
+        </section>
+
+        <section>
+          <h3 className="text-lg font-semibold">Links</h3>
+          <div className="flex gap-2">
+            <a href="#" className="text-primary hover:underline">
+              Primary Link
+            </a>
+            <a href="#" className="text-muted-foreground hover:text-foreground">
+              Muted Link
+            </a>
           </div>
         </section>
       </div>

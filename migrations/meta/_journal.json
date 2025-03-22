@@ -5,8 +5,22 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1742497488737,
-      "tag": "0000_romantic_shinko_yamashiro",
+      "when": 1742583150561,
+      "tag": "0000_real_nomad",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1742589976592,
+      "tag": "0001_useful_husk",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1742595373469,
+      "tag": "0002_wakeful_dorian_gray",
       "breakpoints": true
     }
   ]
