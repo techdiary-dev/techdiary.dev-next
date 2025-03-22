@@ -7,6 +7,7 @@ import { pgClient } from "../persistence/database-drivers/pg.client";
 import {
   and,
   asc,
+  desc,
   eq,
 } from "../persistence/database-drivers/persistence-where-operator";
 import { persistenceRepository } from "../persistence-repositories";
@@ -17,6 +18,7 @@ export const syncAuthenticatedGithubUser = async (
   let [user] = await persistenceRepository.user.findRows({
     where: eq("email", payload.email),
     columns: ["id", "name", "username", "email"],
+    orderBy: [desc("created_at")],
     limit: 1,
   });
 
@@ -25,12 +27,13 @@ export const syncAuthenticatedGithubUser = async (
       name: payload.name,
       username: payload.login,
       email: payload.email,
-      profilePhoto: payload.avatar_url,
+      profile_photo: payload.avatar_url,
       bio: payload.bio,
     });
   }
 
   // check user has social account
+
   const [userSocial] = await persistenceRepository.userSocial.findRows({
     where: and(
       eq("service", "github"),

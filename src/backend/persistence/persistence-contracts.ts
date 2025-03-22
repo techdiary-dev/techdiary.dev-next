@@ -67,6 +67,12 @@ export interface IPersistentQueryPayload<T> {
   columns?: Array<keyof T>;
 }
 
+export interface IPersistentUpdatePayload<T> {
+  where: WhereCondition<T>; // No longer allows arrays
+  data: Partial<T>;
+  columns?: Array<keyof T>;
+}
+
 export interface IPagination<T> {
   page?: number;
   limit?: number;

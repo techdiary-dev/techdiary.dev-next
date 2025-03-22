@@ -293,8 +293,10 @@ export const buildSetClause = <T>(
 
 // Helper function to convert camelCase to snake_case
 export function toSnakeCase(str: string): string {
-  return str
-    .replace(/([A-Z])/g, "_$1")
-    .replace(/^_/, "")
-    .toLowerCase();
+  // return str
+  //   ?.replace(/([A-Z])/g, "_$1")
+  //   ?.replace(/^_/, "")
+  //   ?.toLowerCase();
+
+  return str;
 }
