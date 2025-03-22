@@ -11,6 +11,8 @@ export const createSession = async (userId: string, request: Request) => {
 
   const agent = userAgent(request);
 
+  console.log({ agent });
+
   await persistenceRepository.userSession.createOne({
     user_id: userId,
     token,
