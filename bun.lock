@@ -1,5 +1,5 @@
 {
-  "lockfileVersion": 0,
+  "lockfileVersion": 1,
   "workspaces": {
     "": {
       "name": "techdiary.dev-next",
@@ -30,6 +30,7 @@
         "next": "^15.2.3",
         "next-themes": "^0.4.6",
         "pg": "^8.14.1",
+        "pg-cursor": "^2.13.1",
         "react": "^19",
         "react-dom": "^19",
         "react-hook-form": "^7.54.2",
@@ -947,6 +948,8 @@
     "pg-cloudflare": ["pg-cloudflare@1.1.1", "", {}, "sha512-xWPagP/4B6BgFO+EKz3JONXv3YDgvkbVrGw2mTo3D6tVDQRh1e7cqVGvyR3BE+eQgAvx1XhW/iEASj4/jCWl3Q=="],
 
     "pg-connection-string": ["pg-connection-string@2.7.0", "", {}, "sha512-PI2W9mv53rXJQEOb8xNR8lH7Hr+EKa6oJa38zsK0S/ky2er16ios1wLKhZyxzD7jUReiWokc9WK5nxSnC7W1TA=="],
+
+    "pg-cursor": ["pg-cursor@2.13.1", "", { "peerDependencies": { "pg": "^8" } }, "sha512-t7niROd7/BVlRn2juI0S0MP/Ps87lNMpmnxMRQMOH0fboL0n7gH/MxpymSdR4rZRcPfoR3Sx47JG1u5JOJf6Gg=="],
 
     "pg-int8": ["pg-int8@1.0.1", "", {}, "sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw=="],
 
