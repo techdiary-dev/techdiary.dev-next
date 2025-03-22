@@ -199,7 +199,7 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
     payload: IPersistentQueryPayload<DOMAIN_MODEL_TYPE>
   ): Promise<DOMAIN_MODEL_TYPE[]> {
     const { whereClause, values } = buildWhereClause(payload.where);
-    const columns = toSnakeCase(payload.columns as any);
+    const columns = toSnakeCase(payload.columns as any) || "*";
 
     const sql = `
         DELETE
