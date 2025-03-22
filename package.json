@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "migrate:generate": "npx drizzle-kit generate",
+    "migrate:push-db": "npx drizzle-kit push"
   },
   "dependencies": {
     "@cloudinary/react": "^1.14.1",
