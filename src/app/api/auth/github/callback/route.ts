@@ -18,7 +18,7 @@ export async function GET(request: Request) {
 
     const githubUser = await githubOAuthService.getUserInfo(code!, state!);
 
-    const dbUser = await userRepository.bootSocialUser({
+    const bootedSocialUser = await userRepository.bootSocialUser({
       service: "github",
       service_uid: githubUser.id.toString(),
       name: githubUser.name,
@@ -27,8 +27,9 @@ export async function GET(request: Request) {
       profile_photo: githubUser.avatar_url,
       bio: githubUser.bio,
     });
+
     await sessionRepository.createLoginSession({
-      user_id: dbUser?.id!,
+      user_id: bootedSocialUser?.user.id!,
       request,
     });
 
@@ -45,7 +46,7 @@ export async function GET(request: Request) {
     if (error instanceof Error) {
       return NextResponse.json(
         { error: "Something went wrong" },
-        { status: 500 }
+        { status: 500 },
       );
     }
   }
