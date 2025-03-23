@@ -4,12 +4,14 @@ import { Metadata } from "next";
 import HomeLeftSidebar from "./_components/HomeLeftSidebar";
 import HomeRightSidebar from "./_components/HomeRightSidebar";
 import SidebarToggleButton from "./_components/SidebarToggleButton";
+import { articleRepository } from "@/backend/services/article.repository";
 
 export const metadata: Metadata = {
   title: "Home",
 };
 
 const Page = async () => {
+  const articles = await articleRepository.articleFeed({ page: 1, limit: 10 });
   return (
     <HomepageLayout
       LeftSidebar={<HomeLeftSidebar />}
@@ -17,6 +19,7 @@ const Page = async () => {
       NavbarTrailing={<SidebarToggleButton />}
     >
       <h1>{_t("Home")}</h1>
+      <pre>{JSON.stringify(articles, null, 2)}</pre>
     </HomepageLayout>
   );
 };

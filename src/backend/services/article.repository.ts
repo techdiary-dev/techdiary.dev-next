@@ -101,6 +101,7 @@ class ArticleRepository extends PersistentRepository<Article> {
         page: input.page,
         limit: input.limit,
         orderBy: [desc("published_at")],
+        columns: ["id", "title", "handle", "cover_image"],
       });
     } catch (error) {
       handleRepositoryException(error);
