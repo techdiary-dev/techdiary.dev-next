@@ -204,8 +204,8 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
     const sql = `
         DELETE
         FROM ${this.tableName} ${
-      whereClause ? `WHERE ${whereClause}` : ""
-    } RETURNING ${columns};
+          whereClause ? `WHERE ${whereClause}` : ""
+        } RETURNING ${columns};
     `;
 
     const result = await this.executeSQL(sql, values);

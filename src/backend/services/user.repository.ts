@@ -11,10 +11,11 @@ class UserRepository extends PersistentRepository<User> {
   }
 
   async bootSocialUser(
-    _input: z.infer<typeof UserRepositoryInput.syncUserInput>
+    _input: z.infer<typeof UserRepositoryInput.syncSocialUserInput>
   ) {
     try {
-      const input = await UserRepositoryInput.syncUserInput.parseAsync(_input);
+      const input =
+        await UserRepositoryInput.syncSocialUserInput.parseAsync(_input);
       let [user] = await this.findRows({
         where: eq("email", input.email),
         columns: ["id", "name", "username", "email"],
@@ -62,8 +63,8 @@ class UserRepository extends PersistentRepository<User> {
 
 export const userRepository = new UserRepository();
 export const UserRepositoryInput = {
-  syncUserInput: z.object({
-    service: z.enum(["github", "google", "facebook"]),
+  syncSocialUserInput: z.object({
+    service: z.enum(["github"]),
     service_uid: z.string(),
     name: z.string(),
     username: z.string(),
