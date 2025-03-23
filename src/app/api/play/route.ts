@@ -6,7 +6,7 @@ import {
   eq,
   like,
   or,
-} from "@/backend/persistence/database-drivers/persistence-where-operator";
+} from "@/backend/persistence/persistence-where-operator";
 
 import { NextResponse } from "next/server";
 

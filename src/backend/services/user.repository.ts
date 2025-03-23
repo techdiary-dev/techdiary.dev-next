@@ -1,11 +1,7 @@
 import { z } from "zod";
 import { User } from "../models/domain-models";
 import { persistenceRepository } from "../persistence-repositories";
-import {
-  and,
-  desc,
-  eq,
-} from "../persistence/database-drivers/persistence-where-operator";
+import { and, desc, eq } from "../persistence/persistence-where-operator";
 import { PersistentRepository } from "../persistence/persistence.repository";
 import { handleRepositoryException } from "./RepositoryException";
 
