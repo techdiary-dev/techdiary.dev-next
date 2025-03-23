@@ -40,10 +40,13 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     if (error instanceof RepositoryException) {
-      return NextResponse.json({ error: error.toString() });
+      return NextResponse.json({ error: error.toString() }, { status: 400 });
     }
     if (error instanceof Error) {
-      return NextResponse.json({ error: error.message });
+      return NextResponse.json(
+        { error: "Something went wrong" },
+        { status: 500 }
+      );
     }
   }
 }
