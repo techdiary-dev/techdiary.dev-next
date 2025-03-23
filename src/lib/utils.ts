@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { z } from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -16,4 +17,10 @@ export const generateRandomString = (length: number): string => {
   }
 
   return result;
+};
+
+export const zodErrorToString = (err: z.ZodError) => {
+  return err.errors.reduce((acc, curr) => {
+    return acc + curr.message + "\n";
+  }, "");
 };
