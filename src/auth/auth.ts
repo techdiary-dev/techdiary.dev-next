@@ -1,7 +1,7 @@
 "use server";
 
 import { persistenceRepository } from "@/backend/persistence-repositories";
-import { eq } from "@/backend/persistence/database-drivers/persistence-where-operator";
+import { eq } from "@/backend/persistence/persistence-where-operator";
 import { cookies } from "next/headers";
 import { cache } from "react";
 

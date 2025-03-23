@@ -1,6 +1,7 @@
 import { Pool } from "pg";
 import { IPersistentDriver } from "../persistence-contracts";
 import { buildSafeQuery } from "../persistence-utils";
+import { PersistenceDriverError } from "./PersistenceDriverError";
 
 declare global {
   var pgClient: IPersistentDriver | undefined;
@@ -12,10 +13,29 @@ export class PgDatabaseClient implements IPersistentDriver {
   private pool: Pool;
 
   private constructor() {
-    console.log("Creating new Postgres client");
-    this.pool = new Pool({
-      connectionString: process.env.DATABASE_URL!,
-    });
+    try {
+      if (!process.env.DATABASE_URL) {
+        throw new PersistenceDriverError(
+          "DATABASE_URL environment variable is not defined"
+        );
+      }
+
+      console.log("Creating new Postgres client");
+      this.pool = new Pool({
+        connectionString: process.env.DATABASE_URL,
+      });
+
+      // Test the connection
+      this.pool.on("error", (err) => {
+        console.error("Unexpected error on idle client", err);
+        throw new PersistenceDriverError("Database pool error", err);
+      });
+    } catch (error) {
+      throw new PersistenceDriverError(
+        "Failed to initialize database connection",
+        error
+      );
+    }
   }
 
   public static getInstance(): PgDatabaseClient {
@@ -25,30 +45,58 @@ export class PgDatabaseClient implements IPersistentDriver {
     return PgDatabaseClient.instance;
   }
 
-  public getPool(): Pool {
-    return this.pool;
-  }
-
   /**
    * Executes a raw SQL query with the provided values.
    * @param sql
    * @param values
    */
   async executeSQL(sql: string, values: Array<any>): Promise<{ rows: any[] }> {
-    // Escapes a single value safely
+    try {
+      if (!sql) {
+        throw new PersistenceDriverError("SQL query is required");
+      }
 
-    console.log({
-      sql,
-      values,
-    });
+      console.log({
+        sql,
+        values,
+      });
 
-    const safeSql = buildSafeQuery(sql, values);
+      const safeSql = buildSafeQuery(sql, values);
+      const client = await this.pool.connect();
 
-    const result = await this.pool.query(safeSql);
+      try {
+        const result = await client.query(safeSql);
+        return {
+          rows: result.rows as any[],
+        };
+      } catch (error) {
+        throw new PersistenceDriverError(
+          `Query execution failed: ${sql}`,
+          error
+        );
+      } finally {
+        client.release();
+      }
+    } catch (error) {
+      if (error instanceof PersistenceDriverError) {
+        throw error;
+      }
+      throw new PersistenceDriverError("Database operation failed", error);
+    }
+  }
 
-    return {
-      rows: result.rows as any[],
-    };
+  /**
+   * Closes the database connection pool
+   */
+  async close(): Promise<void> {
+    try {
+      await this.pool.end();
+    } catch (error) {
+      throw new PersistenceDriverError(
+        "Failed to close database connection",
+        error
+      );
+    }
   }
 }
 
