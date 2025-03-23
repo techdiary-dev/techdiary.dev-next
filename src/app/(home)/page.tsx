@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 
 const Page = async () => {
   const articles = await articleRepository.articleFeed({ page: 1, limit: 10 });
+
   return (
     <HomepageLayout
       LeftSidebar={<HomeLeftSidebar />}
