@@ -33,3 +33,8 @@ export interface UserSession {
   device?: string;
   created_at: Date;
 }
+
+export interface IServerFile {
+  key: string;
+  provider: string;
+}
