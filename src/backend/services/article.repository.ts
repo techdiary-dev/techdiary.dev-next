@@ -1,9 +1,12 @@
 import { z } from "zod";
 import { Article } from "../models/domain-models";
 import { pgClient } from "../persistence/database-drivers/pg.client";
-import { eq } from "../persistence/persistence-where-operator";
+import { and, desc, eq, neq } from "../persistence/persistence-where-operator";
 import { PersistentRepository } from "../persistence/persistence.repository";
-import { handleRepositoryException } from "./RepositoryException";
+import {
+  handleRepositoryException,
+  RepositoryException,
+} from "./RepositoryException";
 
 class ArticleRepository extends PersistentRepository<Article> {
   constructor() {
@@ -55,6 +58,54 @@ class ArticleRepository extends PersistentRepository<Article> {
       handleRepositoryException(error);
     }
   }
+
+  // Delete an article
+  async deleteArticle(article_id: string) {
+    try {
+      const deletedArticles = await this.deleteRows({
+        where: eq("id", article_id),
+      });
+
+      if (!deletedArticles || deletedArticles.length === 0) {
+        throw new RepositoryException(
+          "Article not found or could not be deleted"
+        );
+      }
+
+      return deletedArticles[0];
+    } catch (error) {
+      handleRepositoryException(error);
+    }
+  }
+
+  // Get recent articles
+  async findRecentArticles(limit: number = 5): Promise<Article[]> {
+    try {
+      return this.findRows({
+        where: and(eq("is_published", true), neq("published_at", null)),
+        limit,
+        orderBy: [desc("published_at")],
+      });
+    } catch (error) {
+      handleRepositoryException(error);
+      return [];
+    }
+  }
+
+  async articleFeed(_input: z.infer<typeof ArticleRepositoryInput.feedInput>) {
+    try {
+      const input = await ArticleRepositoryInput.feedInput.parseAsync(_input);
+
+      return this.findAllWithPagination({
+        where: and(eq("is_published", true), neq("published_at", null)),
+        page: input.page,
+        limit: input.limit,
+        orderBy: [desc("published_at")],
+      });
+    } catch (error) {
+      handleRepositoryException(error);
+    }
+  }
 }
 
 export const articleRepository = new ArticleRepository();
@@ -90,7 +141,7 @@ export const ArticleRepositoryInput = {
     is_published: z.boolean().optional(),
   }),
 
-  findPublishedArticlesInput: z.object({
+  feedInput: z.object({
     page: z.number().default(1),
     limit: z.number().default(10),
   }),
