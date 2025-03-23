@@ -38,3 +38,21 @@ export interface IServerFile {
   key: string;
   provider: string;
 }
+
+export interface ArticleMetadata {}
+
+export interface Article {
+  id: string;
+  title: string;
+  handle: string;
+  excerpt?: string | null;
+  body?: string | null;
+  cover_image?: IServerFile | null;
+  is_published: boolean;
+  published_at?: Date | null;
+  approved_at?: Date | null;
+  metadata?: ArticleMetadata | null;
+  author_id: string;
+  created_at: Date;
+  updated_at: Date;
+}
