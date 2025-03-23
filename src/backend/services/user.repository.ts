@@ -54,7 +54,10 @@ class UserRepository extends PersistentRepository<User> {
         });
       }
 
-      return user;
+      return {
+        user,
+        userSocial,
+      };
     } catch (error) {
       handleRepositoryException(error);
     }
