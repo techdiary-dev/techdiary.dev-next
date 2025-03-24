@@ -4,14 +4,15 @@ import React from "react";
 import { NextPage } from "next";
 
 interface ArticlePageProps {
-  params: {
+  params: Promise<{
     username: string;
     articleHandle: string;
-  };
+  }>;
 }
 
-const page: NextPage<ArticlePageProps> = async ({ params }) => {
-  const article = await articleActions.articleDetail(params.articleHandle);
+const Page: NextPage<ArticlePageProps> = async ({ params }) => {
+  const _params = await params;
+  const article = await articleActions.articleDetail(_params.articleHandle);
 
   return (
     <BaseLayout>
@@ -22,4 +23,4 @@ const page: NextPage<ArticlePageProps> = async ({ params }) => {
   );
 };
 
-export default page;
+export default Page;
