@@ -21,7 +21,7 @@ const HomepageLayout: React.FC<PropsWithChildren<Props>> = ({
           </aside>
         )}
 
-        <div className="col-span-12 overflow-y-auto px-3 pt-3 md:col-span-9 md:border-l md:pt-6 lg:col-span-6 lg:border-r">
+        <div className="col-span-12 overflow-y-auto md:col-span-9 md:border-l md:pt-6 lg:col-span-6 lg:border-r">
           {children}
         </div>
 
