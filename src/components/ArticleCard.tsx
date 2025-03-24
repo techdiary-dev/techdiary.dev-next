@@ -1,15 +1,19 @@
+"use client";
+
 import { useTranslation } from "@/i18n/use-translation";
 import Link from "next/link";
-import React from "react";
+import React, { useMemo } from "react";
 
 interface ArticleCardProps {
   id: string;
   title: string;
+  handle: string;
   excerpt: string;
   coverImage?: string;
   author: {
     name: string;
     avatar: string;
+    username: string;
   };
   publishedAt: string;
   readingTime: number;
@@ -20,6 +24,7 @@ interface ArticleCardProps {
 const ArticleCard = ({
   id,
   title,
+  handle,
   excerpt,
   coverImage,
   author,
@@ -29,6 +34,11 @@ const ArticleCard = ({
   comments,
 }: ArticleCardProps) => {
   const { lang } = useTranslation();
+
+  const articleUrl = useMemo(() => {
+    return `/${author.username}/${handle}`;
+  }, [author.username, handle]);
+
   return (
     <div data-article-id={id} className="flex flex-col p-4 sm:p-5 group">
       <div className="mb-4 flex items-center">
@@ -40,7 +50,12 @@ const ArticleCard = ({
           />
         </div>
         <div className="ml-2.5">
-          <h4 className="text-sm font-medium">{author.name}</h4>
+          <Link
+            href={`/${author.username}`}
+            className="text-sm font-medium text-foreground"
+          >
+            {author.name}
+          </Link>
           <div className="flex items-center text-xs text-muted-foreground">
             <time dateTime={publishedAt}>
               {new Date(publishedAt).toLocaleDateString(
@@ -60,13 +75,13 @@ const ArticleCard = ({
       <div className="flex flex-1 flex-col">
         <div className="flex flex-col space-y-2 mb-3">
           <Link
-            href={"/"}
+            href={articleUrl}
             className="text-lg font-bold text-foreground group-hover:text-primary group-hover:underline transition-colors duration-200"
           >
             {title}...
           </Link>
           <p className="text-sm text-muted-foreground">
-            {excerpt} [<Link href={"/"}>Read more</Link>]
+            {excerpt} [<Link href={articleUrl}>Read more</Link>]
           </p>
         </div>
 

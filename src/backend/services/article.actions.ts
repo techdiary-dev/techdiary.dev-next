@@ -190,3 +190,34 @@ export async function articleFeed(
     handleRepositoryException(error);
   }
 }
+
+export async function articleDetail(article_handle: string) {
+  try {
+    const [article] = await articleRepository.findRows({
+      where: eq("handle", article_handle),
+      columns: [
+        "id",
+        "title",
+        "handle",
+        "excerpt",
+        "body",
+        "cover_image",
+        "is_published",
+        "published_at",
+        "approved_at",
+        "metadata",
+        "author_id",
+        "created_at",
+        "updated_at",
+      ],
+    });
+
+    if (!article) {
+      throw new RepositoryException("Article not found");
+    }
+
+    return article;
+  } catch (error) {
+    handleRepositoryException(error);
+  }
+}
