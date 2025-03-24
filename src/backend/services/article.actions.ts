@@ -181,7 +181,7 @@ export async function articleFeed(
     response["nodes"] = response["nodes"].map((article) => {
       return {
         ...article,
-        excerpt: removeMarkdownSyntax(article.body) ?? "excerpt",
+        excerpt: article.excerpt ?? removeMarkdownSyntax(article.body),
       };
     });
 

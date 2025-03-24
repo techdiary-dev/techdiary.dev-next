@@ -2,14 +2,10 @@
 
 import * as articleActions from "@/backend/services/article.actions";
 import ArticleCard from "@/components/ArticleCard";
-import { Button } from "@/components/ui/button";
 import { readingTime } from "@/lib/utils";
 import getFileUrl from "@/utils/getFileUrl";
-import {
-  infiniteQueryOptions,
-  useInfiniteQuery,
-  useQuery,
-} from "@tanstack/react-query";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import LoadmoreSensor from "./LoadmoreSensor";
 
 const ArticleFeed = () => {
   const feedInfiniteQuery = useInfiniteQuery({
@@ -59,22 +55,14 @@ const ArticleFeed = () => {
         ))}
 
       <div className="my-10">
-        <Button
-          variant={"link"}
-          onClick={async () => {
+        <LoadmoreSensor
+          visible={feedInfiniteQuery.hasNextPage}
+          onLoadmore={async () => {
+            console.log("fetching next page");
             await feedInfiniteQuery.fetchNextPage();
+            // alert("Fetching next page");
           }}
-          disabled={
-            !feedInfiniteQuery.hasNextPage ||
-            feedInfiniteQuery.isFetchingNextPage
-          }
-        >
-          {feedInfiniteQuery.isFetchingNextPage
-            ? "Loading more..."
-            : feedInfiniteQuery.hasNextPage
-              ? "Load More"
-              : "Nothing more to load"}
-        </Button>
+        />
       </div>
     </div>
   );

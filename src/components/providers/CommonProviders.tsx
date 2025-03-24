@@ -3,8 +3,6 @@
 import { tanstackQueryClient } from "@/lib/tanstack-query.client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import React, { PropsWithChildren } from "react";
-import "jotai-devtools/styles.css";
-import { DevTools as JotaiDevtools } from "jotai-devtools";
 
 import { jotaiStore } from "@/store/store";
 import { Provider as JotaiProvider } from "jotai";
@@ -30,7 +28,6 @@ const CommonProviders: React.FC<PropsWithChildren<Props>> = ({
           </AppConfirmProvider>
         </SessionProvider>
       </QueryClientProvider>
-      <JotaiDevtools />
     </JotaiProvider>
   );
 };
