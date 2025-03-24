@@ -1,4 +1,5 @@
 import {
+  IPersistenceJoin,
   IPersistentOrderBy,
   SimpleWhere,
   WhereCondition,
@@ -101,8 +102,8 @@ const processSimpleCondition = <T>(
     return operator === "="
       ? `"${key.toString()}" IS NULL`
       : operator === "<>"
-      ? `"${key.toString()}" IS NOT NULL`
-      : `"${key.toString()}" IS NULL`;
+        ? `"${key.toString()}" IS NOT NULL`
+        : `"${key.toString()}" IS NULL`;
   }
 
   // Standard case with non-null value
@@ -139,6 +140,29 @@ export const buildOrderByClause = <T>(
   });
 
   return `ORDER BY ${orderByConditions.join(", ")}`;
+};
+
+export const buildJoinClause = <T>(joins?: Array<IPersistenceJoin>) => {
+  if (!joins || joins.length === 0) {
+    return {
+      joinConditionClause: "",
+      joinSelectClause: [],
+    };
+  }
+
+  const joinConditions = joins.map(({ joinTo, localField, foreignField }) => {
+    return `LEFT JOIN "${joinTo}" ON "${joinTo}"."${foreignField}" = "${localField}"`;
+  });
+
+  const joinSelectClause = joins.map(({ as, joinTo, columns }) => {
+    const jsonColumns = columns
+      ?.map((col) => `'${col}', ${joinTo}.${col}`)
+      .join(", ");
+
+    return `,json_build_object(${jsonColumns}) AS ${as}`;
+  });
+
+  return { joinConditionClause: joinConditions.join(" "), joinSelectClause };
 };
 
 /**
