@@ -1,6 +1,9 @@
 "use client";
 
 import * as articleActions from "@/backend/services/article.actions";
+import ArticleCard from "@/components/ArticleCard";
+import { readingTime } from "@/lib/utils";
+import getFileUrl from "@/utils/getFileUrl";
 import { useQuery } from "@tanstack/react-query";
 
 const ArticleFeed = () => {
@@ -9,8 +12,24 @@ const ArticleFeed = () => {
     queryFn: () => articleActions.articleFeed({ limit: 10, page: 1 }),
   });
   return (
-    <div>
-      <pre>{JSON.stringify(feedQuery.data, null, 2)}</pre>
+    <div className="flex flex-col gap-10">
+      {feedQuery.data?.nodes.map((article) => (
+        <ArticleCard
+          key={article.id}
+          id={article.id}
+          title={article.title}
+          excerpt={article.excerpt ?? ""}
+          coverImage={getFileUrl(article.cover_image!)}
+          author={{
+            name: article.user?.name ?? "",
+            avatar: article.user?.profile_photo ?? "",
+          }}
+          publishedAt={article.created_at.toDateString()}
+          readingTime={readingTime(article.body ?? "")}
+          likes={0}
+          comments={0}
+        />
+      ))}
     </div>
   );
 };

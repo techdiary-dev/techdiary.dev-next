@@ -36,7 +36,7 @@ export interface UserSession {
 
 export interface IServerFile {
   key: string;
-  provider: string;
+  provider: "cloudinary" | "direct";
 }
 
 export interface ArticleMetadata {}
@@ -51,6 +51,7 @@ export interface Article {
   is_published: boolean;
   published_at?: Date | null;
   approved_at?: Date | null;
+  user?: User | null;
   metadata?: ArticleMetadata | null;
   author_id: string;
   created_at: Date;

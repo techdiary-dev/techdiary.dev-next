@@ -16,6 +16,7 @@ import {
   RepositoryException,
 } from "./RepositoryException";
 import { ArticleRepositoryInput } from "./inputs/article.input";
+import { removeMarkdownSyntax } from "@/lib/utils";
 
 const articleRepository = new PersistentRepository<Article>(
   "articles",
@@ -152,12 +153,20 @@ export async function articleFeed(
   try {
     const input = await ArticleRepositoryInput.feedInput.parseAsync(_input);
 
-    return articleRepository.findAllWithPagination({
+    const response = await articleRepository.findAllWithPagination({
       where: and(eq("is_published", true)),
       page: input.page,
       limit: input.limit,
       orderBy: [desc("published_at")],
-      columns: ["id", "title", "handle", "cover_image"],
+      columns: [
+        "id",
+        "title",
+        "handle",
+        "cover_image",
+        "body",
+        "created_at",
+        "excerpt",
+      ],
       joins: [
         joinTable<Article, User>({
           as: "user",
@@ -168,6 +177,15 @@ export async function articleFeed(
         }),
       ],
     });
+
+    response["nodes"] = response["nodes"].map((article) => {
+      return {
+        ...article,
+        excerpt: removeMarkdownSyntax(article.body) ?? "excerpt",
+      };
+    });
+
+    return response;
   } catch (error) {
     handleRepositoryException(error);
   }
