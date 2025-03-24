@@ -23,12 +23,12 @@ const ArticleFeed = () => {
     <div className="flex flex-col gap-10">
       {Boolean(feedInfiniteQuery.isFetching) && (
         <>
-          <div className="h-56 bg-muted animate-pulse" />
-          <div className="h-56 bg-muted animate-pulse" />
-          <div className="h-56 bg-muted animate-pulse" />
-          <div className="h-56 bg-muted animate-pulse" />
-          <div className="h-56 bg-muted animate-pulse" />
-          <div className="h-56 bg-muted animate-pulse" />
+          <div className="h-56 bg-muted animate-pulse mx-4" />
+          <div className="h-56 bg-muted animate-pulse mx-4" />
+          <div className="h-56 bg-muted animate-pulse mx-4" />
+          <div className="h-56 bg-muted animate-pulse mx-4" />
+          <div className="h-56 bg-muted animate-pulse mx-4" />
+          <div className="h-56 bg-muted animate-pulse mx-4" />
         </>
       )}
 

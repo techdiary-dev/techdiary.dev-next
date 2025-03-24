@@ -29,6 +29,7 @@
     "cloudinary": "^2.6.0",
     "clsx": "^2.1.1",
     "dotenv": "^16.4.7",
+    "drizzle-kit": "^0.30.5",
     "drizzle-orm": "^0.41.0",
     "jotai": "^2.12.2",
     "lucide-react": "^0.483.0",
