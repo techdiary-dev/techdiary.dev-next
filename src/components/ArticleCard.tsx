@@ -1,3 +1,4 @@
+import { useTranslation } from "@/i18n/use-translation";
 import Link from "next/link";
 import React from "react";
 
@@ -27,6 +28,7 @@ const ArticleCard = ({
   likes,
   comments,
 }: ArticleCardProps) => {
+  const { lang } = useTranslation();
   return (
     <div data-article-id={id} className="flex flex-col p-4 sm:p-5 group">
       <div className="mb-4 flex items-center">
@@ -41,10 +43,14 @@ const ArticleCard = ({
           <h4 className="text-sm font-medium">{author.name}</h4>
           <div className="flex items-center text-xs text-muted-foreground">
             <time dateTime={publishedAt}>
-              {new Date(publishedAt).toLocaleDateString("bn-BD", {
-                month: "long",
-                day: "numeric",
-              })}
+              {new Date(publishedAt).toLocaleDateString(
+                lang == "bn" ? "bn-BD" : "en-US",
+                {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                }
+              )}
             </time>
             <span className="mx-1.5">·</span>
             <span>{readingTime} min read</span>
