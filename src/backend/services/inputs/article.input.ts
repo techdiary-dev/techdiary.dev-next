@@ -9,7 +9,7 @@ export const ArticleRepositoryInput = {
     cover_image: z
       .object({
         key: z.string(),
-        provider: z.string(),
+        provider: z.enum(["cloudinary", "direct"]),
       })
       .optional()
       .nullable(),
@@ -26,7 +26,7 @@ export const ArticleRepositoryInput = {
     cover_image: z
       .object({
         key: z.string(),
-        provider: z.string(),
+        provider: z.enum(["cloudinary", "direct"]),
       })
       .optional(),
     is_published: z.boolean().optional(),

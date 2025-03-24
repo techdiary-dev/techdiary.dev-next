@@ -24,3 +24,34 @@ export const zodErrorToString = (err: z.ZodError) => {
     return acc + curr.message + "\n";
   }, "");
 };
+
+export function removeMarkdownSyntax(md?: string | null, words_count = 65) {
+  return md
+    ?.replace(/!\[.*?\]\(.*?\)/g, "") // Remove images
+    ?.replace(/\[([^\]]+)\]\((.*?)\)/g, "$1") // Remove links but keep text
+    ?.replace(/`{1,3}([^`]+)`{1,3}/g, "$1") // Remove inline code
+    ?.replace(/(\*\*|__)(.*?)\1/g, "$2") // Remove bold
+    ?.replace(/(\*|_)(.*?)\1/g, "$2") // Remove italic
+    ?.replace(/~~(.*?)~~/g, "$1") // Remove strikethrough
+    ?.replace(/#+\s*(.*)/g, "$1") // Remove headings
+    ?.replace(/>\s*(.*)/g, "$1") // Remove blockquotes
+    ?.replace(/- \[ \] /g, "") // Remove task list (unchecked)
+    ?.replace(/- \[x\] /g, "") // Remove task list (checked)
+    ?.replace(/[-*+]\s+/g, "") // Remove bullet points
+    ?.replace(/\d+\.\s+/g, "") // Remove numbered lists
+    ?.replace(/```[\s\S]*?```/g, "") // Remove code blocks
+    ?.replace(/`/g, "") // Remove remaining inline code
+    ?.replace(/\n{2,}/g, "\n") // Remove extra newlines
+    ?.trim()
+    .split(" ")
+    .slice(0, words_count)
+    .join(" ");
+}
+
+export function readingTime(text: string) {
+  const wordsPerMinute = 120;
+  const textWithoutPunctuation = text.replace(/[.,!?;:]/g, "");
+  const wordCount = textWithoutPunctuation.split(/\s+/).length;
+  const minutes = Math.round(wordCount / wordsPerMinute);
+  return minutes;
+}
