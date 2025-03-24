@@ -1,0 +1,36 @@
+.article-card__thumbnail {
+  @apply overflow-hidden rounded-sm;
+}
+.article-card__title {
+  @apply mb-[10px] block text-xl font-semibold text-gray-700 dark:text-gray-300;
+}
+.article-card__excerpt {
+  @apply block text-gray-500 dark:text-gray-400;
+}
+.article-card__content {
+  @apply mt-2;
+}
+.article-card__tags {
+  @apply flex flex-wrap gap-2;
+}
+.article-card__tag {
+  @apply text-gray-500 hover:text-gray-700;
+}
+
+.vote {
+  @apply inline-flex overflow-hidden rounded-md;
+}
+.vote__button {
+  @apply bg-gray-100 hover:bg-gray-200;
+  @apply dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700;
+  @apply flex items-center px-3 py-1 transition-all duration-100;
+}
+.vote__button--upvote {
+  @apply border-r;
+}
+.vote__button--downvote {
+  @apply px-2;
+}
+.vote__button--active {
+  @apply bg-gray-200 text-primary dark:bg-gray-700;
+}

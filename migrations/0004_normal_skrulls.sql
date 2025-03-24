@@ -1,0 +1,1 @@
+ALTER TABLE "user_sessions" ADD COLUMN "device" varchar NOT NULL;

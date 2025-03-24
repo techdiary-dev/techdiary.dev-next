@@ -1,8 +1,8 @@
-import { IServerFile } from "@/http/models/AppImage.model";
+import { IServerFile } from "@/models/AppImage.model";
 import { Cloudinary } from "@cloudinary/url-gen";
 import { blur } from "@cloudinary/url-gen/actions/effect";
 
-const getFileUrl = (fileSource: IServerFile) => {
+const getFileUrl = (fileSource?: IServerFile | null) => {
   const cld = new Cloudinary({
     cloud: { cloudName: "techdiary-dev" },
   });

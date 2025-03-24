@@ -1,0 +1,1 @@
+ALTER TABLE "comments" RENAME COLUMN "content" TO "body";

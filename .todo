@@ -1,30 +1,8 @@
-- [] revalidate cache after update, home page and article details page
-- [] upload files in laravel
+- [] article feed
+- [] article details
+- [] tags
+- [] tags archive
 
-- [] tag diye article filter korar somoy case insensitive vabe filter korte hobe
-- [] jemnon `time & space complexity` ke `time-space-complexity` slug diye filter e aste hobe
-- [] Show a email is not verified yet ribbon under navbar. Make email verified during oauth signup
-
-## Dashboard
-
-- [] Put a empty article graphics
-- [] Cache issue
-- [] Delete/Archieve articles
-- [] Make dashboard navlinks bold on active
-
-## Editor
-
-- [] Article tags
-- [] Fixed save button of drawer
-- [] Article cover upload
-- [] Make mobile friendly
-
-## Backend Specific
-
-- [x] 🔥 meta uuid not autometically creating
-- [] Article feed sort by published_at and also discuss about this with shoaib vai
-- [] PATCH /api/profile: db error on empty string
-- [] Study about token previleages
-- [] Check cascade behabour of tags
-- [] Check for fortify with latest version
-- [] make unsplash proxy api with auth middleware
+- [] dashboard (matrix, article-list)
+- [] bookmarks
+- [] settings()

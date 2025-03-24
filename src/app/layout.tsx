@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
+import "../styles/app.css";
 
-import "@mantine/core/styles.css";
-import "@mantine/notifications/styles.css";
-import "../styles/app.scss";
-
-import { ColorSchemeScript } from "@mantine/core";
+import { getSession } from "@/auth/auth";
+import CommonProviders from "@/components/providers/CommonProviders";
+import I18nProvider from "@/components/providers/I18nProvider";
+import { fontKohinoorBanglaRegular } from "@/lib/fonts";
+import { cookies } from "next/headers";
+import React, { PropsWithChildren } from "react";
 
 export const metadata: Metadata = {
   title: "Techdiary - %s",
@@ -12,21 +14,15 @@ export const metadata: Metadata = {
   icons: { icon: "/favicon.png" },
 };
 
-import AppProvider from "@/providers/AppProvider";
-import { fontKohinoorBanglaRegular } from "@/utils/fonts";
-import React, { PropsWithChildren } from "react";
-import RootWrapper from "../providers/RootWrapper";
-
 const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
+  const _cookies = await cookies();
+  const session = await getSession();
   return (
-    <html lang="en">
-      <head>
-        <ColorSchemeScript key={"techdiary-color-scheme"} />
-      </head>
+    <html lang="en" suppressHydrationWarning>
       <body style={fontKohinoorBanglaRegular.style}>
-        <RootWrapper>
-          <AppProvider>{children}</AppProvider>
-        </RootWrapper>
+        <I18nProvider currentLanguage={_cookies.get("language")?.value || "en"}>
+          <CommonProviders session={session}>{children}</CommonProviders>
+        </I18nProvider>
       </body>
     </html>
   );

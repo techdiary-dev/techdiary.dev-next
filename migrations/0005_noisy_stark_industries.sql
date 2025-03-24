@@ -1,0 +1,1 @@
+ALTER TABLE "user_sessions" ALTER COLUMN "device" DROP NOT NULL;

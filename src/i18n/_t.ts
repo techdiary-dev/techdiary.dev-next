@@ -5,8 +5,9 @@ const dictionaries: {
   [key: string]: any;
 } = { bn };
 
-const _t = (key: string) => {
-  const _lang = cookies().get("language")?.value || "en";
+const _t = async (key: string) => {
+  const cookiesStore = await cookies();
+  const _lang = cookiesStore.get("language")?.value || "en";
   return dictionaries[_lang]?.[key] || key;
 };
 

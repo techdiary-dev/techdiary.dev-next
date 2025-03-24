@@ -1,37 +1,28 @@
-import { http } from "@/http/http.client";
-import FakeEditor from "@/components/FakeEditor";
-import HomeLeftSidebar from "@/components/asides/HomeLeftSidebar";
-import HomeRightSidebar from "@/components/asides/HomeRightSidebar";
-import ThreeColumnLayout from "@/components/layout/ThreeColumnLayout";
-import { IArticleFeedItem } from "@/http/models/Article.model";
-import { PaginatedResponse } from "@/http/models/PaginatedResponse.model";
-import ArticleFeed from "./components/ArticleFeed";
-import axios from "axios";
+import HomepageLayout from "@/components/layout/HomepageLayout";
+import { Metadata } from "next";
+import ArticleFeed from "./_components/ArticleFeed";
+import HomeLeftSidebar from "./_components/HomeLeftSidebar";
+import HomeRightSidebar from "./_components/HomeRightSidebar";
+import SidebarToggleButton from "./_components/SidebarToggleButton";
+import FakeEditor from "./_components/FakeEditor";
 
-// export const revalidate = 3600; // revalidate at most every hour
+export const metadata: Metadata = {
+  title: "Home",
+};
 
-export default async function Home() {
-  // const { data: articles } = await http.get<
-  //   PaginatedResponse<IArticleFeedItem>
-  // >("api/articles", { params: { limit: 20 } });
-
-  const api = await fetch(process.env.NEXT_PUBLIC_API_URL + "/api/articles", {
-    method: "GET",
-    cache: "no-store",
-  });
-
-  const articles = await api.json();
-
+const Page = async () => {
   return (
-    <ThreeColumnLayout
+    <HomepageLayout
       LeftSidebar={<HomeLeftSidebar />}
       RightSidebar={<HomeRightSidebar />}
+      NavbarTrailing={<SidebarToggleButton />}
     >
-      <FakeEditor />
-      <div className="mt-8">
-        <ArticleFeed initialData={articles} />
+      <div className="px-4 my-2 md:m-0">
+        <FakeEditor />
       </div>
-      <div className="my-20"></div>
-    </ThreeColumnLayout>
+      <ArticleFeed />
+    </HomepageLayout>
   );
-}
+};
+
+export default Page;
