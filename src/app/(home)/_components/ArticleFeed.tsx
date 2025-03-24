@@ -13,6 +13,17 @@ const ArticleFeed = () => {
   });
   return (
     <div className="flex flex-col gap-10">
+      {Boolean(feedQuery.isFetching) && (
+        <>
+          <div className="h-56 bg-muted animate-pulse" />
+          <div className="h-56 bg-muted animate-pulse" />
+          <div className="h-56 bg-muted animate-pulse" />
+          <div className="h-56 bg-muted animate-pulse" />
+          <div className="h-56 bg-muted animate-pulse" />
+          <div className="h-56 bg-muted animate-pulse" />
+        </>
+      )}
+
       {feedQuery.data?.nodes.map((article) => (
         <ArticleCard
           key={article.id}
