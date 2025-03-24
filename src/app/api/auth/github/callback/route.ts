@@ -1,7 +1,7 @@
 import { GithubOAuthService } from "@/backend/services/oauth/GithubOAuthService";
 import { RepositoryException } from "@/backend/services/RepositoryException";
-import { sessionRepository } from "@/backend/services/session.repository";
-import { userRepository } from "@/backend/services/user.repository";
+import * as sessionActions from "@/backend/services/session.actions";
+import * as userActions from "@/backend/services/user.repository";
 import { NextResponse } from "next/server";
 
 const githubOAuthService = new GithubOAuthService();
@@ -18,7 +18,7 @@ export async function GET(request: Request) {
 
     const githubUser = await githubOAuthService.getUserInfo(code!, state!);
 
-    const bootedSocialUser = await userRepository.bootSocialUser({
+    const bootedSocialUser = await userActions.bootSocialUser({
       service: "github",
       service_uid: githubUser.id.toString(),
       name: githubUser.name,
@@ -28,7 +28,7 @@ export async function GET(request: Request) {
       bio: githubUser.bio,
     });
 
-    await sessionRepository.createLoginSession({
+    await sessionActions.createLoginSession({
       user_id: bootedSocialUser?.user.id!,
       request,
     });
@@ -46,7 +46,7 @@ export async function GET(request: Request) {
     if (error instanceof Error) {
       return NextResponse.json(
         { error: "Something went wrong" },
-        { status: 500 },
+        { status: 500 }
       );
     }
   }
