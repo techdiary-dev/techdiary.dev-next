@@ -53,8 +53,17 @@ export type CompositeWhere<T> = {
 };
 export type WhereCondition<T> = SimpleWhere<T> | CompositeWhere<T>;
 
-export interface IPersistentPaginationPayload<T> {
+export interface IPersistenceJoin {
+  as: string;
+  joinTo: string;
+  localField: string;
+  foreignField: string;
+  columns: string[];
+}
+
+export interface IPersistentPaginationPayload<T, U = any> {
   where?: WhereCondition<T>;
+  joins?: IPersistenceJoin[];
   orderBy?: Array<IPersistentOrderBy<T>>;
   columns?: Array<keyof T>;
   limit?: number;
@@ -79,6 +88,7 @@ export interface IPagination<T> {
   where?: WhereCondition<T>; // No longer allows arrays
   columns?: Array<keyof T>;
   orderBy?: Array<IPersistentOrderBy<T>>;
+  joins?: IPersistenceJoin[];
 }
 
 //------------------------------------

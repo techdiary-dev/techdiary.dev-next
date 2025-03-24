@@ -1,7 +1,13 @@
 import { z } from "zod";
-import { Article } from "../models/domain-models";
+import { Article, User } from "../models/domain-models";
 import { pgClient } from "../persistence/database-drivers/pg.client";
-import { and, desc, eq, neq } from "../persistence/persistence-where-operator";
+import {
+  and,
+  desc,
+  eq,
+  joinTable,
+  neq,
+} from "../persistence/persistence-where-operator";
 import { PersistentRepository } from "../persistence/persistence.repository";
 import {
   handleRepositoryException,
@@ -85,6 +91,16 @@ class ArticleRepository extends PersistentRepository<Article> {
         where: and(eq("is_published", true), neq("published_at", null)),
         limit,
         orderBy: [desc("published_at")],
+        columns: ["id", "title", "handle"],
+        joins: [
+          joinTable<Article, User>({
+            as: "user",
+            joinTo: "users",
+            localField: "author_id",
+            foreignField: "id",
+            columns: ["id", "name", "username", "profile_photo"],
+          }),
+        ],
       });
     } catch (error) {
       handleRepositoryException(error);
@@ -102,6 +118,15 @@ class ArticleRepository extends PersistentRepository<Article> {
         limit: input.limit,
         orderBy: [desc("published_at")],
         columns: ["id", "title", "handle", "cover_image"],
+        joins: [
+          joinTable<Article, User>({
+            as: "user",
+            joinTo: "users",
+            localField: "author_id",
+            foreignField: "id",
+            columns: ["id", "name", "username", "profile_photo"],
+          }),
+        ],
       });
     } catch (error) {
       handleRepositoryException(error);

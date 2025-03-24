@@ -2,6 +2,8 @@
  * Drizzle-style operator functions with direct generic approach
  */
 
+import { IPersistenceJoin } from "./persistence-contracts";
+
 // Type for all possible operators
 type Operator =
   | "="
@@ -181,5 +183,21 @@ export function desc<T>(key: keyof T): IPersistentOrderBy<T> {
   return {
     key,
     direction: "desc",
+  };
+}
+
+export function joinTable<T, U>(payload: {
+  as: string;
+  joinTo: string;
+  localField: keyof T;
+  foreignField: keyof U;
+  columns: Array<keyof U>;
+}): IPersistenceJoin {
+  return {
+    as: payload.as,
+    joinTo: payload.joinTo,
+    localField: payload.localField.toString(),
+    foreignField: payload.foreignField.toString(),
+    columns: payload.columns.map((col) => col.toString()),
   };
 }

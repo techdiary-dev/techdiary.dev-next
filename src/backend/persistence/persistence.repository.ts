@@ -1,3 +1,4 @@
+import { log } from "console";
 import {
   AppPaginationResponseDto,
   IPagination,
@@ -7,6 +8,7 @@ import {
   IPersistentUpdatePayload,
 } from "./persistence-contracts";
 import {
+  buildJoinClause,
   buildOrderByClause,
   buildSetClause,
   buildWhereClause,
@@ -33,6 +35,7 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
       columns: payload?.columns || [],
       where: payload?.where || undefined,
       orderBy: payload?.orderBy || [],
+      joins: payload?.joins || [],
     });
 
     // Execute the count query
@@ -57,19 +60,34 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
    * @param payload
    */
   async findRows(payload: IPersistentPaginationPayload<DOMAIN_MODEL_TYPE>) {
+    // SELECT
+    //     title,
+    //     handle,
+    //     json_build_object('name', users.name, 'username', users.username) AS user
+
+    // FROM articles
+    // LEFT JOIN users ON author_id = users.id;
+
     // Default columns to '*' if none are provided
-    const columns = toSnakeCase(payload?.columns as any) ?? "*";
+    const columns =
+      payload.columns
+        ?.map((col) => `${this.tableName}.${col.toString()}`)
+        .join(",") ?? "*";
     const { whereClause, values } = buildWhereClause(payload.where);
     const orderByClause = buildOrderByClause(payload?.orderBy);
+    const { joinConditionClause, joinSelectClause } = buildJoinClause(
+      payload.joins
+    );
 
     // Build the SQL query with LIMIT, OFFSET, and ORDER BY
     const limit = payload.limit ?? 10; // Default limit to 10 if not provided
     const offset = payload.offset ?? 0; // Default offset to 0 if not provided
 
-    // Build the final SQL query
     const sqlQuery = `
       SELECT ${columns}
+      ${joinSelectClause ? `${joinSelectClause.join(",")}` : ""}
       FROM ${this.tableName}
+      ${joinConditionClause ? joinConditionClause : ""}
       ${whereClause ? `WHERE ${whereClause}` : ""}
       ${orderByClause ? orderByClause : ""}
       ${limit ? `LIMIT ${limit}` : ""} ${offset ? `OFFSET ${offset}` : ""};

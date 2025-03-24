@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 };
 
 const Page = async () => {
-  const articles = await articleRepository.articleFeed({ page: 1, limit: 10 });
+  const articles = await articleRepository.articleFeed({ limit: 30, page: 1 });
 
   return (
     <HomepageLayout
