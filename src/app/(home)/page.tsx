@@ -4,6 +4,7 @@ import ArticleFeed from "./_components/ArticleFeed";
 import HomeLeftSidebar from "./_components/HomeLeftSidebar";
 import HomeRightSidebar from "./_components/HomeRightSidebar";
 import SidebarToggleButton from "./_components/SidebarToggleButton";
+import FakeEditor from "./_components/FakeEditor";
 
 export const metadata: Metadata = {
   title: "Home",
@@ -16,6 +17,9 @@ const Page = async () => {
       RightSidebar={<HomeRightSidebar />}
       NavbarTrailing={<SidebarToggleButton />}
     >
+      <div className="px-4 my-2 md:m-0">
+        <FakeEditor />
+      </div>
       <ArticleFeed />
     </HomepageLayout>
   );
