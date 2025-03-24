@@ -80,7 +80,7 @@ const ArticleCard = ({
           </div>
         )}
       </div>
-      <div className="mt-4 flex items-center justify-between">
+      {/* <div className="mt-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <button className="flex items-center gap-1.5 text-sm text-neutral-500 transition-all duration-300 hover:text-neutral-800 focus:outline-none">
             <svg
@@ -133,7 +133,7 @@ const ArticleCard = ({
             <path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z" />
           </svg>
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };
