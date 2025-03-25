@@ -12,14 +12,14 @@ export const metadata: Metadata = {
 };
 
 const Page = async () => {
-  const session = await getSession();
+  // const session = await getSession();
   return (
     <HomepageLayout
       LeftSidebar={<HomeLeftSidebar />}
       RightSidebar={<HomeRightSidebar />}
       NavbarTrailing={<SidebarToggleButton />}
     >
-      <pre>{JSON.stringify(session, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(session, null, 2)}</pre> */}
       <div className="px-4 my-2 md:m-0">
         <FakeEditor />
       </div>
