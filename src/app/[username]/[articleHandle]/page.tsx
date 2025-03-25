@@ -1,7 +1,7 @@
 import BaseLayout from "@/components/layout/BaseLayout";
 import * as articleActions from "@/backend/services/article.actions";
 import React from "react";
-import { NextPage } from "next";
+import { Metadata, NextPage } from "next";
 import HomepageLayout from "@/components/layout/HomepageLayout";
 import HomeLeftSidebar from "@/app/(home)/_components/HomeLeftSidebar";
 import { markdownToHtml } from "@/utils/markdoc-parser";
@@ -10,6 +10,10 @@ import Link from "next/link";
 import { readingTime, removeMarkdownSyntax } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import ArticleSidebar from "./_components/ArticleSidebar";
+
+export const metadata: Metadata = {
+  title: "Article detail",
+};
 
 interface ArticlePageProps {
   params: Promise<{
