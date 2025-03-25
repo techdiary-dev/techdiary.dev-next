@@ -86,13 +86,15 @@ const ArticleCard = ({
         </div>
 
         {coverImage && (
-          <div className="relative mt-4 overflow-hidden rounded-md aspect-[16/9]">
-            <img
-              src={coverImage}
-              alt={title}
-              className="h-full w-full object-cover transition-all duration-700 opacity-100 scale-100"
-            />
-          </div>
+          <a href={articleUrl} className="block">
+            <div className="relative mt-4 overflow-hidden rounded-md aspect-[16/9]">
+              <img
+                src={coverImage}
+                alt={title}
+                className="h-full w-full object-cover transition-all duration-700 opacity-100 scale-100"
+              />
+            </div>
+          </a>
         )}
       </div>
       {/* <div className="mt-4 flex items-center justify-between">
