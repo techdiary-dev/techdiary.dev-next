@@ -210,6 +210,15 @@ export async function articleDetail(article_handle: string) {
         "created_at",
         "updated_at",
       ],
+      joins: [
+        joinTable<Article, User>({
+          as: "user",
+          joinTo: "users",
+          localField: "author_id",
+          foreignField: "id",
+          columns: ["id", "name", "username", "profile_photo"],
+        }),
+      ],
     });
 
     if (!article) {

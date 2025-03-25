@@ -6,6 +6,8 @@ import HomepageLayout from "@/components/layout/HomepageLayout";
 import HomeLeftSidebar from "@/app/(home)/_components/HomeLeftSidebar";
 import { markdownToHtml } from "@/utils/markdoc-parser";
 import AppImage from "@/components/AppImage";
+import Link from "next/link";
+import { readingTime, removeMarkdownSyntax } from "@/lib/utils";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -35,8 +37,42 @@ const Page: NextPage<ArticlePageProps> = async ({ params }) => {
           </div>
         )}
 
+        {/* User information */}
+        <div className="mb-4 flex items-center my-4">
+          <div className="relative rounded-full overflow-hidden border transition-transform duration-300 size-10">
+            <img
+              src={article?.user?.profile_photo}
+              alt={article?.user?.username}
+              className="w-full h-full object-cover transition-opacity duration-300 ease-in-out opacity-100"
+            />
+          </div>
+
+          <div className="ml-2.5">
+            <Link
+              href={`/${article?.user?.username}`}
+              className="text-md font-medium text-foreground"
+            >
+              {article?.user?.name}
+            </Link>
+            <div className="flex items-center text-xs text-muted-foreground">
+              <time dateTime={article?.published_at?.toString()}>
+                {new Date(article?.published_at!).toLocaleDateString("bn-BD", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </time>
+              <span className="mx-1.5">·</span>
+              <span>
+                {readingTime(removeMarkdownSyntax(article?.body ?? "")!)} min
+                read
+              </span>
+            </div>
+          </div>
+        </div>
+
         <div className="my-6">
-          <h1 className="text-3xl font-bold">{article?.title ?? ""}</h1>
+          <h1 className="text-2xl font-bold">{article?.title ?? ""}</h1>
         </div>
 
         <div
