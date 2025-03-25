@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 const Page = async () => {
-  const session = getSession();
+  const session = await getSession();
   return (
     <HomepageLayout
       LeftSidebar={<HomeLeftSidebar />}
