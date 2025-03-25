@@ -8,6 +8,8 @@ import { markdownToHtml } from "@/utils/markdoc-parser";
 import AppImage from "@/components/AppImage";
 import Link from "next/link";
 import { readingTime, removeMarkdownSyntax } from "@/lib/utils";
+import { notFound } from "next/navigation";
+import ArticleSidebar from "./_components/ArticleSidebar";
 
 interface ArticlePageProps {
   params: Promise<{
@@ -20,10 +22,17 @@ const Page: NextPage<ArticlePageProps> = async ({ params }) => {
   const _params = await params;
   const article = await articleActions.articleDetail(_params.articleHandle);
 
+  if (!article) {
+    throw notFound();
+  }
+
   const parsedHTML = markdownToHtml(article?.body ?? "");
 
   return (
-    <HomepageLayout LeftSidebar={<HomeLeftSidebar />}>
+    <HomepageLayout
+      LeftSidebar={<HomeLeftSidebar />}
+      RightSidebar={<ArticleSidebar />}
+    >
       {/* {!article && <div>Article not found</div>} */}
       <div className="px-4 my-2 md:m-0">
         {article?.cover_image && (
