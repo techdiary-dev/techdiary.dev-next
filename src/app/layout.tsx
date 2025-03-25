@@ -9,9 +9,13 @@ import { cookies } from "next/headers";
 import React, { PropsWithChildren } from "react";
 
 export const metadata: Metadata = {
-  title: "Techdiary - %s",
-  openGraph: { title: "Techdiary" },
+  title: {
+    default: "TechDiary",
+    template: "%s | TechDiary",
+  },
   icons: { icon: "/favicon.png" },
+  description: "Homepage of TechDiary",
+  metadataBase: new URL("https://techdiary.dev"),
 };
 
 const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
