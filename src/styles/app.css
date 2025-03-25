@@ -1,6 +1,7 @@
 @import "_fonts.css";
 @import "_utils.css";
 @import "_editor.css";
+@import "_content-typography.css";
 
 @import "tailwindcss";
 @import "tw-animate-css";
