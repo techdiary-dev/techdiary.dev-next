@@ -219,6 +219,7 @@ export async function articleDetail(article_handle: string) {
           columns: ["id", "name", "username", "profile_photo"],
         }),
       ],
+      limit: 1,
     });
 
     if (!article) {
