@@ -5,10 +5,10 @@
   @apply prose-a:inline-block;
   @apply prose-p:p-0;
   @apply prose-img:inline-block;
-  @apply prose-headings:font-semibold prose-headings:text-foreground prose-headings:underline;
-  @apply prose-h1:text-lg;
-  @apply prose-h2:text-lg;
-  @apply prose-h3:text-base;
+  @apply prose-headings:font-semibold prose-headings:text-foreground prose-headings:underline prose-headings:first:mt-0;
+  @apply prose-h1:text-2xl;
+  @apply prose-h2:text-xl;
+  @apply prose-h3:text-lg;
   @apply prose-h4:text-base;
 
   iframe {

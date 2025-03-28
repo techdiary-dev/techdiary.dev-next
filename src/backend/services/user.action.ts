@@ -31,7 +31,7 @@ export async function updateUserProfile(
         education: input.education,
         designation: input.designation,
         bio: input.bio,
-        websiteUrl: input.websiteUrl,
+        website_url: input.websiteUrl,
         location: input.location,
         social_links: input.social_links,
         profile_readme: input.profile_readme,
