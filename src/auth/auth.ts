@@ -89,3 +89,13 @@ export const deleteSession = async () => {
     _cookies.delete("session");
   }
 };
+
+export const setAfterAuthRedirect = async (url: string) => {
+  const _cookies = await cookies();
+  _cookies.set("next", url);
+};
+
+export const getAfterAuthRedirect = async () => {
+  const _cookies = await cookies();
+  return _cookies.get("next")?.value ?? null;
+};

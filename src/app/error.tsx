@@ -1,6 +1,7 @@
 "use client";
 
-import BaseLayout from "@/components/layout/BaseLayout";
+import { useTranslation } from "@/i18n/use-translation";
+import Link from "next/link";
 import React from "react";
 
 interface ErrorPageProps {
@@ -9,15 +10,17 @@ interface ErrorPageProps {
 }
 
 const _ErrorPage: React.FC<ErrorPageProps> = (props) => {
+  const { _t } = useTranslation();
   return (
-    <BaseLayout>
-      <h1>Error</h1>
-      <p>Sorry, an unexpected error has occurred.</p>
-      <p>
-        <i>{props.error.message}</i>
-      </p>
-      <button onClick={props.reset}>Try again</button>
-    </BaseLayout>
+    <div className="max-w-xl mx-auto">
+      <div className="flex flex-col items-center justify-center gap-4 p-4">
+        <img src="/images/sadface.gif" className="max-w-full" alt="Error" />
+        <p>
+          <i>{props.error.message}</i>
+        </p>
+        <Link href="/">{_t("Go back to home")}</Link>
+      </div>
+    </div>
   );
 };
 

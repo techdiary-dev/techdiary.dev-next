@@ -5,13 +5,12 @@ import { redirect } from "next/navigation";
 import React, { PropsWithChildren } from "react";
 
 const layout: React.FC<PropsWithChildren> = async ({ children }) => {
-  // const headersList = await headers();
-  // const header_url = headersList.get("x-current-url");
-  // console.log({ header_url });
+  const _headers = await headers();
+  const currentUrl = _headers.get("x-current-url");
   const session = await getSession();
 
-  if (!session?.session) {
-    redirect(`/login?next=${encodeURIComponent(window.location.pathname)}`);
+  if (!session?.user) {
+    redirect(`/login?next=${currentUrl}`);
   }
 
   return <SidebarProvider>{children}</SidebarProvider>;

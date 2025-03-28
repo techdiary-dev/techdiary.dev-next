@@ -41,7 +41,9 @@ const AuthenticatedUserMenu = () => {
         <DropdownMenuItem asChild>
           <Link href={`/${authSession?.user?.id}`}>{_t("My profile")}</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem>{_t("Dashboard")}</DropdownMenuItem>
+        <DropdownMenuItem asChild>
+          <Link href="/dashboard">{_t("Dashboard")}</Link>
+        </DropdownMenuItem>
         <DropdownMenuItem>{_t("Bookmarks")}</DropdownMenuItem>
         <DropdownMenuItem>{_t("Settings")}</DropdownMenuItem>
         <DropdownMenuItem onClick={handleLogout}>
