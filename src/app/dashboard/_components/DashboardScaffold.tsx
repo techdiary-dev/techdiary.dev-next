@@ -86,7 +86,7 @@ const DashboardScaffold: React.FC<
             <AuthenticatedUserMenu />
           </div>
         </div>
-        <div className="flex-1 p-4">{children}</div>
+        <div className="flex-1 p-4 wrapper mx-auto">{children}</div>
       </main>
     </>
   );

@@ -41,7 +41,7 @@
   "Share on Twitter": "টুইটার শেয়ার করুন",
   "Diaries": "ডায়েরি সমূহ",
   "Comments": "কমেন্ট সমূহ",
-  "Total posts": "সর্বমোট লিখা",
+  "Total articles": "সর্বমোট লিখা",
   "Total post reactions": "সর্বমোট রিয়েকশন",
   "Total post comments": "সর্বমোট কমেন্ট",
   "Total post bookmarks": "সর্বমোট বুকমার্ক",
@@ -94,5 +94,6 @@
   "Go back to home": "Home এ ফেরত যান",
   "Join Techdiary community": "Techdiary কমিউনিটি যোগ দিন",
   "A community of 5000+ incredible developers is called Techdiary Community": "5000+ অসাধারণ ডেভেলপারদের একটি কমিউনিটি - Techdiary",
-  "Article views report": "আর্টিক্যাল ভিউ রিপোর্ট"
+  "Article views report": "আর্টিক্যাল ভিউ রিপোর্ট",
+  "Stats": "পরিসংখ্যান"
 }
