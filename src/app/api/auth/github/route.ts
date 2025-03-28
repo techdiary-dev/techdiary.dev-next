@@ -1,6 +1,5 @@
 import { setAfterAuthRedirect } from "@/auth/auth";
 import { GithubOAuthService } from "@/backend/services/oauth/GithubOAuthService";
-import { cookies } from "next/headers";
 const githubOAuthService = new GithubOAuthService();
 
 export async function GET(request: Request): Promise<Response> {
