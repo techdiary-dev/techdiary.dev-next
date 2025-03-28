@@ -50,4 +50,8 @@ export const ArticleRepositoryInput = {
     page: z.number().default(1),
     limit: z.number().default(10),
   }),
+  myArticleInput: z.object({
+    page: z.number().default(1),
+    limit: z.number().default(10),
+  }),
 };

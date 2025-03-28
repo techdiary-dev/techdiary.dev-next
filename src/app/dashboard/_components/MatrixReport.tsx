@@ -8,7 +8,7 @@ const MatrixReport = () => {
   const { _t } = useTranslation();
   return (
     <div className="my-6">
-      <h3>{_t("Stats")}</h3>
+      <h3 className="text-lg font-semibold">{_t("Stats")}</h3>
 
       <div className="mt-4 grid grid-col-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card className="rounded">
