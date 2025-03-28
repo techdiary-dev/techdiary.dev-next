@@ -65,7 +65,7 @@ export function AppConfirmProvider({
                 {modalContent.title ?? "Are you sure?"}
               </AlertDialogTitle>
             </AlertDialogHeader>
-            <AlertDialogDescription asChild>
+            <AlertDialogDescription>
               {modalContent.children}
             </AlertDialogDescription>
             <AlertDialogFooter>

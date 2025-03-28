@@ -108,9 +108,9 @@ const ArticleList = () => {
                       <button
                         onClick={() => {
                           appConfirm.show({
-                            title: _t("Sure to archive?"),
+                            title: `${_t("Sure to unpublish")}?`,
                             children: _t(
-                              "No worries, This can be undone anytime."
+                              "If you unpublish the article, this will be excluded in home page and search results, however direct links to the article will still work."
                             ),
                             labels: {
                               confirm: _t("Yes"),
@@ -127,41 +127,11 @@ const ArticleList = () => {
                         }}
                       >
                         <CardStackIcon />
-                        <span>{_t("Make archive")}</span>
+                        <span>{_t("Make Unpublished")}</span>
                       </button>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-                {/* <Menu>
-                <Menu.Target>
-                 
-                <Menu.Dropdown>
-                 
-                  <Menu.Item
-                    leftSection={<CardStackIcon />}
-                    component="button"
-                    onClick={() => {
-                      openConfirmModal({
-                        title: _t("Sure to archive?"),
-                        children: _t("No worries, This can be undone anytime."),
-                        labels: {
-                          confirm: _t("Yes"),
-                          cancel: _t("Cancel"),
-                        },
-                        onConfirm() {
-                          try {
-                            apiRepo
-                              .makeArchive(article?.id)
-                              .finally(() => router.refresh());
-                          } catch (error) {}
-                        },
-                      });
-                    }}
-                  >
-                    {_t("Make archive")}
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu> */}
               </div>
             </article>
           ));
