@@ -1,6 +1,5 @@
 "use client";
 
-import { useTranslation } from "@/i18n/use-translation";
 import Link from "next/link";
 import React from "react";
 
