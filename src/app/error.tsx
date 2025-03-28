@@ -10,7 +10,6 @@ interface ErrorPageProps {
 }
 
 const _ErrorPage: React.FC<ErrorPageProps> = (props) => {
-  const { _t } = useTranslation();
   return (
     <div className="max-w-xl mx-auto">
       <div className="flex flex-col items-center justify-center gap-4 p-4">
@@ -18,7 +17,7 @@ const _ErrorPage: React.FC<ErrorPageProps> = (props) => {
         <p>
           <i>{props.error.message}</i>
         </p>
-        <Link href="/">{_t("Go back to home")}</Link>
+        <Link href="/">{"Go back to home"}</Link>
       </div>
     </div>
   );
