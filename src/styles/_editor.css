@@ -1,16 +1,15 @@
 .fake-editor {
   @apply transition-all duration-150;
-  @apply bg-gray-200 hover:bg-white dark:bg-slate-700 dark:hover:bg-slate-600;
-  @apply border border-gray-300 dark:border-gray-600;
+  @apply bg-muted text-muted-foreground;
+  @apply border;
   @apply flex cursor-pointer rounded p-5;
 }
 .fake-editor__icon {
   @apply h-6 w-6;
-  @apply text-gray-700 dark:text-gray-300;
   @apply mr-4 fill-current opacity-75;
 }
 .fake-editor__placeholder {
-  @apply text-base text-gray-700 dark:text-gray-400;
+  @apply text-base;
 }
 
 .td-editor h1,
