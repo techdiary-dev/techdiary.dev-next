@@ -15,14 +15,20 @@ const ArticleList = () => {
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const _page = lastPage?.meta?.currentPage ?? 1;
-      return _page + 1;
+      return lastPage?.meta.hasNextPage ? _page + 1 : null;
     },
   });
 
   return (
     <div>
       <h3 className="text-lg font-semibold">{_t("Articles")}</h3>
-      <div className="flex flex-col divide-y divide-dashed divide-border-color">
+
+      <div className="flex flex-col divide-y divide-dashed divide-border-color mt-2">
+        {feedInfiniteQuery.isFetching &&
+          Array.from({ length: 10 }).map((_, i) => (
+            <article key={i} className=" bg-muted h-20 animate-pulse" />
+          ))}
+
         {feedInfiniteQuery.data?.pages.map((page) => {
           return page?.nodes.map((article) => (
             <article
