@@ -17,6 +17,7 @@ import {
 } from "./RepositoryException";
 import { ArticleRepositoryInput } from "./inputs/article.input";
 import { removeMarkdownSyntax } from "@/lib/utils";
+import { getSessionUserId } from "@/auth/auth";
 
 const articleRepository = new PersistentRepository<Article>(
   "articles",
@@ -227,6 +228,23 @@ export async function articleDetail(article_handle: string) {
     }
 
     return article;
+  } catch (error) {
+    handleRepositoryException(error);
+  }
+}
+
+export async function myArticles(
+  input: z.infer<typeof ArticleRepositoryInput.myArticleInput>
+) {
+  const sessionUserId = await getSessionUserId();
+  try {
+    const articles = await articleRepository.findAllWithPagination({
+      where: eq("author_id", sessionUserId),
+      columns: ["id", "title", "handle", "created_at"],
+      limit: input.limit,
+      page: input.page,
+    });
+    return articles;
   } catch (error) {
     handleRepositoryException(error);
   }

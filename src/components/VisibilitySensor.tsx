@@ -3,12 +3,12 @@
 import { LoaderIcon } from "lucide-react";
 import React, { useEffect } from "react";
 
-interface LoadmoreSensorProps {
+interface VisibilitySensorProps {
   visible?: boolean;
   onLoadmore?: () => void;
 }
 
-const LoadmoreSensor: React.FC<LoadmoreSensorProps> = ({
+const VisibilitySensor: React.FC<VisibilitySensorProps> = ({
   visible = true,
   onLoadmore,
 }) => {
@@ -46,4 +46,4 @@ const LoadmoreSensor: React.FC<LoadmoreSensorProps> = ({
   );
 };
 
-export default LoadmoreSensor;
+export default VisibilitySensor;
