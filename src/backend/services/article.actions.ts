@@ -240,7 +240,7 @@ export async function myArticles(
   try {
     const articles = await articleRepository.findAllWithPagination({
       where: eq("author_id", sessionUserId),
-      columns: ["id", "title", "handle", "created_at"],
+      columns: ["id", "title", "handle", "created_at", "is_published"],
       limit: input.limit,
       page: input.page,
     });

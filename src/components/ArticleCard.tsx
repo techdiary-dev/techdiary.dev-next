@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslation } from "@/i18n/use-translation";
+import { formattedTime } from "@/lib/utils";
 import Link from "next/link";
 import React, { useMemo } from "react";
 
@@ -58,14 +59,7 @@ const ArticleCard = ({
           </Link>
           <div className="flex items-center text-xs text-muted-foreground">
             <time dateTime={publishedAt}>
-              {new Date(publishedAt).toLocaleDateString(
-                lang == "bn" ? "bn-BD" : "en-US",
-                {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                }
-              )}
+              {formattedTime(new Date(publishedAt), lang?.toString())}
             </time>
             <span className="mx-1.5">·</span>
             <span>{readingTime} min read</span>
