@@ -55,3 +55,21 @@ export function readingTime(text: string) {
   const minutes = Math.round(wordCount / wordsPerMinute);
   return minutes;
 }
+
+export const formattedTime = (date: Date, lang = "en") => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  return new Intl.DateTimeFormat(`${lang}-BD`, options).format(date);
+};
+
+export const relativeTime = (date: Date) => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+  return new Intl.DateTimeFormat("en-US", options).format(date);
+};

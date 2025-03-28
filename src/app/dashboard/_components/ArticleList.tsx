@@ -1,8 +1,24 @@
 "use client";
 
 import * as articleActions from "@/backend/services/article.actions";
+import { useAppConfirm } from "@/components/app-confirm";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import VisibilitySensor from "@/components/VisibilitySensor";
 import { useTranslation } from "@/i18n/use-translation";
+import { formattedTime } from "@/lib/utils";
+import {
+  CardStackIcon,
+  DotsHorizontalIcon,
+  Pencil1Icon,
+} from "@radix-ui/react-icons";
+
 import { useInfiniteQuery } from "@tanstack/react-query";
 import Link from "next/link";
 
@@ -18,6 +34,8 @@ const ArticleList = () => {
       return lastPage?.meta.hasNextPage ? _page + 1 : null;
     },
   });
+
+  const appConfirm = useAppConfirm();
 
   return (
     <div>
@@ -36,7 +54,7 @@ const ArticleList = () => {
               className="flex justify-between flex-col md:flex-row py-3 space-y-2"
             >
               <div className="flex flex-col">
-                <p>{article.id}</p>
+                <p>{article.handle}</p>
                 <Link
                   className="text-forground text-lg"
                   href={`/dashboard/articles/${article?.id}`}
@@ -44,9 +62,8 @@ const ArticleList = () => {
                   {article.title}
                 </Link>
                 {article.is_published && (
-                  <p className="text-sm text-forground-muted">
-                    {_t("Published on")}{" "}
-                    {/* {relativeTime(new Date(article.published_at))} */}
+                  <p className="text-sm text-muted-foreground">
+                    {_t("Published on")} {formattedTime(article.published_at!)}
                   </p>
                 )}
               </div>
@@ -69,21 +86,57 @@ const ArticleList = () => {
                   <p>{article?.votes?.score || 0} </p>
                 </div> */}
                 </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger>
+                    <button className="flex items-center gap-2">
+                      <p className="text-sm md:hidden">{_t("Actions")}</p>
+                      <DotsHorizontalIcon className="h-5 w-5" />
+                    </button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href={`/dashboard/articles/${article?.id}`}
+                        className="text-foreground"
+                      >
+                        <Pencil1Icon />
+                        <span>{_t("Edit")}</span>
+                      </Link>
+                    </DropdownMenuItem>
+
+                    <DropdownMenuItem asChild>
+                      <button
+                        onClick={() => {
+                          appConfirm.show({
+                            title: _t("Sure to archive?"),
+                            children: _t(
+                              "No worries, This can be undone anytime."
+                            ),
+                            labels: {
+                              confirm: _t("Yes"),
+                              cancel: _t("Cancel"),
+                            },
+                            onConfirm() {
+                              // try {
+                              //   apiRepo
+                              //     .makeArchive(article?.id)
+                              //     .finally(() => router.refresh());
+                              // } catch (error) {}
+                            },
+                          });
+                        }}
+                      >
+                        <CardStackIcon />
+                        <span>{_t("Make archive")}</span>
+                      </button>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
                 {/* <Menu>
                 <Menu.Target>
-                  <button className="flex items-center gap-2">
-                    <p className="text-sm md:hidden">{_t("Actions")}</p>
-                    <DotsHorizontalIcon className="h-5 w-5" />
-                  </button>
-                </Menu.Target>
+                 
                 <Menu.Dropdown>
-                  <Menu.Item
-                    leftSection={<Pencil1Icon />}
-                    component={Link}
-                    href={`/dashboard/articles/${article?.id}`}
-                  >
-                    {_t("Edit")}
-                  </Menu.Item>
+                 
                   <Menu.Item
                     leftSection={<CardStackIcon />}
                     component="button"
