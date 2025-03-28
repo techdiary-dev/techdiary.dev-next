@@ -11,7 +11,7 @@ const SocialLoginCard = () => {
   return (
     <div className="flex flex-col gap-3">
       <Link
-        className="flex w-full items-center justify-center space-x-2 rounded-sm border border-gray-800 bg-gray-800/5 py-2 text-gray-700 transition duration-150 hover:opacity-95 dark:border-gray-700 dark:text-gray-400"
+        className="flex w-full items-center justify-center space-x-2 rounded-sm border py-2  transition duration-150 hover:opacity-95"
         href={`/api/auth/github?next=${searchParams.get("next")}`}
       >
         <svg

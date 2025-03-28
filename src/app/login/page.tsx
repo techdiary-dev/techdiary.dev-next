@@ -12,9 +12,9 @@ const page = async () => {
           <h3 className="text-xl font-semibold">
             {_t("Join Techdiary community")}
           </h3>
-          <p className=" text-muted-foreground">
+          <p className="text-muted-foreground text-center">
             {_t(
-              "A community of 5000+ incredible developers is called DEV Community."
+              "A community of 5000+ incredible developers is called Techdiary Community."
             )}
           </p>
         </div>
