@@ -10,11 +10,24 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { Calendar, Home, Inbox, Search, Settings } from "lucide-react";
+import {
+  Calendar,
+  CommandIcon,
+  Home,
+  Inbox,
+  Search,
+  Settings,
+} from "lucide-react";
 import React, { PropsWithChildren } from "react";
 import DashboardSidebar from "./DashboardSidebar";
 import AuthenticatedUserMenu from "@/components/Navbar/AuthenticatedUserMenu";
 import ThemeSwitcher from "@/components/Navbar/ThemeSwitcher";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface DashboardScaffoldProps {}
 
@@ -50,11 +63,24 @@ const DashboardScaffold: React.FC<
   PropsWithChildren<DashboardScaffoldProps>
 > = ({ children }) => {
   return (
-    <SidebarProvider>
+    <>
       <DashboardSidebar />
       <main className="w-full">
         <div className="p-4 flex items-center gap-2 justify-between">
-          <SidebarTrigger />
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <SidebarTrigger />
+              </TooltipTrigger>
+              <TooltipContent>
+                <div className="flex items-center gap-2">
+                  <CommandIcon className="size-4" />
+                  <span>+</span>
+                  <span className=" text-lg">b</span>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
           <div className="flex items-center gap-2">
             <ThemeSwitcher />
             <AuthenticatedUserMenu />
@@ -62,7 +88,7 @@ const DashboardScaffold: React.FC<
         </div>
         <div className="flex-1 p-4">{children}</div>
       </main>
-    </SidebarProvider>
+    </>
   );
 };
 

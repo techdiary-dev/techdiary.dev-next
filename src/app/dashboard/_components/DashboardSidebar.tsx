@@ -46,7 +46,7 @@ const DashboardSidebar = () => {
     },
   ];
   return (
-    <Sidebar>
+    <Sidebar variant="floating" collapsible="icon">
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>{_t("Dashboard")}</SidebarGroupLabel>
