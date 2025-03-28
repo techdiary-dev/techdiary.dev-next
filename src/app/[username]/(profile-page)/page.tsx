@@ -1,5 +1,6 @@
 import { getUserByUsername } from "@/backend/services/user.action";
 import BaseLayout from "@/components/layout/BaseLayout";
+import _t from "@/i18n/_t";
 import { markdownToHtml } from "@/utils/markdoc-parser";
 import { Link2Icon } from "@radix-ui/react-icons";
 import React from "react";
@@ -236,6 +237,14 @@ const UserProfilePage: React.FC<UserProfilePageProps> = async ({ params }) => {
           </aside>
 
           <main className="border rounded md:col-span-9 col-span-full">
+            <nav className="flex divide-x items-center bg-muted p-2">
+              <a href="#" className="pr-2">
+                {_t("Overview")}
+              </a>
+              <a href="#" className="pl-2">
+                {_t("My articles")}
+              </a>
+            </nav>
             <div
               dangerouslySetInnerHTML={{
                 __html: markdownToHtml(profile?.profile_readme) || "",
