@@ -39,7 +39,9 @@ const AuthenticatedUserMenu = () => {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuItem asChild>
-          <Link href={`/${authSession?.user?.id}`}>{_t("My profile")}</Link>
+          <Link href={`/@${authSession?.user?.username}`}>
+            {_t("My profile")}
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href="/dashboard">{_t("Dashboard")}</Link>
