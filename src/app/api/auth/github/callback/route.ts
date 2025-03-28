@@ -1,7 +1,9 @@
+import { getAfterAuthRedirect } from "@/auth/auth";
 import { GithubOAuthService } from "@/backend/services/oauth/GithubOAuthService";
 import { RepositoryException } from "@/backend/services/RepositoryException";
 import * as sessionActions from "@/backend/services/session.actions";
 import * as userActions from "@/backend/services/user.repository";
+import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 
 const githubOAuthService = new GithubOAuthService();
@@ -11,6 +13,7 @@ export async function GET(request: Request) {
     const url = new URL(request.url);
     const code = url.searchParams.get("code");
     const state = url.searchParams.get("state");
+    const afterAuthRedirect = await getAfterAuthRedirect();
 
     if (code === null || state === null) {
       return NextResponse.json({ error: "Please restart the process." });
@@ -32,6 +35,15 @@ export async function GET(request: Request) {
       user_id: bootedSocialUser?.user.id!,
       request,
     });
+
+    if (afterAuthRedirect) {
+      return new Response(null, {
+        status: 302,
+        headers: {
+          Location: afterAuthRedirect ?? "/",
+        },
+      });
+    }
 
     return new Response(null, {
       status: 302,
