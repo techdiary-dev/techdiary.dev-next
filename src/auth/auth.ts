@@ -97,5 +97,6 @@ export const setAfterAuthRedirect = async (url: string) => {
 
 export const getAfterAuthRedirect = async () => {
   const _cookies = await cookies();
-  return _cookies.get("next")?.value ?? null;
+  const value = _cookies.get("next")?.value;
+  return value !== "null" ? value : null;
 };
