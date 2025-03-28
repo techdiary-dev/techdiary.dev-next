@@ -52,7 +52,7 @@ const ArticleCard = ({
         </div>
         <div className="ml-2.5">
           <Link
-            href={`/${author.username}`}
+            href={`/@${author.username}`}
             className="text-sm font-medium text-foreground"
           >
             {author.name}
