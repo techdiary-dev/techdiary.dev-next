@@ -31,7 +31,8 @@ const ArticleList = () => {
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const _page = lastPage?.meta?.currentPage ?? 1;
-      return lastPage?.meta.hasNextPage ? _page + 1 : null;
+      const _totalPages = lastPage?.meta?.totalPages ?? 1;
+      return _page + 1 <= _totalPages ? _page + 1 : null;
     },
   });
 

@@ -37,6 +37,12 @@ export const ArticleRepositoryInput = {
     limit: z.number().default(10),
   }),
 
+  userFeedInput: z.object({
+    user_id: z.string(),
+    page: z.number().default(1),
+    limit: z.number().default(10),
+  }),
+
   findArticlesByAuthorInput: z.object({
     author_id: z.string(),
     published_only: z.boolean().default(false),
