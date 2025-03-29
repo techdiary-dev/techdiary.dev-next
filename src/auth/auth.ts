@@ -76,6 +76,11 @@ export const getSession = cache(async (): Promise<SessionResult> => {
 export const getSessionUserId = cache(async (): Promise<string | null> => {
   const _cookies = await cookies();
   const userId = _cookies.get("session_userId")?.value ?? null;
+
+  if (!userId) {
+    throw new Error("Unauthorized");
+  }
+
   return userId;
 });
 

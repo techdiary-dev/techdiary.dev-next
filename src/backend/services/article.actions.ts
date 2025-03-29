@@ -285,9 +285,41 @@ export async function myArticles(
   try {
     const articles = await articleRepository.findAllWithPagination({
       where: eq("author_id", sessionUserId),
-      columns: ["id", "title", "handle", "created_at", "is_published"],
+      columns: [
+        "id",
+        "title",
+        "handle",
+        "created_at",
+        "is_published",
+        "approved_at",
+      ],
       limit: input.limit,
       page: input.page,
+    });
+    return articles;
+  } catch (error) {
+    handleRepositoryException(error);
+  }
+}
+
+/**
+ * Updates the status of an article.
+ * @param article_id - The unique identifier of the article to update
+ * @param is_published - The new status of the article
+ * @returns
+ */
+export async function setArticlePublished(
+  article_id: string,
+  is_published: boolean
+) {
+  const sessionUserId = await getSessionUserId();
+  try {
+    const articles = await articleRepository.updateOne({
+      where: and(eq("id", article_id), eq("author_id", sessionUserId)),
+      data: {
+        is_published: is_published,
+        published_at: is_published ? new Date() : null,
+      },
     });
     return articles;
   } catch (error) {

@@ -4,6 +4,14 @@ import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import React, { PropsWithChildren } from "react";
 import DashboardScaffold from "./_components/DashboardScaffold";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Dashboard",
+    template: "%s | TechDiary",
+  },
+};
 
 const layout: React.FC<PropsWithChildren> = async ({ children }) => {
   const _headers = await headers();
