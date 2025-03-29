@@ -17,6 +17,7 @@ import {
 } from "./RepositoryException";
 import { ArticleRepositoryInput } from "./inputs/article.input";
 import { removeMarkdownSyntax } from "@/lib/utils";
+import { getSessionUserId } from "@/auth/auth";
 
 const articleRepository = new PersistentRepository<Article>(
   "articles",
@@ -191,6 +192,51 @@ export async function articleFeed(
   }
 }
 
+export async function userArticleFeed(
+  _input: z.infer<typeof ArticleRepositoryInput.userFeedInput>,
+  columns?: (keyof Article)[]
+) {
+  try {
+    const input = await ArticleRepositoryInput.userFeedInput.parseAsync(_input);
+
+    const response = await articleRepository.findAllWithPagination({
+      where: and(eq("is_published", true), eq("author_id", input.user_id)),
+      page: input.page,
+      limit: input.limit,
+      orderBy: [desc("published_at")],
+      columns: columns ?? [
+        "id",
+        "title",
+        "handle",
+        "cover_image",
+        "body",
+        "created_at",
+        "excerpt",
+      ],
+      joins: [
+        joinTable<Article, User>({
+          as: "user",
+          joinTo: "users",
+          localField: "author_id",
+          foreignField: "id",
+          columns: ["id", "name", "username", "profile_photo"],
+        }),
+      ],
+    });
+
+    response["nodes"] = response["nodes"].map((article) => {
+      return {
+        ...article,
+        excerpt: article.excerpt ?? removeMarkdownSyntax(article.body),
+      };
+    });
+
+    return response;
+  } catch (error) {
+    handleRepositoryException(error);
+  }
+}
+
 export async function articleDetail(article_handle: string) {
   try {
     const [article] = await articleRepository.findRows({
@@ -210,6 +256,16 @@ export async function articleDetail(article_handle: string) {
         "created_at",
         "updated_at",
       ],
+      joins: [
+        joinTable<Article, User>({
+          as: "user",
+          joinTo: "users",
+          localField: "author_id",
+          foreignField: "id",
+          columns: ["id", "name", "username", "profile_photo"],
+        }),
+      ],
+      limit: 1,
     });
 
     if (!article) {
@@ -217,6 +273,23 @@ export async function articleDetail(article_handle: string) {
     }
 
     return article;
+  } catch (error) {
+    handleRepositoryException(error);
+  }
+}
+
+export async function myArticles(
+  input: z.infer<typeof ArticleRepositoryInput.myArticleInput>
+) {
+  const sessionUserId = await getSessionUserId();
+  try {
+    const articles = await articleRepository.findAllWithPagination({
+      where: eq("author_id", sessionUserId),
+      columns: ["id", "title", "handle", "created_at", "is_published"],
+      limit: input.limit,
+      page: input.page,
+    });
+    return articles;
   } catch (error) {
     handleRepositoryException(error);
   }

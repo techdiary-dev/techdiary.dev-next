@@ -1,7 +1,15 @@
-import React from "react";
+import ArticleList from "./_components/ArticleList";
+import MatrixReport from "./_components/MatrixReport";
+// import ViewsChart from "./_components/ViewsChart";
 
 const page = () => {
-  return <div>page</div>;
+  return (
+    <>
+      {/* <ViewsChart /> */}
+      <MatrixReport />
+      <ArticleList />
+    </>
+  );
 };
 
 export default page;

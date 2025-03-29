@@ -9,9 +9,25 @@ import { cookies } from "next/headers";
 import React, { PropsWithChildren } from "react";
 
 export const metadata: Metadata = {
-  title: "Techdiary - %s",
-  openGraph: { title: "Techdiary" },
+  title: {
+    default: "TechDiary",
+    template: "%s | TechDiary",
+  },
+  applicationName: "TechDiary",
+  referrer: "origin-when-cross-origin",
+  keywords: ["TechDiary", "টেকডায়েরি"],
   icons: { icon: "/favicon.png" },
+  description: "Homepage of TechDiary",
+  metadataBase: new URL("https://www.techdiary.dev"),
+  openGraph: {
+    title: "TechDiary - টেকডায়েরি",
+    description: "চিন্তা, সমস্যা, সমাধান",
+    url: "https://www.techdiary.dev",
+    siteName: "TechDiary",
+    locale: "bn_BD",
+    type: "website",
+    images: ["https://www.techdiary.dev/og.png"],
+  },
 };
 
 const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {

@@ -7,7 +7,7 @@ export interface User {
   education: string;
   designation: string;
   bio: string;
-  websiteUrl: string;
+  website_url: string;
   location: string;
   social_links: any;
   profile_readme: string;

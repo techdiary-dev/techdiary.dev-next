@@ -60,22 +60,28 @@ export const validateSessionToken = async (
 
 export const getSession = cache(async (): Promise<SessionResult> => {
   const _cookies = await cookies();
-  const token = _cookies.get("session")?.value ?? null;
+  const token = _cookies.get("session_token")?.value ?? null;
   if (!token) {
     return { session: null, user: null };
   }
   const result = await validateSessionToken(token);
 
   if (!result) {
-    _cookies.delete("session");
+    _cookies.delete("session_token");
   }
 
   return result;
 });
 
+export const getSessionUserId = cache(async (): Promise<string | null> => {
+  const _cookies = await cookies();
+  const userId = _cookies.get("session_userId")?.value ?? null;
+  return userId;
+});
+
 export const deleteSession = async () => {
   const _cookies = await cookies();
-  const token = _cookies.get("session")?.value ?? null;
+  const token = _cookies.get("session_token")?.value ?? null;
   if (!token) {
     return;
   }
@@ -88,4 +94,15 @@ export const deleteSession = async () => {
   } finally {
     _cookies.delete("session");
   }
+};
+
+export const setAfterAuthRedirect = async (url: string) => {
+  const _cookies = await cookies();
+  _cookies.set("next", url);
+};
+
+export const getAfterAuthRedirect = async () => {
+  const _cookies = await cookies();
+  const value = _cookies.get("next")?.value;
+  return value !== "null" ? value : null;
 };

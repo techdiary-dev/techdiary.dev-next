@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslation } from "@/i18n/use-translation";
+import { formattedTime } from "@/lib/utils";
 import Link from "next/link";
 import React, { useMemo } from "react";
 
@@ -51,21 +52,14 @@ const ArticleCard = ({
         </div>
         <div className="ml-2.5">
           <Link
-            href={`/${author.username}`}
+            href={`/@${author.username}`}
             className="text-sm font-medium text-foreground"
           >
             {author.name}
           </Link>
           <div className="flex items-center text-xs text-muted-foreground">
             <time dateTime={publishedAt}>
-              {new Date(publishedAt).toLocaleDateString(
-                lang == "bn" ? "bn-BD" : "en-US",
-                {
-                  month: "long",
-                  day: "numeric",
-                  year: "numeric",
-                }
-              )}
+              {formattedTime(new Date(publishedAt), lang?.toString())}
             </time>
             <span className="mx-1.5">·</span>
             <span>{readingTime} min read</span>
@@ -86,13 +80,15 @@ const ArticleCard = ({
         </div>
 
         {coverImage && (
-          <div className="relative mt-4 overflow-hidden rounded-md aspect-[16/9]">
-            <img
-              src={coverImage}
-              alt={title}
-              className="h-full w-full object-cover transition-all duration-700 opacity-100 scale-100"
-            />
-          </div>
+          <a href={articleUrl} className="block">
+            <div className="relative mt-4 overflow-hidden rounded-md aspect-[16/9]">
+              <img
+                src={coverImage}
+                alt={title}
+                className="h-full w-full object-cover transition-all duration-700 opacity-100 scale-100"
+              />
+            </div>
+          </a>
         )}
       </div>
       {/* <div className="mt-4 flex items-center justify-between">

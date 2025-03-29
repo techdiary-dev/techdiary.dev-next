@@ -34,7 +34,14 @@ export async function createLoginSession(
       user_id: input.user_id,
       device: `${agent.os.name} ${agent.browser.name} ${agent.browser.version}`,
     });
-    _cookies.set("session", token, {
+    _cookies.set("session_token", token, {
+      path: "/",
+      secure: process.env.NODE_ENV === "production",
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 30,
+      sameSite: "lax",
+    });
+    _cookies.set("session_userId", input.user_id, {
       path: "/",
       secure: process.env.NODE_ENV === "production",
       httpOnly: true,

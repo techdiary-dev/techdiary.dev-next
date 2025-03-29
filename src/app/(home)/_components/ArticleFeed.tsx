@@ -5,7 +5,7 @@ import ArticleCard from "@/components/ArticleCard";
 import { readingTime } from "@/lib/utils";
 import getFileUrl from "@/utils/getFileUrl";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import LoadmoreSensor from "./LoadmoreSensor";
+import VisibilitySensor from "@/components/VisibilitySensor";
 
 const ArticleFeed = () => {
   const feedInfiniteQuery = useInfiniteQuery({
@@ -55,7 +55,7 @@ const ArticleFeed = () => {
         ))}
 
       <div className="my-10">
-        <LoadmoreSensor
+        <VisibilitySensor
           visible={feedInfiniteQuery.hasNextPage}
           onLoadmore={async () => {
             console.log("fetching next page");
