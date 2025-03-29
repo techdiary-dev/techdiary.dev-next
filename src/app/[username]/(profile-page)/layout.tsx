@@ -4,6 +4,7 @@ import ProfilePageAside from "./_components/ProfilePageAside";
 import _t from "@/i18n/_t";
 import { getUserByUsername } from "@/backend/services/user.action";
 import Image from "next/image";
+import Link from "next/link";
 
 interface ProfilePageLayoutProps {
   children: React.ReactNode;
@@ -75,15 +76,18 @@ const layout: React.FC<ProfilePageLayoutProps> = async ({
 
           <main className="md:col-span-9 col-span-full">
             <nav className="flex items-center bg-muted rounded-tl-md rounded-tr-md">
-              <a
-                href="#"
+              <Link
+                href={`/@${profile?.username}`}
                 className="pr-2 border-b-4 border-primary text-muted-foreground p-2"
               >
                 {_t("Overview")}
-              </a>
-              <a href="#" className="pl-2 text-muted-foreground">
+              </Link>
+              <Link
+                href={`/@${profile?.username}/articles`}
+                className="pl-2 text-muted-foreground"
+              >
                 {_t("My articles")}
-              </a>
+              </Link>
             </nav>
             {children}
           </main>

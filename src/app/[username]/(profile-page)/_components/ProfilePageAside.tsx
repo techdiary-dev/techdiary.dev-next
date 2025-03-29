@@ -1,5 +1,17 @@
 import { User } from "@/backend/models/domain-models";
+import Behance from "@/components/icons/behance";
+import Dribbble from "@/components/icons/Dribbble";
+import Facebook from "@/components/icons/facebook";
+import Github from "@/components/icons/github";
+import Instagram from "@/components/icons/instagram";
+import Linkinedin from "@/components/icons/linkinedin";
+import Medium from "@/components/icons/medium";
+import Stackoverflow from "@/components/icons/stackoverflow";
+import Twitch from "@/components/icons/twitch";
+import X from "@/components/icons/x";
+import Youtube from "@/components/icons/youtube";
 import { Link2Icon } from "lucide-react";
+import Link from "next/link";
 import React from "react";
 
 interface ProfilePageAsideProps {
@@ -10,7 +22,7 @@ const ProfilePageAside: React.FC<ProfilePageAsideProps> = ({ profile }) => {
   return (
     <div>
       <img
-        className="w-full rounded"
+        className="w-[28%] md:w-full rounded"
         src={
           profile?.profile_photo ||
           `https://api.dicebear.com/8.x/initials/svg?seed=${profile?.username}`
@@ -31,7 +43,7 @@ const ProfilePageAside: React.FC<ProfilePageAsideProps> = ({ profile }) => {
       )}
 
       {/* User infos start */}
-      <div className="flex flex-col mt-4 space-y-4">
+      <div className="flex flex-col mt-4 gap-2 md:gap-4">
         {profile?.website_url && (
           <div className="flex items-center space-x-1">
             <Link2Icon className="w-5 h-5" />
@@ -58,6 +70,7 @@ const ProfilePageAside: React.FC<ProfilePageAsideProps> = ({ profile }) => {
             <span className="text-sm">{profile?.education}</span>
           </div>
         )}
+
         {profile?.email && (
           <div className="flex items-center space-x-1">
             <svg
@@ -97,115 +110,117 @@ const ProfilePageAside: React.FC<ProfilePageAsideProps> = ({ profile }) => {
       {/* User infos end */}
 
       {/* Uer Socials start */}
-      {/* <div className="flex gap-2 mt-5">
-                {profile?.social_links?.github && (
-                  <a
-                    href={profile?.social_links?.github}
-                    target="_blank"
-                    className=" text-forground-muted"
-                  >
-                    <FaGithub size={20} />
-                  </a>
-                )}
+      <div className="flex flex-wrap gap-3 mt-5">
+        {profile?.social_links?.github && (
+          <Link
+            href={profile?.social_links?.github}
+            target="_blank"
+            className=" text-forground-muted"
+          >
+            <Github size={30} />
+          </Link>
+        )}
 
-                {profile?.social_links?.facebook && (
-                  <a
-                    href={profile?.social_links?.facebook}
-                    target="_blank"
-                    className=" text-forground-muted"
-                  >
-                    <FaFacebook size={20} />
-                  </a>
-                )}
+        {profile?.social_links?.facebook && (
+          <Link
+            href={profile?.social_links?.facebook}
+            target="_blank"
+            className=" text-forground-muted"
+          >
+            <Facebook size={30} />
+          </Link>
+        )}
 
-                {profile?.social_links?.stackOverflow && (
-                  <a
-                    href={profile?.social_links?.stackOverflow}
-                    target="_blank"
-                    className=" text-forground-muted"
-                  >
-                    <FaStackOverflow size={20} />
-                  </a>
-                )}
+        {profile?.social_links?.stackOverflow && (
+          <Link
+            href={profile?.social_links?.stackOverflow}
+            target="_blank"
+            className=" text-forground-muted"
+          >
+            <Stackoverflow size={30} />
+          </Link>
+        )}
 
-                {profile?.social_links?.medium && (
-                  <a
-                    href={profile?.social_links?.medium}
-                    target="_blank"
-                    className=" text-forground-muted"
-                  >
-                    <FaMedium size={20} />
-                  </a>
-                )}
+        {profile?.social_links?.medium && (
+          <Link
+            href={profile?.social_links?.medium}
+            target="_blank"
+            className=" text-forground-muted"
+          >
+            <Medium size={30} />
+          </Link>
+        )}
 
-                {profile?.social_links?.linkedin && (
-                  <a
-                    href={profile?.social_links?.linkedin}
-                    target="_blank"
-                    className=" text-forground-muted"
-                  >
-                    <FaLinkedinIn size={20} />
-                  </a>
-                )}
-                {profile?.social_links?.twitter && (
-                  <a
-                    href={profile?.social_links?.twitter}
-                    target="_blank"
-                    className=" text-forground-muted"
-                  >
-                    <FaTwitter size={20} />
-                  </a>
-                )}
+        {profile?.social_links?.linkedin && (
+          <a
+            href={profile?.social_links?.linkedin}
+            target="_blank"
+            className=" text-forground-muted"
+          >
+            <Linkinedin size={30} />
+          </a>
+        )}
 
-                {profile?.social_links?.instagram && (
-                  <a
-                    href={profile?.social_links?.instagram}
-                    target="_blank"
-                    className=" text-forground-muted"
-                  >
-                    <FaInstagram size={20} />
-                  </a>
-                )}
+        {profile?.social_links?.twitter && (
+          <Link
+            href={profile?.social_links?.twitter}
+            target="_blank"
+            className=" text-forground-muted"
+          >
+            <X size={30} />
+          </Link>
+        )}
 
-                {profile?.social_links?.behance && (
-                  <a
-                    href={profile?.social_links?.behance}
-                    target="_blank"
-                    className=" text-forground-muted"
-                  >
-                    <FaBehance size={20} />
-                  </a>
-                )}
-                {profile?.social_links?.dribbble && (
-                  <a
-                    href={profile?.social_links?.dribbble}
-                    target="_blank"
-                    className=" text-forground-muted"
-                  >
-                    <FaDribbble size={20} />
-                  </a>
-                )}
+        {profile?.social_links?.instagram && (
+          <Link
+            href={profile?.social_links?.instagram}
+            target="_blank"
+            className=" text-forground-muted"
+          >
+            <Instagram size={30} />
+          </Link>
+        )}
 
-                {profile?.social_links?.twitch && (
-                  <a
-                    href={profile?.social_links?.twitch}
-                    target="_blank"
-                    className=" text-forground-muted"
-                  >
-                    <FaTwitch size={20} />
-                  </a>
-                )}
+        {profile?.social_links?.behance && (
+          <a
+            href={profile?.social_links?.behance}
+            target="_blank"
+            className=" text-forground-muted"
+          >
+            <Behance size={30} />
+          </a>
+        )}
 
-                {profile?.social_links?.youtube && (
-                  <a
-                    href={profile?.social_links?.youtube}
-                    target="_blank"
-                    className=" text-forground-muted"
-                  >
-                    <FaYoutube size={20} />
-                  </a>
-                )}
-              </div> */}
+        {profile?.social_links?.dribbble && (
+          <Link
+            href={profile?.social_links?.dribbble}
+            target="_blank"
+            className=" text-forground-muted"
+          >
+            <Dribbble size={30} />
+          </Link>
+        )}
+
+        {profile?.social_links?.twitch && (
+          <Link
+            href={profile?.social_links?.twitch}
+            target="_blank"
+            className=" text-forground-muted"
+          >
+            <Twitch size={30} />
+          </Link>
+        )}
+
+        {profile?.social_links?.youtube && (
+          <a
+            href={profile?.social_links?.youtube}
+            target="_blank"
+            className=" text-forground-muted"
+          >
+            <Youtube size={30} />
+          </a>
+        )}
+      </div>
       {/* User Socials end */}
     </div>
   );
