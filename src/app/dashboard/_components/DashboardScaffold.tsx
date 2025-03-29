@@ -28,6 +28,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import LanguageSwitcher from "@/components/Navbar/LanguageSwitcher";
 
 interface DashboardScaffoldProps {}
 
@@ -82,6 +83,7 @@ const DashboardScaffold: React.FC<
             </Tooltip>
           </TooltipProvider>
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
             <ThemeSwitcher />
             <AuthenticatedUserMenu />
           </div>
