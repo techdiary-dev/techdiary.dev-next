@@ -2,7 +2,8 @@
   @apply prose prose-slate text-foreground;
   @apply max-w-none;
   @apply prose-code:p-0;
-  @apply prose-a:inline-block;
+  @apply prose-blockquote:text-muted-foreground;
+  @apply prose-a:inline-block prose-a:text-primary;
   @apply prose-p:p-0;
   @apply prose-img:inline-block;
   @apply prose-headings:font-semibold prose-headings:text-foreground prose-headings:underline prose-headings:first:mt-0;
