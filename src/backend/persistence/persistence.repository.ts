@@ -235,7 +235,7 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
    * @param sql
    * @param values
    */
-  executeSQL(sql: string, values: DOMAIN_MODEL_TYPE[]) {
+  executeSQL(sql: string, values: string[]) {
     try {
       return this.persistentDriver.executeSQL(sql, values);
     } catch (e) {

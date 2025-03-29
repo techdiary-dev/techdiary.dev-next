@@ -5,6 +5,8 @@ import {
   WhereCondition,
 } from "./persistence-contracts";
 
+export const sql = String.raw;
+
 /**
  * Builds a WHERE clause for SQL queries
  * @param where Where condition or undefined
