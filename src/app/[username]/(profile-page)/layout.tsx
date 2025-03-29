@@ -5,6 +5,9 @@ import _t from "@/i18n/_t";
 import { getUserByUsername } from "@/backend/services/user.action";
 import Image from "next/image";
 import Link from "next/link";
+import { headers } from "next/headers";
+import clsx from "clsx";
+import { sanitizedUsername } from "@/lib/utils";
 
 interface ProfilePageLayoutProps {
   children: React.ReactNode;
@@ -15,10 +18,10 @@ const layout: React.FC<ProfilePageLayoutProps> = async ({
   children,
   params,
 }) => {
+  const _headers = await headers();
+  const currentPath = _headers.get("x-current-path");
   const _params = await params;
-  const username = _params?.username?.startsWith("%40")
-    ? _params.username.replaceAll("%40", "").toLowerCase()
-    : _params.username.toLowerCase();
+  const username = sanitizedUsername(_params?.username);
   const profile = await getUserByUsername(username, [
     // all fields
     "id",
@@ -68,6 +71,13 @@ const layout: React.FC<ProfilePageLayoutProps> = async ({
 
   return (
     <BaseLayout>
+      {/* <pre>
+        {JSON.stringify(
+          { currentPath: sanitizedUsername(currentPath!), username },
+          null,
+          2
+        )}
+      </pre> */}
       <div className="wrapper">
         <div className="grid grid-cols-1 gap-6 my-2 lg:my-6 md:grid-cols-12 lg:gap-10">
           <aside className="md:col-span-3 col-span-full">
@@ -78,13 +88,19 @@ const layout: React.FC<ProfilePageLayoutProps> = async ({
             <nav className="flex items-center bg-muted rounded-tl-md rounded-tr-md">
               <Link
                 href={`/@${profile?.username}`}
-                className="pr-2 border-b-4 border-primary text-muted-foreground p-2"
+                className={clsx("pr-2 text-muted-foreground p-2", {
+                  "border-b-4 border-primary":
+                    sanitizedUsername(currentPath!) == username,
+                })}
               >
                 {_t("Overview")}
               </Link>
               <Link
                 href={`/@${profile?.username}/articles`}
-                className="pl-2 text-muted-foreground"
+                className={clsx("pr-2 text-muted-foreground p-2", {
+                  "border-b-4 border-primary":
+                    sanitizedUsername(currentPath!) == `${username}articles`,
+                })}
               >
                 {_t("My articles")}
               </Link>
