@@ -99,5 +99,6 @@
   "Article views report": "আর্টিক্যাল ভিউ রিপোর্ট",
   "Stats": "পরিসংখ্যান",
   "Profile not found": "প্রোফাইল খুঁজে পাওয়া যায়নি",
-  "The user you are looking for does not exist": "আপনি সেই ব্যবহারকারীর জন্য খুঁজে পাওয়া যায়নি"
+  "The user you are looking for does not exist": "আপনি সেই ব্যবহারকারীর জন্য খুঁজে পাওয়া যায়নি",
+  "No profile readme found": "কোনো প্রোফাইল readme পাওয়া যায়নি"
 }
