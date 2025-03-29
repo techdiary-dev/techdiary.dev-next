@@ -71,9 +71,27 @@ const ArticleList = () => {
 
               <div className="flex items-center gap-10 justify-between">
                 <div className="flex gap-4 items-center">
+                  {!article.approved_at && (
+                    <p className="bg-yellow-400/30 rounded-sm px-2 py-1 text-sm">
+                      🚧 {_t("অনুমোদনাধীন")}
+                    </p>
+                  )}
+
+                  {article.approved_at && (
+                    <p className="bg-green-400/30 rounded-sm px-2 py-1 text-sm">
+                      ✅ {_t("অনুমোদিত")}
+                    </p>
+                  )}
+
                   {!article.is_published && (
                     <p className="bg-yellow-400/30 rounded-sm px-2 py-1 text-sm">
                       🚧 {_t("Draft")}
+                    </p>
+                  )}
+
+                  {article.is_published && (
+                    <p className="bg-green-400/30 rounded-sm px-2 py-1 text-sm">
+                      ✅ {_t("Published")}
                     </p>
                   )}
 
