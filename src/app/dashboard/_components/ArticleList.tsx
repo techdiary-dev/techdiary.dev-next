@@ -111,18 +111,21 @@ const ArticleList = () => {
                           appConfirm.show({
                             title: `${_t("Sure to unpublish")}?`,
                             children: _t(
-                              "If you unpublish the article, this will be excluded in home page and search results, however direct links to the article will still work."
+                              "If you unpublish the article, this will be excluded in home page and search results, however direct links to the article will still work"
                             ),
                             labels: {
                               confirm: _t("Yes"),
                               cancel: _t("Cancel"),
                             },
-                            onConfirm() {
-                              // try {
-                              //   apiRepo
-                              //     .makeArchive(article?.id)
-                              //     .finally(() => router.refresh());
-                              // } catch (error) {}
+                            async onConfirm() {
+                              try {
+                                await articleActions.setArticlePublished(
+                                  article?.id,
+                                  !article?.is_published
+                                );
+                              } finally {
+                                feedInfiniteQuery.refetch();
+                              }
                             },
                           });
                         }}
