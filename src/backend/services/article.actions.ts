@@ -155,7 +155,7 @@ export async function articleFeed(
     const input = await ArticleRepositoryInput.feedInput.parseAsync(_input);
 
     const response = await articleRepository.findAllWithPagination({
-      where: and(eq("is_published", true)),
+      where: and(eq("is_published", true), neq("approved_at", null)),
       page: input.page,
       limit: input.limit,
       orderBy: [desc("published_at")],
@@ -200,7 +200,11 @@ export async function userArticleFeed(
     const input = await ArticleRepositoryInput.userFeedInput.parseAsync(_input);
 
     const response = await articleRepository.findAllWithPagination({
-      where: and(eq("is_published", true), eq("author_id", input.user_id)),
+      where: and(
+        eq("is_published", true),
+        neq("approved_at", null),
+        eq("author_id", input.user_id)
+      ),
       page: input.page,
       limit: input.limit,
       orderBy: [desc("published_at")],
