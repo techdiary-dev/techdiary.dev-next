@@ -4,7 +4,7 @@ import { useTranslation } from "@/i18n/use-translation";
 import React from "react";
 
 const LanguageSwitcher = () => {
-  const { toggle, lang, _t } = useTranslation();
+  const { toggle, lang } = useTranslation();
 
   return (
     <button
