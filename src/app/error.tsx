@@ -13,9 +13,10 @@ const _ErrorPage: React.FC<ErrorPageProps> = (props) => {
     <div className="max-w-xl mx-auto">
       <div className="flex flex-col items-center justify-center gap-4 p-4">
         <img src="/images/sadface.gif" className="max-w-full" alt="Error" />
-        <p>
+        <p className="text-2xl text-destructive">
           <i>{props.error.message}</i>
         </p>
+        <pre>{JSON.stringify(props.error, null, 2)}</pre>
         <Link href="/">{"Go back to home"}</Link>
       </div>
     </div>

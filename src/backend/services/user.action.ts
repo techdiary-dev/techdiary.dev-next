@@ -73,12 +73,14 @@ export async function getUserById(id: string): Promise<User | null> {
  * @throws {RepositoryException} If query fails
  */
 export async function getUserByUsername(
-  username: string
+  username: string,
+  columns?: (keyof User)[]
 ): Promise<User | null> {
   try {
     const [user] = await persistenceRepository.user.findRows({
       where: eq("username", username),
       limit: 1,
+      columns: columns ? columns : undefined,
     });
     return user;
   } catch (error) {
