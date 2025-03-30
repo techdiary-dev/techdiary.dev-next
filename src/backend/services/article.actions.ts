@@ -17,7 +17,7 @@ import {
 } from "./RepositoryException";
 import { ArticleRepositoryInput } from "./inputs/article.input";
 import { removeMarkdownSyntax } from "@/lib/utils";
-import { getSessionUserId } from "@/auth/auth";
+import { getSessionUserId } from "./session.actions";
 
 const articleRepository = new PersistentRepository<Article>(
   "articles",
