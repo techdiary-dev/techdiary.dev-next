@@ -31,6 +31,9 @@ export interface UserSession {
   user_id: string;
   token: string;
   device?: string;
+  device_type?: string;
+  ip?: string;
+  last_action_at?: Date;
   created_at: Date;
 }
 
