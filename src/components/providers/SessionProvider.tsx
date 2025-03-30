@@ -1,9 +1,9 @@
 "use client";
 
 import React, { PropsWithChildren } from "react";
-import { SessionResult } from "./auth";
 import { useHydrateAtoms } from "jotai/utils";
 import { sessionAtom } from "@/store/session.atom";
+import { SessionResult } from "@/backend/services/action-type";
 
 interface AuthProviderProps {
   session: SessionResult;

@@ -1,6 +1,6 @@
 "use server";
 
-import { getSessionUserId } from "@/auth/auth";
+import * as sessionActions from "@/backend/services/session.actions";
 import { persistenceRepository } from "../persistence-repositories";
 import { sql } from "../persistence/persistence-utils";
 
@@ -19,7 +19,7 @@ SELECT (SELECT Count(*)
 `;
 
 export async function myArticleMatrix() {
-  const sessionUserId = await getSessionUserId();
+  const sessionUserId = await sessionActions.getSessionUserId();
 
   const totalPostsQuery = await persistenceRepository.article.executeSQL(
     query,
