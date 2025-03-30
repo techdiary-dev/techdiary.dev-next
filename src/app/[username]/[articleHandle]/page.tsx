@@ -24,7 +24,9 @@ interface ArticlePageProps {
 
 const Page: NextPage<ArticlePageProps> = async ({ params }) => {
   const _params = await params;
-  const article = await articleActions.articleDetail(_params.articleHandle);
+  const article = await articleActions.articleDetailByHandle(
+    _params.articleHandle
+  );
 
   if (!article) {
     throw notFound();
