@@ -47,8 +47,7 @@ export const userSessionsTable = pgTable("user_sessions", {
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
   token: varchar("token").notNull(),
-  device_type: varchar("device_type"),
-  device: varchar("device"), // os + browser + version
+  device: varchar("device"), // os + browser
   ip: varchar("ip"),
   last_action_at: timestamp("last_action_at"),
   created_at: timestamp("created_at"),

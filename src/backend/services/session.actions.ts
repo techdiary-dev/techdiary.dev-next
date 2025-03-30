@@ -38,8 +38,8 @@ export async function createLoginSession(
     await sessionRepository.createOne({
       token,
       user_id: input.user_id,
-      device: `${agent.os.name} ${agent.browser.name} ${agent.browser.version}`,
-      // ip: input.request.ip,
+      device: `${agent.os.name} ${agent.browser.name}`,
+      ip: input.request.headers.get("x-forwarded-for") ?? "",
       last_action_at: new Date(),
     });
     _cookies.set(USER_SESSION_KEY.SESSION_TOKEN, token, {
@@ -72,6 +72,13 @@ export const validateSessionToken = async (
   if (!session) {
     return { session: null, user: null };
   }
+
+  await persistenceRepository.userSession.updateOne({
+    where: eq("id", session.id),
+    data: {
+      last_action_at: new Date(),
+    },
+  });
 
   const [user] = await persistenceRepository.user.findRows({
     limit: 1,

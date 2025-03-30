@@ -169,6 +169,13 @@
       "when": 1743318043149,
       "tag": "0023_tranquil_dagger",
       "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1743331413433,
+      "tag": "0024_complex_prodigy",
+      "breakpoints": true
     }
   ]
 }
