@@ -33,6 +33,8 @@ export async function createLoginSession(
       token,
       user_id: input.user_id,
       device: `${agent.os.name} ${agent.browser.name} ${agent.browser.version}`,
+      // ip: input.request.ip,
+      last_action_at: new Date(),
     });
     _cookies.set("session_token", token, {
       path: "/",
