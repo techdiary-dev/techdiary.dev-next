@@ -30,7 +30,7 @@ export async function createLoginSession(
   _input: z.infer<typeof UserSessionInput.createLoginSessionInput>
 ): Promise<void> {
   const _cookies = await cookies();
-  const token = generateRandomString(50);
+  const token = generateRandomString(120);
   try {
     const input =
       await UserSessionInput.createLoginSessionInput.parseAsync(_input);
