@@ -9,9 +9,13 @@ type MarkdownCommand =
   | "code"
   | "image";
 
-export function useMarkdownEditor() {
+interface Options {
+  value?: string;
+}
+
+export function useMarkdownEditor(options?: Options) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(options?.value ?? "");
 
   const executeCommand = (command: MarkdownCommand) => {
     if (!textareaRef.current) return;
