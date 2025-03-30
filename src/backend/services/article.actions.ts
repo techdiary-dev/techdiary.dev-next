@@ -241,10 +241,51 @@ export async function userArticleFeed(
   }
 }
 
-export async function articleDetail(article_handle: string) {
+export async function articleDetailByHandle(article_handle: string) {
   try {
     const [article] = await articleRepository.findRows({
       where: eq("handle", article_handle),
+      columns: [
+        "id",
+        "title",
+        "handle",
+        "excerpt",
+        "body",
+        "cover_image",
+        "is_published",
+        "published_at",
+        "approved_at",
+        "metadata",
+        "author_id",
+        "created_at",
+        "updated_at",
+      ],
+      joins: [
+        joinTable<Article, User>({
+          as: "user",
+          joinTo: "users",
+          localField: "author_id",
+          foreignField: "id",
+          columns: ["id", "name", "username", "profile_photo"],
+        }),
+      ],
+      limit: 1,
+    });
+
+    if (!article) {
+      throw new RepositoryException("Article not found");
+    }
+
+    return article;
+  } catch (error) {
+    handleRepositoryException(error);
+  }
+}
+
+export async function articleDetailByUUID(uuid: string) {
+  try {
+    const [article] = await articleRepository.findRows({
+      where: eq("id", uuid),
       columns: [
         "id",
         "title",
