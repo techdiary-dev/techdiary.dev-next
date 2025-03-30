@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "../styles/app.css";
 
-import { getSession } from "@/auth/auth";
+import * as sessionActions from "@/backend/services/session.actions";
 import CommonProviders from "@/components/providers/CommonProviders";
 import I18nProvider from "@/components/providers/I18nProvider";
 import { fontKohinoorBanglaRegular } from "@/lib/fonts";
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
 
 const RootLayout: React.FC<PropsWithChildren> = async ({ children }) => {
   const _cookies = await cookies();
-  const session = await getSession();
+  const session = await sessionActions.getSession();
   return (
     <html lang="en" suppressHydrationWarning>
       <body style={fontKohinoorBanglaRegular.style}>

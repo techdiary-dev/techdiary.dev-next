@@ -3,7 +3,7 @@
 import { useTranslation } from "@/i18n/use-translation";
 import { useSession } from "@/store/session.atom";
 import { useAppConfirm } from "../app-confirm";
-import { deleteSession } from "@/auth/auth";
+import * as sessionActions from "@/backend/services/session.actions";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,7 +23,7 @@ const AuthenticatedUserMenu = () => {
       title: _t("Sure to logout?"),
       children: <p>{_t("You will be logged out after this")}</p>,
       async onConfirm() {
-        await deleteSession();
+        await sessionActions.deleteLoginSession();
         window.location.reload();
       },
     });
