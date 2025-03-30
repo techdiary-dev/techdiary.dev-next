@@ -16,21 +16,6 @@ const page: React.FC<Props> = async ({ params }) => {
   const [article] = await persistenceRepository.article.findRows({
     limit: 1,
     where: and(eq("id", _params.uuid), eq("author_id", sessionUserId)),
-    columns: [
-      "id",
-      "title",
-      "handle",
-      "excerpt",
-      "body",
-      "cover_image",
-      "is_published",
-      "published_at",
-      "approved_at",
-      "metadata",
-      "author_id",
-      "created_at",
-      "updated_at",
-    ],
   });
 
   if (!article) {
