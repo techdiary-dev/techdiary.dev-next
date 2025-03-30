@@ -29,7 +29,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     "write"
   );
 
-  const editor = useMarkdownEditor();
+  const editor = useMarkdownEditor({ value: article?.body ?? "" });
 
   return (
     <>
