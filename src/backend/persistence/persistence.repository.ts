@@ -80,7 +80,7 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
     );
 
     // Build the SQL query with LIMIT, OFFSET, and ORDER BY
-    const limit = payload.limit ?? 10; // Default limit to 10 if not provided
+    const limit = payload.limit == -1 ? undefined : 10; // Default limit to 10 if not provided
     const offset = payload.offset ?? 0; // Default offset to 0 if not provided
 
     const sqlQuery = `

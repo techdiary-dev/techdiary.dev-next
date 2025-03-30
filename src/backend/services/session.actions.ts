@@ -154,6 +154,27 @@ export const deleteLoginSession = async () => {
   }
 };
 
+export const deleteSession = async (sessionId: string) => {
+  try {
+    await persistenceRepository.userSession.deleteRows({
+      where: eq("id", sessionId),
+    });
+  } catch (error) {}
+};
+
+export const mySessions = async () => {
+  const _cookies = await cookies();
+  const user_id = _cookies.get(USER_SESSION_KEY.SESSION_USER_ID)?.value ?? null;
+  if (!user_id) {
+    return [];
+  }
+
+  return persistenceRepository.userSession.findRows({
+    where: eq("user_id", user_id),
+    limit: -1,
+  });
+};
+
 /**
  * Set the URL to redirect to after authentication.
  * @param url - The URL to redirect to after authentication.
