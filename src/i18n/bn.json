@@ -101,5 +101,7 @@
   "Stats": "পরিসংখ্যান",
   "Profile not found": "প্রোফাইল খুঁজে পাওয়া যায়নি",
   "The user you are looking for does not exist": "আপনি সেই ব্যবহারকারীর জন্য খুঁজে পাওয়া যায়নি",
-  "No profile readme found": "কোনো প্রোফাইল readme পাওয়া যায়নি"
+  "No profile readme found": "কোনো প্রোফাইল readme পাওয়া যায়নি",
+  "Login Sessions": "লগইন সেশন সমূহ",
+  "These are the login sessions of your account. You can use this to revoke access to your account": "এটি আপনার একাউন্ট এর লগইন সেশন তালিকা। আপনি অন্য ডিভাইস থেকে লগাউট করে দিতে পারবেন"
 }
