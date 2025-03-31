@@ -17,7 +17,7 @@ import React, { useRef } from "react";
 import { ArticleRepositoryInput } from "@/backend/services/inputs/article.input";
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
 import { useClickAway } from "@/hooks/use-click-away";
-import { formattedTime } from "@/lib/utils";
+import { formattedTime, zodErrorToString } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import Link from "next/link";
@@ -38,8 +38,8 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
   const router = useRouter();
   const titleRef = useRef<HTMLTextAreaElement | null>(null);
   useAutoResizeTextarea(titleRef);
-  const setDebouncedTitle = useDebouncedCallback(() => handleSaveTitle(), 500);
-  const setDebouncedBody = useDebouncedCallback(() => handleSaveBody(), 500);
+  const setDebouncedTitle = useDebouncedCallback(() => handleSaveTitle(), 1000);
+  const setDebouncedBody = useDebouncedCallback(() => handleSaveBody(), 1000);
 
   const [editorMode, selectEditorMode] = React.useState<"write" | "preview">(
     "write"
@@ -54,9 +54,6 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
 
   const editor = useMarkdownEditor({ value: article?.body ?? "" });
 
-  useClickAway(titleRef, () => handleSaveTitle());
-  // useClickAway(editor.ref, () => handleDefocusBody());
-
   const updateMyArticleMutation = useMutation({
     mutationFn: (
       input: z.infer<typeof ArticleRepositoryInput.updateMyArticleInput>
@@ -64,9 +61,8 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
       return articleActions.updateMyArticle(input);
     },
     onSuccess: () => {},
-    onError(error) {
-      alert("Failed to update article");
-      // console.log(error.response?.data);
+    onError(err) {
+      alert(err.message);
     },
   });
 
@@ -77,9 +73,8 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     onSuccess: (res) => {
       router.push(`/dashboard/articles/${res?.id}`);
     },
-    onError(error) {
-      // const msg = error.response?.data?.message || "Failed to update article";
-      // setErrorMsg(msg);
+    onError(err) {
+      alert(err.message);
     },
   });
 
@@ -238,12 +233,12 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
               className="focus:outline-none h-[calc(100vh-120px)] bg-background w-full"
               placeholder={_t("Write something stunning...")}
               ref={editor.ref}
-              value={editor.value}
+              value={editorForm.watch("body")}
               onChange={(e) => {
-                editor.setValue(e.target.value);
+                editorForm.setValue("body", e.target.value);
                 setDebouncedBody(e.target.value);
               }}
-              onBlur={() => handleSaveBody()}
+              // onBlur={() => handleSaveBody()}
             ></textarea>
           ) : (
             <div className="content-typography" />
