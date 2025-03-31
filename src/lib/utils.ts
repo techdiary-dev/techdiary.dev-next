@@ -73,3 +73,21 @@ export const sanitizedUsername = (username: string) => {
     ? decoded.replace(/[@/]/g, "").toLowerCase()
     : decoded.toLowerCase();
 };
+
+export const slugify = (text: string) => {
+  return text
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+};
+
+export const removeNullOrUndefinedFromObject = (obj: any) => {
+  const newObj = { ...obj };
+  Object.keys(newObj).forEach((key) => {
+    if (newObj[key] === null || newObj[key] === undefined) {
+      delete newObj[key];
+    }
+  });
+  return newObj;
+};
