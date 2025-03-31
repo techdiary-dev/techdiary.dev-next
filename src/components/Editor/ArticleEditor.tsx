@@ -1,7 +1,9 @@
 "use client";
 
 import { Article } from "@/backend/models/domain-models";
+import * as articleActions from "@/backend/services/article.actions";
 import { useTranslation } from "@/i18n/use-translation";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ArrowLeftIcon,
   FontBoldIcon,
@@ -10,12 +12,21 @@ import {
   HeadingIcon,
   ImageIcon,
 } from "@radix-ui/react-icons";
-import React from "react";
+import React, { useRef } from "react";
 
-import EditorCommandButton from "./EditorCommandButton";
-import { useMarkdownEditor } from "./useMarkdownEditor";
+import { ArticleRepositoryInput } from "@/backend/services/inputs/article.input";
+import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
+import { useClickAway } from "@/hooks/use-click-away";
+import { formattedTime } from "@/lib/utils";
+import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import EditorCommandButton from "./EditorCommandButton";
+import { useMarkdownEditor } from "./useMarkdownEditor";
+import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 
 interface Prop {
   uuid?: string;
@@ -24,35 +35,112 @@ interface Prop {
 
 const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
   const { _t } = useTranslation();
+  const router = useRouter();
+  const titleRef = useRef<HTMLTextAreaElement | null>(null);
+  useAutoResizeTextarea(titleRef);
+  const setDebouncedTitle = useDebouncedCallback(() => handleSaveTitle(), 500);
+  const setDebouncedBody = useDebouncedCallback(() => handleSaveBody(), 500);
 
   const [editorMode, selectEditorMode] = React.useState<"write" | "preview">(
     "write"
   );
+  const editorForm = useForm({
+    defaultValues: {
+      title: article?.title || "",
+      body: article?.body || "",
+    },
+    resolver: zodResolver(ArticleRepositoryInput.updateArticleInput),
+  });
 
   const editor = useMarkdownEditor({ value: article?.body ?? "" });
+
+  useClickAway(titleRef, () => handleSaveTitle());
+  // useClickAway(editor.ref, () => handleDefocusBody());
+
+  const updateMyArticleMutation = useMutation({
+    mutationFn: (
+      input: z.infer<typeof ArticleRepositoryInput.updateMyArticleInput>
+    ) => {
+      return articleActions.updateMyArticle(input);
+    },
+    onSuccess: () => {},
+    onError(error) {
+      alert("Failed to update article");
+      // console.log(error.response?.data);
+    },
+  });
+
+  const articleCreateMutation = useMutation({
+    mutationFn: (
+      input: z.infer<typeof ArticleRepositoryInput.createMyArticleInput>
+    ) => articleActions.createMyArticle(input),
+    onSuccess: (res) => {
+      router.push(`/dashboard/articles/${res?.id}`);
+    },
+    onError(error) {
+      // const msg = error.response?.data?.message || "Failed to update article";
+      // setErrorMsg(msg);
+    },
+  });
+
+  const handleSaveTitle = () => {
+    if (!uuid) {
+      if (editorForm.watch("title")) {
+        articleCreateMutation.mutate({
+          title: editorForm.watch("title") ?? "",
+        });
+      }
+    }
+
+    if (uuid) {
+      if (editorForm.watch("title")) {
+        updateMyArticleMutation.mutate({
+          article_id: uuid,
+          title: editorForm.watch("title") ?? "",
+        });
+      }
+    }
+  };
+
+  const handleSaveBody = () => {
+    // if (!uuid) {
+    //   if (editorForm.watch("body")) {
+    //     articleCreateMutation.mutate({
+    //       title: editorForm.watch("body") ?? "",
+    //     });
+    //   }
+    // }
+
+    if (uuid) {
+      if (editorForm.watch("body")) {
+        updateMyArticleMutation.mutate({
+          article_id: uuid,
+          body: editorForm.watch("body") ?? "",
+        });
+      }
+    }
+  };
 
   return (
     <>
       <div className="flex bg-background gap-2 items-start justify-between mt-2 mb-10 sticky z-30 p-5">
-        {uuid && (
-          <div className="flex items-center gap-2 text-sm text-forground-muted">
-            <div className="flex gap-4 items-center">
-              <Link href={"/dashboard"} className=" text-forground">
-                <ArrowLeftIcon width={20} height={20} />
-              </Link>
-              {/* {articleUpdateMutation.isPending ? (
-                <p>{_t("Saving")}...</p>
-              ) : (
-                <p>
-                  {article?.updated_at && (
-                    <span>
-                      (Saved {formatDistanceToNow(article?.updated_at)})
-                    </span>
-                  )}
-                </p>
-              )} */}
-            </div>
+        <div className="flex items-center gap-2 text-sm text-forground-muted">
+          <div className="flex gap-4 items-center">
+            <Link href={"/dashboard"} className=" text-forground">
+              <ArrowLeftIcon width={20} height={20} />
+            </Link>
+            {updateMyArticleMutation.isPending ? (
+              <p>{_t("Saving")}...</p>
+            ) : (
+              <p>
+                {article?.updated_at && (
+                  <span>(Saved {formattedTime(article?.updated_at)})</span>
+                )}
+              </p>
+            )}
+          </div>
 
+          {uuid && (
             <p
               className={clsx("px-2 py-1", {
                 "bg-green-100": article?.is_published,
@@ -65,8 +153,8 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
                 <span className="text-destructive">{_t("Draft")}</span>
               )}
             </p>
-          </div>
-        )}
+          )}
+        </div>
 
         {uuid && (
           <div className="flex gap-2">
@@ -106,11 +194,18 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
 
       {/* Editor */}
       <div className="max-w-[750px] mx-auto p-4 md:p-0">
-        <input
+        <textarea
           placeholder={_t("Title")}
           tabIndex={1}
           autoFocus
-          className="w-full text-2xl focus:outline-none bg-background"
+          value={editorForm.watch("title")}
+          className="w-full text-2xl focus:outline-none bg-background resize-none"
+          ref={titleRef}
+          onBlur={() => handleSaveTitle()}
+          onChange={(e) => {
+            editorForm.setValue("title", e.target.value);
+            setDebouncedTitle(e.target.value);
+          }}
         />
 
         {/* Editor Toolbar */}
@@ -144,7 +239,11 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
               placeholder={_t("Write something stunning...")}
               ref={editor.ref}
               value={editor.value}
-              onChange={(e) => editor.setValue(e.target.value)}
+              onChange={(e) => {
+                editor.setValue(e.target.value);
+                setDebouncedBody(e.target.value);
+              }}
+              onBlur={() => handleSaveBody()}
             ></textarea>
           ) : (
             <div className="content-typography" />

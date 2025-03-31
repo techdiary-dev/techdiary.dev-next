@@ -14,6 +14,7 @@ import {
   buildWhereClause,
   toSnakeCase,
 } from "./persistence-utils";
+import { removeNullOrUndefinedFromObject } from "@/lib/utils";
 
 export class PersistentRepository<DOMAIN_MODEL_TYPE> {
   constructor(
@@ -80,7 +81,7 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
     );
 
     // Build the SQL query with LIMIT, OFFSET, and ORDER BY
-    const limit = payload.limit == -1 ? undefined : 10; // Default limit to 10 if not provided
+    const limit = payload?.limit ? payload.limit : (payload.limit ?? 10); // Default limit to 10 if not provided
     const offset = payload.offset ?? 0; // Default offset to 0 if not provided
 
     const sqlQuery = `
@@ -184,7 +185,7 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
 
     // Build SET clause using the where values as starting point
     const { setClause, values: allValues } = buildSetClause(
-      payload.data,
+      removeNullOrUndefinedFromObject(payload.data),
       whereValues
     );
 

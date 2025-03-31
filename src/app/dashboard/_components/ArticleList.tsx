@@ -2,6 +2,7 @@
 
 import * as articleActions from "@/backend/services/article.actions";
 import { useAppConfirm } from "@/components/app-confirm";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +18,7 @@ import {
   CardStackIcon,
   DotsHorizontalIcon,
   Pencil1Icon,
+  PlusIcon,
 } from "@radix-ui/react-icons";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -40,7 +42,16 @@ const ArticleList = () => {
 
   return (
     <div>
-      <h3 className="text-lg font-semibold">{_t("Articles")}</h3>
+      <div className="flex items-center gap-2 justify-between">
+        <h3 className="text-lg font-semibold">{_t("Articles")}</h3>
+
+        <Button asChild>
+          <Link href={`/dashboard/articles/new`}>
+            <PlusIcon className="w-5 h-5" />
+            <span className="ml-2">Create new article</span>
+          </Link>
+        </Button>
+      </div>
 
       <div className="flex flex-col divide-y divide-dashed divide-border-color mt-2">
         {feedInfiniteQuery.isFetching &&

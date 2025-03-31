@@ -17,7 +17,35 @@ export const ArticleRepositoryInput = {
     author_id: z.string(),
   }),
 
+  createMyArticleInput: z.object({
+    title: z.string(),
+    excerpt: z.string().optional().nullable(),
+    body: z.string().optional().nullable(),
+    cover_image: z
+      .object({
+        key: z.string(),
+        provider: z.enum(["cloudinary", "direct"]),
+      })
+      .optional()
+      .nullable(),
+    is_published: z.boolean().optional().nullable(),
+  }),
+
   updateArticleInput: z.object({
+    article_id: z.string(),
+    title: z.string().optional(),
+    handle: z.string().optional(),
+    excerpt: z.string().optional(),
+    body: z.string().optional(),
+    cover_image: z
+      .object({
+        key: z.string(),
+        provider: z.enum(["cloudinary", "direct"]),
+      })
+      .optional(),
+    is_published: z.boolean().optional(),
+  }),
+  updateMyArticleInput: z.object({
     article_id: z.string(),
     title: z.string().optional(),
     handle: z.string().optional(),

@@ -16,7 +16,11 @@ import {
   RepositoryException,
 } from "./RepositoryException";
 import { ArticleRepositoryInput } from "./inputs/article.input";
-import { removeMarkdownSyntax } from "@/lib/utils";
+import {
+  generateRandomString,
+  removeMarkdownSyntax,
+  slugify,
+} from "@/lib/utils";
 import { getSessionUserId } from "./session.actions";
 
 const articleRepository = new PersistentRepository<Article>(
@@ -53,6 +57,52 @@ export async function createArticle(
   }
 }
 
+export async function createMyArticle(
+  _input: z.infer<typeof ArticleRepositoryInput.createMyArticleInput>
+) {
+  try {
+    const sessionUserId = await getSessionUserId();
+    if (!sessionUserId) {
+      throw new RepositoryException("Unauthorized");
+    }
+
+    const input =
+      await ArticleRepositoryInput.createMyArticleInput.parseAsync(_input);
+
+    const handle = await getUniqueArticleHandle(input.title);
+
+    const article = await articleRepository.createOne({
+      title: input.title,
+      handle: handle,
+      excerpt: input.excerpt ?? null,
+      body: input.body ?? null,
+      cover_image: input.cover_image ?? null,
+      is_published: input.is_published ?? false,
+      published_at: input.is_published ? new Date() : null,
+      author_id: sessionUserId,
+    });
+    return article;
+  } catch (error) {
+    handleRepositoryException(error);
+  }
+}
+
+export const getUniqueArticleHandle = async (title: string) => {
+  try {
+    const [article] = await articleRepository.findRows({
+      where: eq("handle", slugify(title)),
+      columns: ["id", "handle"],
+      limit: 1,
+    });
+    if (article) {
+      return `${slugify(title)}-${generateRandomString(5)}`;
+    }
+    return slugify(title);
+  } catch (error) {
+    handleRepositoryException(error);
+  }
+};
+
 /**
  * Updates an existing article in the database.
  *
@@ -68,6 +118,35 @@ export async function updateArticle(
       await ArticleRepositoryInput.updateArticleInput.parseAsync(_input);
     const article = await articleRepository.updateOne({
       where: eq("id", input.article_id),
+      data: {
+        title: input.title,
+        handle: input.handle,
+        excerpt: input.excerpt,
+        body: input.body,
+        cover_image: input.cover_image,
+        is_published: input.is_published,
+        published_at: input.is_published ? new Date() : null,
+      },
+    });
+    return article;
+  } catch (error) {
+    handleRepositoryException(error);
+  }
+}
+
+export async function updateMyArticle(
+  _input: z.infer<typeof ArticleRepositoryInput.updateMyArticleInput>
+) {
+  try {
+    const sessionUserId = await getSessionUserId();
+    if (!sessionUserId) {
+      throw new RepositoryException("Unauthorized");
+    }
+
+    const input =
+      await ArticleRepositoryInput.updateMyArticleInput.parseAsync(_input);
+    const article = await articleRepository.updateOne({
+      where: and(eq("id", input.article_id), eq("author_id", sessionUserId)),
       data: {
         title: input.title,
         handle: input.handle,
