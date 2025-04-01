@@ -13,6 +13,7 @@ import { PersistentRepository } from "../persistence/persistence.repository";
 import { handleRepositoryException } from "./RepositoryException";
 import { SessionResult, USER_SESSION_KEY } from "./action-type";
 import { UserSessionInput } from "./inputs/session.input";
+import { env } from "@/env";
 
 const sessionRepository = new PersistentRepository<UserSession>(
   "user_sessions",
@@ -44,14 +45,14 @@ export async function createLoginSession(
     });
     _cookies.set(USER_SESSION_KEY.SESSION_TOKEN, token, {
       path: "/",
-      secure: process.env.NODE_ENV === "production",
+      secure: env.NODE_ENV === "production",
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 30,
       sameSite: "lax",
     });
     _cookies.set(USER_SESSION_KEY.SESSION_USER_ID, input.user_id, {
       path: "/",
-      secure: process.env.NODE_ENV === "production",
+      secure: env.NODE_ENV === "production",
       httpOnly: true,
       maxAge: 60 * 60 * 24 * 30,
       sameSite: "lax",

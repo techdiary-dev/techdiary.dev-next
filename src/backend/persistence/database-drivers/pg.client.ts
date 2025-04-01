@@ -2,6 +2,7 @@ import { Pool } from "pg";
 import { IPersistentDriver } from "../persistence-contracts";
 import { buildSafeQuery } from "../persistence-utils";
 import { PersistenceDriverError } from "./PersistenceDriverError";
+import { env } from "@/env";
 
 declare global {
   var pgClient: IPersistentDriver | undefined;
@@ -14,15 +15,9 @@ export class PgDatabaseClient implements IPersistentDriver {
 
   private constructor() {
     try {
-      if (!process.env.DATABASE_URL) {
-        throw new PersistenceDriverError(
-          "DATABASE_URL environment variable is not defined"
-        );
-      }
-
       console.log("Creating new Postgres client");
       this.pool = new Pool({
-        connectionString: process.env.DATABASE_URL,
+        connectionString: env.DATABASE_URL,
       });
 
       // Test the connection
