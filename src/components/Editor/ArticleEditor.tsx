@@ -4,6 +4,7 @@ import { Article } from "@/backend/models/domain-models";
 import * as articleActions from "@/backend/services/article.actions";
 import { useTranslation } from "@/i18n/use-translation";
 import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   ArrowLeftIcon,
   FontBoldIcon,
@@ -31,6 +32,7 @@ import { z } from "zod";
 import EditorCommandButton from "./EditorCommandButton";
 import { useMarkdownEditor } from "./useMarkdownEditor";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
+import { markdownToHtml } from "@/utils/markdoc-parser";
 
 interface Prop {
   uuid?: string;
@@ -248,7 +250,12 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
               }}
             ></textarea>
           ) : (
-            <div className="content-typography" />
+            <div
+              className="content-typography"
+              dangerouslySetInnerHTML={{
+                __html: markdownToHtml(editorForm.watch("body") ?? ""),
+              }}
+            />
           )}
         </div>
       </div>
