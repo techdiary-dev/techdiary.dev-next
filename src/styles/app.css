@@ -32,6 +32,8 @@
   --color-border: var(--border);
   --color-destructive: var(--destructive);
   --color-destructive-forground: var(--destructive-foreground);
+  --color-success: oklch(0.792 0.209 151.711);
+  --color-success-foreground: oklch(0.985 0 0);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
   --color-muted-foreground: var(--muted-foreground);
