@@ -11,47 +11,53 @@ type MarkdownCommand =
 
 interface Options {
   value?: string;
+  ref?: React.RefObject<HTMLTextAreaElement | null>;
 }
 
 export function useMarkdownEditor(options?: Options) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const [value, setValue] = useState(options?.value ?? "");
+  const textareaRef = options?.ref;
+  if (!textareaRef) return;
 
   const executeCommand = (command: MarkdownCommand) => {
     if (!textareaRef.current) return;
     const { selectionStart, selectionEnd } = textareaRef.current;
-    let updatedValue = value;
+    let updatedValue = textareaRef.current.value;
+
+    console.log({ updatedValue, selectionStart, selectionEnd });
 
     switch (command) {
       case "heading":
         updatedValue =
-          value.substring(0, selectionStart) +
-          `## ${value.substring(selectionStart, selectionEnd)}` +
-          value.substring(selectionEnd);
+          updatedValue.substring(0, selectionStart) +
+          `## ${updatedValue.substring(selectionStart, selectionEnd)}` +
+          updatedValue.substring(selectionEnd);
         break;
       case "bold":
         updatedValue =
-          value.substring(0, selectionStart) +
-          `**${value.substring(selectionStart, selectionEnd)}**` +
-          value.substring(selectionEnd);
+          updatedValue.substring(0, selectionStart) +
+          `**${updatedValue.substring(selectionStart, selectionEnd)}**` +
+          updatedValue.substring(selectionEnd);
         break;
       case "italic":
         updatedValue =
-          value.substring(0, selectionStart) +
-          `*${value.substring(selectionStart, selectionEnd)}*` +
-          value.substring(selectionEnd);
+          updatedValue.substring(0, selectionStart) +
+          `*${updatedValue.substring(selectionStart, selectionEnd)}*` +
+          updatedValue.substring(selectionEnd);
         break;
       case "image":
         updatedValue =
-          value.substring(0, selectionStart) +
+          updatedValue.substring(0, selectionStart) +
           `![alt text](image-url)` +
-          value.substring(selectionEnd);
+          updatedValue.substring(selectionEnd);
         break;
     }
+    textareaRef.current.value = updatedValue;
+    // Trigger input event to notify changes
+    const event = new Event("change", { bubbles: true });
+    textareaRef.current.dispatchEvent(event);
 
-    setValue(updatedValue);
     textareaRef.current.focus();
   };
 
-  return { ref: textareaRef, value, setValue, executeCommand };
+  return { executeCommand };
 }
