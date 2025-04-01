@@ -33,6 +33,7 @@ import EditorCommandButton from "./EditorCommandButton";
 import { useMarkdownEditor } from "./useMarkdownEditor";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { markdownToHtml } from "@/utils/markdoc-parser";
+import { useAppConfirm } from "../app-confirm";
 
 interface Prop {
   uuid?: string;
@@ -42,6 +43,7 @@ interface Prop {
 const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
   const { _t, lang } = useTranslation();
   const router = useRouter();
+  const appConfig = useAppConfirm();
   const titleRef = useRef<HTMLTextAreaElement | null>(null);
   const bodyRef = useRef<HTMLTextAreaElement | null>(null);
   useAutoResizeTextarea(titleRef);
@@ -67,7 +69,9 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     ) => {
       return articleActions.updateMyArticle(input);
     },
-    onSuccess: () => {},
+    onSuccess: () => {
+      router.refresh();
+    },
     onError(err) {
       alert(err.message);
     },
@@ -146,7 +150,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
 
           {uuid && (
             <p
-              className={clsx("px-2 py-1", {
+              className={clsx("px-2 py-1 text-foreground", {
                 "bg-green-100": article?.is_published,
                 "bg-red-100": !article?.is_published,
               })}
@@ -173,13 +177,27 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
 
             <button
               onClick={() => {
-                alert("Not implemented");
+                appConfig.show({
+                  title: _t("Are you sure?"),
+                  labels: {
+                    confirm: _t("Yes"),
+                    cancel: _t("No"),
+                  },
+                  onConfirm: () => {
+                    updateMyArticleMutation.mutate({
+                      article_id: uuid,
+                      is_published: !article?.is_published,
+                    });
+                  },
+                });
               }}
               className={clsx(
                 "hover:bg-muted transition-colors duration-200 px-4 py-1 font-semibold",
                 {
-                  "text-success": !article?.is_published,
-                  "text-destructive": article?.is_published,
+                  "bg-success/10 text-success-foreground":
+                    !article?.is_published,
+                  "text-destructive text-destructive-foreground":
+                    article?.is_published,
                 }
               )}
             >
@@ -239,7 +257,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
           {editorMode === "write" ? (
             <textarea
               tabIndex={2}
-              className="focus:outline-none h-[calc(100vh-120px)] bg-background w-full"
+              className="focus:outline-none h-[calc(100vh-120px)] bg-background w-full resize-none"
               placeholder={_t("Write something stunning...")}
               ref={bodyRef}
               value={editorForm.watch("body")}
