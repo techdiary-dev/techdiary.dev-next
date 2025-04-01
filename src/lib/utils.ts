@@ -56,13 +56,24 @@ export function readingTime(text: string) {
   return minutes;
 }
 
-export const formattedTime = (date: Date, lang = "en") => {
+export const formattedTime = (date: Date, lang: "bn" | "en" | null = "en") => {
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
     month: "long",
     day: "numeric",
   };
   return new Intl.DateTimeFormat(`${lang}-BD`, options).format(date);
+};
+
+export const formattedRelativeTime = (
+  date: Date,
+  lang: "bn" | "en" | null = "en"
+) => {
+  const rtf1 = new Intl.RelativeTimeFormat(lang ?? "en", { style: "short" });
+  return rtf1.format(
+    Math.round(Math.abs(date.getTime() - new Date().getTime()) / 1000),
+    "second"
+  );
 };
 
 export const sanitizedUsername = (username: string) => {
