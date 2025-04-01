@@ -37,7 +37,7 @@ const Page: NextPage<ArticlePageProps> = async ({ params }) => {
   return (
     <HomepageLayout
       LeftSidebar={<HomeLeftSidebar />}
-      RightSidebar={<ArticleSidebar />}
+      RightSidebar={<ArticleSidebar article={article} />}
     >
       {/* {!article && <div>Article not found</div>} */}
       <div className="px-4 my-2 md:m-0">

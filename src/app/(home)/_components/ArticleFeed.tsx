@@ -43,6 +43,7 @@ const ArticleFeed = () => {
             excerpt={article?.excerpt ?? ""}
             coverImage={getFileUrl(article?.cover_image!)}
             author={{
+              id: article?.user?.id ?? "",
               name: article?.user?.name ?? "",
               avatar: article?.user?.profile_photo ?? "",
               username: article?.user?.username ?? "",

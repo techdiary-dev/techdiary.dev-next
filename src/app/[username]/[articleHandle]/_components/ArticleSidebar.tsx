@@ -1,10 +1,14 @@
+import { Article } from "@/backend/models/domain-models";
 import UserInformationCard from "@/components/UserInformationCard";
 import React from "react";
 
-const ArticleSidebar = () => {
+interface Props {
+  article: Article;
+}
+const ArticleSidebar: React.FC<Props> = ({ article }) => {
   return (
     <div>
-      <UserInformationCard />
+      <UserInformationCard userId={article?.user?.id!} />
     </div>
   );
 };

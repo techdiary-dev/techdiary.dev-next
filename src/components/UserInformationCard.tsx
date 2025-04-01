@@ -2,23 +2,43 @@
 
 import { useTranslation } from "@/i18n/use-translation";
 import { Button } from "./ui/button";
+import * as userActions from "@/backend/services/user.action";
+import { useQuery } from "@tanstack/react-query";
+import { useSession } from "@/store/session.atom";
+import Link from "next/link";
 
-const UserInformationCard = () => {
+interface Props {
+  userId: string;
+}
+
+const UserInformationCard: React.FC<Props> = ({ userId }) => {
   const { _t } = useTranslation();
+  const session = useSession();
+  const userQuery = useQuery({
+    queryKey: ["user", userId],
+    queryFn: () => userActions.getUserById(userId),
+  });
   const profileData = {
-    name: "King Rayhan",
-    title: "Full Stack Developer",
-    bio: "My name is Rayhan and I'm a full stack web developer, Nodejs wizard. With my 6+ years of freelancing career, I learned a lot of modern webs developing tools and frameworks like expressjs, reactjs..",
-    location: "Dhaka, Bangladesh",
-    education: "Computer Science and engineering",
-    joinDate: "1 Mar 2018",
-    avatarUrl: "https://avatars.githubusercontent.com/u/7611746?v=4",
+    avatarUrl: userQuery.data?.profile_photo,
+    name: userQuery.data?.name,
+    title: userQuery.data?.designation,
+    bio: userQuery.data?.bio,
+    location: userQuery.data?.location,
+    joinDate: userQuery.data?.created_at,
+    education: userQuery.data?.education,
   };
+
+  if (userQuery.isFetching)
+    return (
+      <>
+        <div className="h-80 animate-pulse bg-muted rounded-sm"></div>
+      </>
+    );
 
   return (
     <div>
       {/* Profile Header */}
-      <div className="py-3 px-4 flex items-center">
+      <div className="py-3 flex items-center">
         {/* Avatar */}
         <div className="relative mr-4">
           <img
@@ -36,9 +56,20 @@ const UserInformationCard = () => {
       </div>
 
       {/* Profile Body */}
-      <div className="p-4 space-y-4">
+      <div className="space-y-4">
         {/* Edit Button */}
-        <Button className="w-full">Follow</Button>
+        {session?.user?.id == userId ? (
+          <Button className="w-full" asChild>
+            <Link href={"/dashboard/settings"}>{_t("Profile Settings")}</Link>
+          </Button>
+        ) : (
+          <Button
+            onClick={() => alert("Not implemented yet")}
+            className="w-full"
+          >
+            {_t("Follow")}
+          </Button>
+        )}
 
         {/* Bio */}
         <p className="text-sm leading-relaxed text-muted-foreground">
@@ -48,28 +79,23 @@ const UserInformationCard = () => {
         {/* Profile Details */}
         <div className="space-y-3">
           {/* Location */}
-          <div className="flex flex-col">
-            <p className="font-semibold">{_t("Location")}</p>
-            <p className="text-sm text-muted-foreground">
-              {profileData.location}
-            </p>
-          </div>
+          {profileData.location && (
+            <div className="flex flex-col">
+              <p className="font-semibold">{_t("Location")}</p>
+              <p className="text-sm text-muted-foreground">
+                {profileData.location}
+              </p>
+            </div>
+          )}
 
-          <div className="flex flex-col">
-            <p className="font-semibold">{_t("Education")}</p>
-            <p className="text-sm text-muted-foreground">
-              {profileData.education}
-            </p>
-          </div>
-
-          <div className="flex flex-col">
-            <p className="font-semibold">{_t("Joined")}</p>
-            <p className="text-sm text-muted-foreground">
-              {profileData.joinDate}
-            </p>
-          </div>
-
-          {/*  */}
+          {profileData.education && (
+            <div className="flex flex-col">
+              <p className="font-semibold">{_t("Education")}</p>
+              <p className="text-sm text-muted-foreground">
+                {profileData.education}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
