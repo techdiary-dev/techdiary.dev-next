@@ -61,14 +61,6 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
    * @param payload
    */
   async findRows(payload: IPersistentPaginationPayload<DOMAIN_MODEL_TYPE>) {
-    // SELECT
-    //     title,
-    //     handle,
-    //     json_build_object('name', users.name, 'username', users.username) AS user
-
-    // FROM articles
-    // LEFT JOIN users ON author_id = users.id;
-
     // Default columns to '*' if none are provided
     const columns =
       payload.columns
