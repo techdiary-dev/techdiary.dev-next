@@ -11,6 +11,7 @@ import { SearchIcon } from "lucide-react";
 import SocialLoginCard from "../SocialLoginCard";
 import AuthenticatedUserMenu from "./AuthenticatedUserMenu";
 import LanguageSwitcher from "./LanguageSwitcher";
+import Link from "next/link";
 
 const NavbarActions: React.FC = () => {
   const { _t } = useTranslation();
@@ -23,10 +24,14 @@ const NavbarActions: React.FC = () => {
       </Button>
       <LanguageSwitcher />
       <ThemeSwitcher />
-      <Button className="hidden md:block">{_t("New diary")}</Button>
 
       {authSession?.session ? (
-        <AuthenticatedUserMenu />
+        <>
+          <Button className="hidden md:block" asChild>
+            <Link href={"/dashboard/articles/new"}>{_t("New diary")}</Link>
+          </Button>
+          <AuthenticatedUserMenu />
+        </>
       ) : (
         <UnAuthenticatedMenu />
       )}
