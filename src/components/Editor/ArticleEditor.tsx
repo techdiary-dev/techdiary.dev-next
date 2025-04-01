@@ -214,19 +214,19 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         <div className="flex flex-col justify-between md:items-center md:flex-row">
           <div className="flex w-full gap-6 p-2 my-2 bg-muted">
             <EditorCommandButton
-              onClick={() => editor.executeCommand("heading")}
+              onClick={() => editor?.executeCommand("heading")}
               Icon={<HeadingIcon />}
             />
             <EditorCommandButton
-              onClick={() => editor.executeCommand("bold")}
+              onClick={() => editor?.executeCommand("bold")}
               Icon={<FontBoldIcon />}
             />
             <EditorCommandButton
-              onClick={() => editor.executeCommand("italic")}
+              onClick={() => editor?.executeCommand("italic")}
               Icon={<FontItalicIcon />}
             />
             <EditorCommandButton
-              onClick={() => editor.executeCommand("image")}
+              onClick={() => editor?.executeCommand("image")}
               Icon={<ImageIcon />}
             />
           </div>
