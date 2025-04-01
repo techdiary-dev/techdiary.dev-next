@@ -17,7 +17,11 @@ import React, { useRef } from "react";
 import { ArticleRepositoryInput } from "@/backend/services/inputs/article.input";
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
 import { useClickAway } from "@/hooks/use-click-away";
-import { formattedTime, zodErrorToString } from "@/lib/utils";
+import {
+  formattedRelativeTime,
+  formattedTime,
+  zodErrorToString,
+} from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import Link from "next/link";
@@ -34,7 +38,7 @@ interface Prop {
 }
 
 const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
-  const { _t } = useTranslation();
+  const { _t, lang } = useTranslation();
   const router = useRouter();
   const titleRef = useRef<HTMLTextAreaElement | null>(null);
   useAutoResizeTextarea(titleRef);
@@ -129,7 +133,9 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
             ) : (
               <p>
                 {article?.updated_at && (
-                  <span>(Saved {formattedTime(article?.updated_at)})</span>
+                  <span>
+                    ({_t("Saved")} {formattedTime(article?.updated_at, lang)})
+                  </span>
                 )}
               </p>
             )}
@@ -238,7 +244,6 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
                 editorForm.setValue("body", e.target.value);
                 setDebouncedBody(e.target.value);
               }}
-              // onBlur={() => handleSaveBody()}
             ></textarea>
           ) : (
             <div className="content-typography" />
