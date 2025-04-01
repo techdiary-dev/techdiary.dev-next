@@ -41,6 +41,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
   const { _t, lang } = useTranslation();
   const router = useRouter();
   const titleRef = useRef<HTMLTextAreaElement | null>(null);
+  const bodyRef = useRef<HTMLTextAreaElement | null>(null);
   useAutoResizeTextarea(titleRef);
   const setDebouncedTitle = useDebouncedCallback(() => handleSaveTitle(), 1000);
   const setDebouncedBody = useDebouncedCallback(() => handleSaveBody(), 1000);
@@ -56,7 +57,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     resolver: zodResolver(ArticleRepositoryInput.updateArticleInput),
   });
 
-  const editor = useMarkdownEditor({ value: article?.body ?? "" });
+  const editor = useMarkdownEditor({ ref: bodyRef });
 
   const updateMyArticleMutation = useMutation({
     mutationFn: (
@@ -170,7 +171,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
 
             <button
               onClick={() => {
-                //
+                alert("Not implemented");
               }}
               className={clsx(
                 "hover:bg-muted transition-colors duration-200 px-4 py-1 font-semibold",
@@ -184,7 +185,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
             </button>
             <button
               onClick={() => {
-                // drawerOpenHandler.toggle();
+                alert("Not implemented");
               }}
             >
               <GearIcon className="w-5 h-5" />
@@ -238,9 +239,10 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
               tabIndex={2}
               className="focus:outline-none h-[calc(100vh-120px)] bg-background w-full"
               placeholder={_t("Write something stunning...")}
-              ref={editor.ref}
+              ref={bodyRef}
               value={editorForm.watch("body")}
               onChange={(e) => {
+                console.log({ value: e.target.value });
                 editorForm.setValue("body", e.target.value);
                 setDebouncedBody(e.target.value);
               }}
