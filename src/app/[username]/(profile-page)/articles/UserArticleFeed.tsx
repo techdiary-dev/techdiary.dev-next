@@ -52,6 +52,7 @@ const UserArticleFeed: React.FC<UserArticleFeedProps> = ({ userId }) => {
           handle={article?.handle ?? ""}
           excerpt={article?.excerpt ?? ""}
           author={{
+            id: article?.user?.id ?? "",
             name: article?.user?.name ?? "",
             avatar: article?.user?.profile_photo ?? "",
             username: article?.user?.username ?? "",
