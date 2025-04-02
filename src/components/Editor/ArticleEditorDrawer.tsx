@@ -77,7 +77,7 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
       <SheetContent className="m-3 h-[100vh-20px] w-[100vw-20px]">
         <SheetHeader>
           <SheetDescription asChild>
-            <form>
+            <form onSubmit={form.handleSubmit(handleOnSubmit)}>
               This action cannot be undone. This will permanently delete your
               account and remove your data from our servers.
             </form>
