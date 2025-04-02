@@ -19,10 +19,11 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent className="m-3 h-[100vh-20px] w-[100vw-20px]">
         <SheetHeader>
-          <SheetTitle>Are you absolutely sure?</SheetTitle>
-          <SheetDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+          <SheetDescription asChild>
+            <form>
+              This action cannot be undone. This will permanently delete your
+              account and remove your data from our servers.
+            </form>
           </SheetDescription>
         </SheetHeader>
       </SheetContent>
