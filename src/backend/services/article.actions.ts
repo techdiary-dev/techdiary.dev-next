@@ -1,5 +1,6 @@
 "use server";
 
+import { generateRandomString, removeMarkdownSyntax } from "@/lib/utils";
 import { z } from "zod";
 import { Article, User } from "../models/domain-models";
 import { pgClient } from "../persistence/database-drivers/pg.client";
@@ -16,12 +17,8 @@ import {
   RepositoryException,
 } from "./RepositoryException";
 import { ArticleRepositoryInput } from "./inputs/article.input";
-import {
-  generateRandomString,
-  removeMarkdownSyntax,
-  slugify,
-} from "@/lib/utils";
 import { getSessionUserId } from "./session.actions";
+import { slugify } from "@/lib/slug-helper.util";
 
 const articleRepository = new PersistentRepository<Article>(
   "articles",
@@ -419,6 +416,7 @@ export async function myArticles(
       ],
       limit: input.limit,
       page: input.page,
+      orderBy: [desc("created_at")],
     });
     return articles;
   } catch (error) {
