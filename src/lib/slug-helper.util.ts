@@ -1,3 +1,18 @@
+/*
+ * File: slug-helper.util.ts
+ * Responsibility: Utility functions for slug generation. 
+ *  - slugify: Converts a given title to a slug format, handling both English and Bangla text.
+ *  - separateWords: it can separate words from a given string.
+ *  - maxLength: it can trim the max length of a given string and handle the word completion.
+
+ * Author: Rasel Hossain
+ * Created: 2025-04-02
+ * Last Modified By: Null
+ * Last Modified At: Null
+ * Version: 1.0.0
+
+ */
+
 const banglaToEnglishMap: Record<string, string> = {
   অ: "o",
   আ: "a",
@@ -72,13 +87,38 @@ const banglaToEnglishMap: Record<string, string> = {
   "ঁ": "",
 };
 
+type SlugifyOptions = Partial<{
+  separator: string;
+  maxLength: number;
+}>;
+
+const DEFAULT_OPTIONS: Required<SlugifyOptions> = {
+  separator: "-",
+  maxLength: 100,
+};
+
 /**
  * Converts a given title to a slug format, handling both English and Bangla text.
  * @param title The text to convert to a slug
- * @param separator The character to use as a separator (defaults to "-")
- * @returns The slugified string
+ * @property {options.separator} [separator="-"] - Character to use as word separator
+ * @property {option.maxLength} [maxLength=100] - Maximum length of the generated slug
+ * @example ```
+ * const slug= slugify("আমি তোমাকে ভালোবাসি", { separator: "-", maxLength: 10 });
+ * console.log(slug); // ami-tomake
+ * ```
  */
-export function slugify(title: string, separator: string = "-"): string {
+export function slugify(title: string, options?: SlugifyOptions): string {
+  if (title.length === 0) return "";
+
+  // Merge options with defaults
+  const { separator, maxLength } = {
+    ...DEFAULT_OPTIONS,
+    ...options,
+  };
+
+  // Escape special characters in separator for regex
+  const escapedSeparator = separator.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
   // Convert Bangla to English
   title = title
     .split("")
@@ -86,11 +126,36 @@ export function slugify(title: string, separator: string = "-"): string {
     .join("");
 
   // Normalize text: Remove special characters except separator, letters, numbers, and spaces
-  title = title.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Remove diacritics
-  title = title.replace(/[^a-zA-Z0-9\s-]/g, ""); // Keep only letters, numbers, and spaces
+  title = title
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "") // Remove diacritics
+    .replace(new RegExp(`[^a-zA-Z0-9\\s${separator}]`, "g"), "") // Keep only letters, numbers, and spaces
+    .trim()
+    .replace(/\s+/g, escapedSeparator) // Replace multiple spaces/dashes with a single separator
+    .toLowerCase();
 
-  // Replace multiple spaces/dashes with a single separator
-  title = title.trim().replace(/\s+/g, separator).toLowerCase();
+  /**
+   * Trim the max length and handle the word completion
+   * example1: maxLength = 10, separator = "-", title = "আমি তোমাকে ভালোবাসি"
+   * result = 'ami-tomake"
+   *
+   * example2: maxLength = 5, separator = "-", title = "আমি তোমাকে ভালবাসি"
+   * result = "ami" it will remove the last separator because the word is not complete
+   * */
+  if (maxLength && title.length > maxLength) {
+    const lastSeparatorIndex = title.lastIndexOf(separator, maxLength);
+    title =
+      lastSeparatorIndex > 0
+        ? title.substring(0, lastSeparatorIndex)
+        : title.substring(0, maxLength);
+  }
+
+  // Remove leading/trailing separators
+  // this logic is more efficient then if , else case with startWith and endsWith condition
+  title = title.replace(
+    new RegExp(`^${escapedSeparator}+|${escapedSeparator}+$`, "g"),
+    ""
+  );
 
   return title;
 }
