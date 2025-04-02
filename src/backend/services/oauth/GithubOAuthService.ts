@@ -8,7 +8,7 @@ export class GithubOAuthService implements IOAuthService<IGithubUser> {
     const state = generateRandomString(50);
     const params = new URLSearchParams({
       client_id: env.GITHUB_CLIENT_ID,
-      redirect_uri: env.GITHUB_CLIENT_SECRET,
+      redirect_uri: env.GITHUB_CALLBACK_URL,
       scope: "user:email",
       state,
     });
