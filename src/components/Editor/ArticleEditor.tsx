@@ -34,6 +34,16 @@ import { useMarkdownEditor } from "./useMarkdownEditor";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { markdownToHtml } from "@/utils/markdoc-parser";
 import { useAppConfirm } from "../app-confirm";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
+import { useToggle } from "@/hooks/use-toggle";
+import ArticleEditorDrawer from "./ArticleEditorDrawer";
 
 interface Prop {
   uuid?: string;
@@ -43,6 +53,7 @@ interface Prop {
 const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
   const { _t, lang } = useTranslation();
   const router = useRouter();
+  const [isOpenSettingDrawer, toggleSettingDrawer] = useToggle();
   const appConfig = useAppConfirm();
   const titleRef = useRef<HTMLTextAreaElement | null>(null);
   const bodyRef = useRef<HTMLTextAreaElement | null>(null);
@@ -129,7 +140,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
 
   return (
     <>
-      <div className="flex bg-background gap-2 items-start justify-between mt-2 mb-10 sticky z-30 p-5">
+      <div className="flex bg-background gap-2 items-center justify-between mt-2 mb-10 sticky z-30 p-5">
         <div className="flex items-center gap-2 text-sm text-forground-muted">
           <div className="flex gap-4 items-center">
             <Link href={"/dashboard"} className=" text-forground">
@@ -170,7 +181,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
               onClick={() =>
                 selectEditorMode(editorMode === "write" ? "preview" : "write")
               }
-              className="px-4 py-1 font-semibold transition-colors duration-200 rounded-sm hover:bg-muted"
+              className="px-4 py-1 hidden md:block font-semibold transition-colors duration-200 rounded-sm hover:bg-muted"
             >
               {editorMode === "write" ? _t("Preview") : _t("Editor")}
             </button>
@@ -192,10 +203,9 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
                 });
               }}
               className={clsx(
-                "hover:bg-muted transition-colors duration-200 px-4 py-1 font-semibold",
+                "transition-colors hidden md:block duration-200 px-4 py-1 font-semibold cursor-pointer",
                 {
-                  "bg-success/10 text-success-foreground":
-                    !article?.is_published,
+                  "bg-success text-success-foreground": !article?.is_published,
                   "text-destructive text-destructive-foreground":
                     article?.is_published,
                 }
@@ -203,11 +213,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
             >
               {article?.is_published ? _t("Unpublish") : _t("Publish")}
             </button>
-            <button
-              onClick={() => {
-                alert("Not implemented");
-              }}
-            >
+            <button onClick={() => toggleSettingDrawer()}>
               <GearIcon className="w-5 h-5" />
             </button>
           </div>
@@ -277,6 +283,15 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
           )}
         </div>
       </div>
+
+      <ArticleEditorDrawer
+        article={article!}
+        open={isOpenSettingDrawer}
+        onClose={toggleSettingDrawer}
+        onSave={function (): void {
+          throw new Error("Function not implemented.");
+        }}
+      />
     </>
   );
 };

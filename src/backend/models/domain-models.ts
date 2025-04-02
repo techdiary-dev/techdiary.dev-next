@@ -42,7 +42,14 @@ export interface IServerFile {
   provider: "cloudinary" | "direct";
 }
 
-export interface ArticleMetadata {}
+export interface ArticleMetadata {
+  seo: {
+    title?: string;
+    description?: string;
+    keywords?: string[];
+    canonical_url?: string;
+  };
+}
 
 export interface Article {
   id: string;

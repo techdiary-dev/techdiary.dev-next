@@ -55,9 +55,22 @@ export const ArticleRepositoryInput = {
       .object({
         key: z.string(),
         provider: z.enum(["cloudinary", "direct"]),
+        alt: z.string().optional(),
       })
       .optional(),
     is_published: z.boolean().optional(),
+    metadata: z
+      .object({
+        seo: z
+          .object({
+            title: z.string().optional(),
+            description: z.string().optional(),
+            keywords: z.array(z.string()).optional(),
+            canonical_url: z.string().optional(),
+          })
+          .optional(),
+      })
+      .optional(),
   }),
 
   feedInput: z.object({
