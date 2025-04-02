@@ -31,6 +31,9 @@ export interface UserSession {
   user_id: string;
   token: string;
   device?: string;
+  device_type?: string;
+  ip?: string;
+  last_action_at?: Date;
   created_at: Date;
 }
 
@@ -39,7 +42,14 @@ export interface IServerFile {
   provider: "cloudinary" | "direct";
 }
 
-export interface ArticleMetadata {}
+export interface ArticleMetadata {
+  seo: {
+    title?: string;
+    description?: string;
+    keywords?: string[];
+    canonical_url?: string;
+  };
+}
 
 export interface Article {
   id: string;

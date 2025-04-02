@@ -4,6 +4,8 @@ import { useTranslation } from "@/i18n/use-translation";
 import { formattedTime } from "@/lib/utils";
 import Link from "next/link";
 import React, { useMemo } from "react";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
+import UserInformationCard from "./UserInformationCard";
 
 interface ArticleCardProps {
   id: string;
@@ -12,6 +14,7 @@ interface ArticleCardProps {
   excerpt: string;
   coverImage?: string;
   author: {
+    id: string;
     name: string;
     avatar: string;
     username: string;
@@ -42,30 +45,38 @@ const ArticleCard = ({
 
   return (
     <div data-article-id={id} className="flex flex-col p-4 sm:p-5 group">
-      <div className="mb-4 flex items-center">
-        <div className="relative rounded-full overflow-hidden border border-neutral-200 bg-neutral-100 transition-transform duration-300 w-8 h-8 opacity-100">
-          <img
-            src={author.avatar}
-            alt={author.name}
-            className="w-full h-full object-cover transition-opacity duration-300 ease-in-out opacity-100"
-          />
-        </div>
-        <div className="ml-2.5">
-          <Link
-            href={`/@${author.username}`}
-            className="text-sm font-medium text-foreground"
-          >
-            {author.name}
-          </Link>
-          <div className="flex items-center text-xs text-muted-foreground">
-            <time dateTime={publishedAt}>
-              {formattedTime(new Date(publishedAt), lang?.toString())}
-            </time>
-            <span className="mx-1.5">·</span>
-            <span>{readingTime} min read</span>
+      <HoverCard>
+        <HoverCardTrigger>
+          <div className="mb-4 flex items-center">
+            <div className="relative rounded-full overflow-hidden border border-neutral-200 bg-neutral-100 transition-transform duration-300 w-8 h-8 opacity-100">
+              <img
+                src={author.avatar}
+                alt={author.name}
+                className="w-full h-full object-cover transition-opacity duration-300 ease-in-out opacity-100"
+              />
+            </div>
+            <div className="ml-2.5">
+              <Link
+                href={`/@${author.username}`}
+                className="text-sm font-medium text-foreground"
+              >
+                {author.name}
+              </Link>
+              <div className="flex items-center text-xs text-muted-foreground">
+                <time dateTime={publishedAt}>
+                  {formattedTime(new Date(publishedAt), lang)}
+                </time>
+                <span className="mx-1.5">·</span>
+                <span>{readingTime} min read</span>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </HoverCardTrigger>
+        <HoverCardContent align="start">
+          <UserInformationCard userId={author.id} />
+        </HoverCardContent>
+      </HoverCard>
+
       <div className="flex flex-1 flex-col">
         <div className="flex flex-col space-y-2 mb-3">
           <Link

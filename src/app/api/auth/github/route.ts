@@ -1,5 +1,5 @@
-import { setAfterAuthRedirect } from "@/auth/auth";
 import { GithubOAuthService } from "@/backend/services/oauth/GithubOAuthService";
+import * as sessionActions from "@/backend/services/session.actions";
 const githubOAuthService = new GithubOAuthService();
 
 export async function GET(request: Request): Promise<Response> {
@@ -7,7 +7,7 @@ export async function GET(request: Request): Promise<Response> {
   const authorizationUrl = await githubOAuthService.getAuthorizationUrl();
   const next = url.searchParams.get("next");
   if (next) {
-    await setAfterAuthRedirect(next);
+    await sessionActions.setAfterAuthRedirect(next);
   }
 
   return new Response(null, {

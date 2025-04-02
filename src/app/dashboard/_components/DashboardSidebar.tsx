@@ -11,7 +11,14 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { useTranslation } from "@/i18n/use-translation";
-import { BellIcon, Bookmark, Home, Settings, Settings2 } from "lucide-react";
+import {
+  BellIcon,
+  Bookmark,
+  Home,
+  KeySquareIcon,
+  Settings,
+  Settings2,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -40,9 +47,9 @@ const DashboardSidebar = () => {
       icon: Settings2,
     },
     {
-      title: "Sessions",
+      title: _t("Login Sessions"),
       url: "/sessions",
-      icon: Settings,
+      icon: KeySquareIcon,
     },
   ];
   return (

@@ -2,25 +2,16 @@
 
 import { useTranslation } from "@/i18n/use-translation";
 
-import Link from "next/link";
 import { Button } from "../ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import ThemeSwitcher from "./ThemeSwitcher";
 
-import SocialLoginCard from "../SocialLoginCard";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { SearchIcon } from "lucide-react";
 import { useSession } from "@/store/session.atom";
-import { useAppConfirm } from "../app-confirm";
-import { deleteSession } from "@/auth/auth";
+import { SearchIcon } from "lucide-react";
+import SocialLoginCard from "../SocialLoginCard";
 import AuthenticatedUserMenu from "./AuthenticatedUserMenu";
 import LanguageSwitcher from "./LanguageSwitcher";
+import Link from "next/link";
 
 const NavbarActions: React.FC = () => {
   const { _t } = useTranslation();
@@ -33,10 +24,14 @@ const NavbarActions: React.FC = () => {
       </Button>
       <LanguageSwitcher />
       <ThemeSwitcher />
-      <Button className="hidden md:block">{_t("New diary")}</Button>
 
       {authSession?.session ? (
-        <AuthenticatedUserMenu />
+        <>
+          <Button className="hidden md:block" asChild>
+            <Link href={"/dashboard/articles/new"}>{_t("New diary")}</Link>
+          </Button>
+          <AuthenticatedUserMenu />
+        </>
       ) : (
         <UnAuthenticatedMenu />
       )}

@@ -1,5 +1,6 @@
 "use server";
 
+import { generateRandomString, removeMarkdownSyntax } from "@/lib/utils";
 import { z } from "zod";
 import { Article, User } from "../models/domain-models";
 import { pgClient } from "../persistence/database-drivers/pg.client";
@@ -16,8 +17,8 @@ import {
   RepositoryException,
 } from "./RepositoryException";
 import { ArticleRepositoryInput } from "./inputs/article.input";
-import { removeMarkdownSyntax } from "@/lib/utils";
-import { getSessionUserId } from "@/auth/auth";
+import { getSessionUserId } from "./session.actions";
+import { slugify } from "@/lib/slug-helper.util";
 
 const articleRepository = new PersistentRepository<Article>(
   "articles",
@@ -53,6 +54,52 @@ export async function createArticle(
   }
 }
 
+export async function createMyArticle(
+  _input: z.infer<typeof ArticleRepositoryInput.createMyArticleInput>
+) {
+  try {
+    const sessionUserId = await getSessionUserId();
+    if (!sessionUserId) {
+      throw new RepositoryException("Unauthorized");
+    }
+
+    const input =
+      await ArticleRepositoryInput.createMyArticleInput.parseAsync(_input);
+
+    const handle = await getUniqueArticleHandle(input.title);
+
+    const article = await articleRepository.createOne({
+      title: input.title,
+      handle: handle,
+      excerpt: input.excerpt ?? null,
+      body: input.body ?? null,
+      cover_image: input.cover_image ?? null,
+      is_published: input.is_published ?? false,
+      published_at: input.is_published ? new Date() : null,
+      author_id: sessionUserId,
+    });
+    return article;
+  } catch (error) {
+    handleRepositoryException(error);
+  }
+}
+
+export const getUniqueArticleHandle = async (title: string) => {
+  try {
+    const [article] = await articleRepository.findRows({
+      where: eq("handle", slugify(title)),
+      columns: ["id", "handle"],
+      limit: 1,
+    });
+    if (article) {
+      return `${slugify(title)}-${generateRandomString(5)}`;
+    }
+    return slugify(title);
+  } catch (error) {
+    handleRepositoryException(error);
+  }
+};
+
 /**
  * Updates an existing article in the database.
  *
@@ -68,6 +115,35 @@ export async function updateArticle(
       await ArticleRepositoryInput.updateArticleInput.parseAsync(_input);
     const article = await articleRepository.updateOne({
       where: eq("id", input.article_id),
+      data: {
+        title: input.title,
+        handle: input.handle,
+        excerpt: input.excerpt,
+        body: input.body,
+        cover_image: input.cover_image,
+        is_published: input.is_published,
+        published_at: input.is_published ? new Date() : null,
+      },
+    });
+    return article;
+  } catch (error) {
+    handleRepositoryException(error);
+  }
+}
+
+export async function updateMyArticle(
+  _input: z.infer<typeof ArticleRepositoryInput.updateMyArticleInput>
+) {
+  try {
+    const sessionUserId = await getSessionUserId();
+    if (!sessionUserId) {
+      throw new RepositoryException("Unauthorized");
+    }
+
+    const input =
+      await ArticleRepositoryInput.updateMyArticleInput.parseAsync(_input);
+    const article = await articleRepository.updateOne({
+      where: and(eq("id", input.article_id), eq("author_id", sessionUserId)),
       data: {
         title: input.title,
         handle: input.handle,
@@ -155,7 +231,7 @@ export async function articleFeed(
     const input = await ArticleRepositoryInput.feedInput.parseAsync(_input);
 
     const response = await articleRepository.findAllWithPagination({
-      where: and(eq("is_published", true)),
+      where: and(eq("is_published", true), neq("approved_at", null)),
       page: input.page,
       limit: input.limit,
       orderBy: [desc("published_at")],
@@ -200,7 +276,11 @@ export async function userArticleFeed(
     const input = await ArticleRepositoryInput.userFeedInput.parseAsync(_input);
 
     const response = await articleRepository.findAllWithPagination({
-      where: and(eq("is_published", true), eq("author_id", input.user_id)),
+      where: and(
+        eq("is_published", true),
+        neq("approved_at", null),
+        eq("author_id", input.user_id)
+      ),
       page: input.page,
       limit: input.limit,
       orderBy: [desc("published_at")],
@@ -237,10 +317,51 @@ export async function userArticleFeed(
   }
 }
 
-export async function articleDetail(article_handle: string) {
+export async function articleDetailByHandle(article_handle: string) {
   try {
     const [article] = await articleRepository.findRows({
       where: eq("handle", article_handle),
+      columns: [
+        "id",
+        "title",
+        "handle",
+        "excerpt",
+        "body",
+        "cover_image",
+        "is_published",
+        "published_at",
+        "approved_at",
+        "metadata",
+        "author_id",
+        "created_at",
+        "updated_at",
+      ],
+      joins: [
+        joinTable<Article, User>({
+          as: "user",
+          joinTo: "users",
+          localField: "author_id",
+          foreignField: "id",
+          columns: ["id", "name", "username", "profile_photo"],
+        }),
+      ],
+      limit: 1,
+    });
+
+    if (!article) {
+      throw new RepositoryException("Article not found");
+    }
+
+    return article;
+  } catch (error) {
+    handleRepositoryException(error);
+  }
+}
+
+export async function articleDetailByUUID(uuid: string) {
+  try {
+    const [article] = await articleRepository.findRows({
+      where: eq("id", uuid),
       columns: [
         "id",
         "title",
@@ -285,9 +406,42 @@ export async function myArticles(
   try {
     const articles = await articleRepository.findAllWithPagination({
       where: eq("author_id", sessionUserId),
-      columns: ["id", "title", "handle", "created_at", "is_published"],
+      columns: [
+        "id",
+        "title",
+        "handle",
+        "created_at",
+        "is_published",
+        "approved_at",
+      ],
       limit: input.limit,
       page: input.page,
+      orderBy: [desc("created_at")],
+    });
+    return articles;
+  } catch (error) {
+    handleRepositoryException(error);
+  }
+}
+
+/**
+ * Updates the status of an article.
+ * @param article_id - The unique identifier of the article to update
+ * @param is_published - The new status of the article
+ * @returns
+ */
+export async function setArticlePublished(
+  article_id: string,
+  is_published: boolean
+) {
+  const sessionUserId = await getSessionUserId();
+  try {
+    const articles = await articleRepository.updateOne({
+      where: and(eq("id", article_id), eq("author_id", sessionUserId)),
+      data: {
+        is_published: is_published,
+        published_at: is_published ? new Date() : null,
+      },
     });
     return articles;
   } catch (error) {

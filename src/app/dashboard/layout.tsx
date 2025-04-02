@@ -1,14 +1,22 @@
-import { getSession } from "@/auth/auth";
+import * as sessionActions from "@/backend/services/session.actions";
 import { SidebarProvider } from "@/components/ui/sidebar";
+import { Metadata } from "next";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import React, { PropsWithChildren } from "react";
 import DashboardScaffold from "./_components/DashboardScaffold";
 
+export const metadata: Metadata = {
+  title: {
+    default: "Dashboard",
+    template: "%s | TechDiary",
+  },
+};
+
 const layout: React.FC<PropsWithChildren> = async ({ children }) => {
   const _headers = await headers();
   const currentPath = _headers.get("x-current-path");
-  const session = await getSession();
+  const session = await sessionActions.getSession();
 
   const cookieStore = await cookies();
   const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";

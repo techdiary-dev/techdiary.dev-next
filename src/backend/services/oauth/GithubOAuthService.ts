@@ -1,20 +1,21 @@
 import { generateRandomString } from "@/lib/utils";
 import { IGithubUser, IOAuthService } from "./oauth-contract";
 import { cookies } from "next/headers";
+import { env } from "@/env";
 
 export class GithubOAuthService implements IOAuthService<IGithubUser> {
   async getAuthorizationUrl(): Promise<string> {
     const state = generateRandomString(50);
     const params = new URLSearchParams({
-      client_id: process.env.GITHUB_CLIENT_ID!,
-      redirect_uri: process.env.GITHUB_CALLBACK_URL!,
+      client_id: env.GITHUB_CLIENT_ID,
+      redirect_uri: env.GITHUB_CALLBACK_URL,
       scope: "user:email",
       state,
     });
     const _cookies = await cookies();
     _cookies.set("github_oauth_state", state, {
       path: "/",
-      secure: process.env.NODE_ENV === "production",
+      secure: env.NODE_ENV === "production",
       httpOnly: true,
       maxAge: 60 * 10,
       sameSite: "lax",
@@ -35,9 +36,9 @@ export class GithubOAuthService implements IOAuthService<IGithubUser> {
 
     const githubAccessToken = await validateGitHubCode(
       code,
-      process.env.GITHUB_CLIENT_ID!,
-      process.env.GITHUB_CLIENT_SECRET!,
-      process.env.GITHUB_CALLBACK_URL!
+      env.GITHUB_CLIENT_ID,
+      env.GITHUB_CLIENT_SECRET,
+      env.GITHUB_CALLBACK_URL
     );
 
     const githubUser = await getGithubUser(githubAccessToken.access_token);

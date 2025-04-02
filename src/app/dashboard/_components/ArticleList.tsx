@@ -2,6 +2,7 @@
 
 import * as articleActions from "@/backend/services/article.actions";
 import { useAppConfirm } from "@/components/app-confirm";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,6 +18,7 @@ import {
   CardStackIcon,
   DotsHorizontalIcon,
   Pencil1Icon,
+  PlusIcon,
 } from "@radix-ui/react-icons";
 
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -40,7 +42,16 @@ const ArticleList = () => {
 
   return (
     <div>
-      <h3 className="text-lg font-semibold">{_t("Articles")}</h3>
+      <div className="flex items-center gap-2 justify-between">
+        <h3 className="text-lg font-semibold">{_t("Articles")}</h3>
+
+        <Button asChild>
+          <Link href={`/dashboard/articles/new`}>
+            <PlusIcon className="w-5 h-5" />
+            <span className="ml-2">Create new article</span>
+          </Link>
+        </Button>
+      </div>
 
       <div className="flex flex-col divide-y divide-dashed divide-border-color mt-2">
         {feedInfiniteQuery.isFetching &&
@@ -71,9 +82,27 @@ const ArticleList = () => {
 
               <div className="flex items-center gap-10 justify-between">
                 <div className="flex gap-4 items-center">
+                  {!article.approved_at && (
+                    <p className="bg-yellow-400/30 rounded-sm px-2 py-1 text-sm">
+                      🚧 {_t("অনুমোদনাধীন")}
+                    </p>
+                  )}
+
+                  {article.approved_at && (
+                    <p className="bg-green-400/30 rounded-sm px-2 py-1 text-sm">
+                      ✅ {_t("অনুমোদিত")}
+                    </p>
+                  )}
+
                   {!article.is_published && (
                     <p className="bg-yellow-400/30 rounded-sm px-2 py-1 text-sm">
                       🚧 {_t("Draft")}
+                    </p>
+                  )}
+
+                  {article.is_published && (
+                    <p className="bg-green-400/30 rounded-sm px-2 py-1 text-sm">
+                      ✅ {_t("Published")}
                     </p>
                   )}
 
@@ -111,18 +140,21 @@ const ArticleList = () => {
                           appConfirm.show({
                             title: `${_t("Sure to unpublish")}?`,
                             children: _t(
-                              "If you unpublish the article, this will be excluded in home page and search results, however direct links to the article will still work."
+                              "If you unpublish the article, this will be excluded in home page and search results, however direct links to the article will still work"
                             ),
                             labels: {
                               confirm: _t("Yes"),
                               cancel: _t("Cancel"),
                             },
-                            onConfirm() {
-                              // try {
-                              //   apiRepo
-                              //     .makeArchive(article?.id)
-                              //     .finally(() => router.refresh());
-                              // } catch (error) {}
+                            async onConfirm() {
+                              try {
+                                await articleActions.setArticlePublished(
+                                  article?.id,
+                                  !article?.is_published
+                                );
+                              } finally {
+                                feedInfiniteQuery.refetch();
+                              }
                             },
                           });
                         }}
