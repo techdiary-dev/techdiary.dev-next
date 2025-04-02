@@ -66,7 +66,7 @@ export const ArticleRepositoryInput = {
             title: z.string().optional(),
             description: z.string().optional(),
             keywords: z.array(z.string()).optional(),
-            canonical_url: z.string().optional(),
+            canonical_url: z.string().url().optional(),
           })
           .optional(),
       })

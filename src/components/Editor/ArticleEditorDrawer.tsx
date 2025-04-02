@@ -1,16 +1,18 @@
 import { Article } from "@/backend/models/domain-models";
+import * as articleActions from "@/backend/services/article.actions";
+import { ArticleRepositoryInput } from "@/backend/services/inputs/article.input";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import React from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { z } from "zod";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
-  SheetTitle,
 } from "../ui/sheet";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { ArticleRepositoryInput } from "@/backend/services/inputs/article.input";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 interface Props {
   article: Article;
@@ -19,6 +21,21 @@ interface Props {
   onSave: () => void;
 }
 const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
+  const router = useRouter();
+  const updateMyArticleMutation = useMutation({
+    mutationFn: (
+      input: z.infer<typeof ArticleRepositoryInput.updateMyArticleInput>
+    ) => {
+      return articleActions.updateMyArticle(input);
+    },
+    onSuccess: () => {
+      router.refresh();
+    },
+    onError(err) {
+      alert(err.message);
+    },
+  });
+
   const form = useForm<
     z.infer<typeof ArticleRepositoryInput.updateMyArticleInput>
   >({
@@ -36,6 +53,25 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
     },
     resolver: zodResolver(ArticleRepositoryInput.updateMyArticleInput),
   });
+
+  const handleOnSubmit: SubmitHandler<
+    z.infer<typeof ArticleRepositoryInput.updateMyArticleInput>
+  > = (payload) => {
+    updateMyArticleMutation.mutate({
+      article_id: article?.id ?? "",
+      excerpt: payload.excerpt,
+      handle: payload.handle,
+      metadata: {
+        seo: {
+          title: payload.metadata?.seo?.title ?? "",
+          description: payload.metadata?.seo?.description ?? "",
+          keywords: payload.metadata?.seo?.keywords ?? [],
+          canonical_url: payload.metadata?.seo?.canonical_url ?? "",
+        },
+      },
+    });
+  };
+
   return (
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent className="m-3 h-[100vh-20px] w-[100vw-20px]">
