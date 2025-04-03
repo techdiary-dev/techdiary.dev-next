@@ -4,6 +4,9 @@
 /node_modules
 /.pnp
 .pnp.js
+yarn.lock
+.yarn/cache
+bun.lockb
 .yarn/install-state.gz
 
 # testing

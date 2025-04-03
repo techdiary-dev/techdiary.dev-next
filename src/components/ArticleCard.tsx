@@ -6,6 +6,7 @@ import Link from "next/link";
 import React, { useMemo } from "react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 import UserInformationCard from "./UserInformationCard";
+import Image from "next/image";
 
 interface ArticleCardProps {
   id: string;
@@ -49,9 +50,9 @@ const ArticleCard = ({
         <HoverCardTrigger>
           <div className="mb-4 flex items-center">
             <div className="relative rounded-full overflow-hidden border border-neutral-200 bg-neutral-100 transition-transform duration-300 w-8 h-8 opacity-100">
-              <img
-                src={author.avatar}
-                alt={author.name}
+              <Image
+                src={author.avatar ?? ""}
+                alt={author.name ?? ""}
                 className="w-full h-full object-cover transition-opacity duration-300 ease-in-out opacity-100"
               />
             </div>
@@ -93,7 +94,7 @@ const ArticleCard = ({
         {coverImage && (
           <a href={articleUrl} className="block">
             <div className="relative mt-4 overflow-hidden rounded-md aspect-[16/9]">
-              <img
+              <Image
                 src={coverImage}
                 alt={title}
                 className="h-full w-full object-cover transition-all duration-700 opacity-100 scale-100"

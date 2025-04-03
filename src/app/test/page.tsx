@@ -3,7 +3,7 @@
 import { TagInput } from "@/components/ui/tags-input";
 import React from "react";
 
-const page = () => {
+const Page = () => {
   const [tags, setTags] = React.useState<string[]>([]);
   return (
     <div className="p-10">
@@ -12,4 +12,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

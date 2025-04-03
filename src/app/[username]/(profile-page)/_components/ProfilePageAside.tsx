@@ -11,6 +11,7 @@ import Twitch from "@/components/icons/twitch";
 import X from "@/components/icons/x";
 import Youtube from "@/components/icons/youtube";
 import { Link2Icon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -21,13 +22,13 @@ interface ProfilePageAsideProps {
 const ProfilePageAside: React.FC<ProfilePageAsideProps> = ({ profile }) => {
   return (
     <div>
-      <img
+      <Image
         className="w-[28%] md:w-full rounded"
         src={
           profile?.profile_photo ||
           `https://api.dicebear.com/8.x/initials/svg?seed=${profile?.username}`
         }
-        alt={profile?.username}
+        alt={profile?.username ?? "Profile photo"}
       />
       <div className="mt-4">
         <h2 className="text-xl font-semibold">{profile?.name}</h2>

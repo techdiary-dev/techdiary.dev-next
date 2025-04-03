@@ -1,16 +1,11 @@
 "use client";
 
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useTranslation } from "@/i18n/use-translation";
 import { homeSidebarOpenAtom } from "@/store/home-sidebar.atom";
 import { useAtom } from "jotai";
 import { BookmarkIcon, HomeIcon, PlusIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
@@ -162,7 +157,7 @@ const Sidebar = () => {
         <div className="flex flex-col gap-2">
           {tags.slice(0, count).map((tag, index) => (
             <div className="flex items-center gap-2" key={index}>
-              <img
+              <Image
                 src={tag.icon}
                 width={20}
                 height={20}
