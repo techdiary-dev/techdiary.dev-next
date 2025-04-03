@@ -24,14 +24,10 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-} from "../ui/sheet";
-import { Textarea } from "../ui/textarea";
 import { InputTags } from "../ui/input-tags";
+import { Sheet, SheetContent } from "../ui/sheet";
+import { TagInput } from "../ui/tags-input";
+import { Textarea } from "../ui/textarea";
 
 interface Props {
   article: Article;
@@ -60,6 +56,8 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
       alert(err.message);
     },
   });
+
+  const [tags, setTags] = React.useState<string[]>([]);
 
   const form = useForm<
     z.infer<typeof ArticleRepositoryInput.updateMyArticleInput>
@@ -219,6 +217,8 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
                     </FormItem>
                   )}
                 />
+
+                <TagInput tags={tags ?? []} onTagsChange={setTags} />
               </div>
 
               <Button>{_t("Save")}</Button>

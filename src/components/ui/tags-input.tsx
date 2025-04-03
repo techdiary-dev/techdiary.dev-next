@@ -1,134 +1,90 @@
-"use client";
-
 import * as React from "react";
 import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
-export type Tag = {
-  id: string;
-  text: string;
-};
-
-type TagInputProps = {
+export interface TagInputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
-  tags: Tag[];
-  setTags: React.Dispatch<React.SetStateAction<Tag[]>>;
-  suggestions?: Tag[];
-  disabled?: boolean;
-  onTagAdd?: (tag: Tag) => void;
-  onTagRemove?: (tagId: string) => void;
-};
+  tags?: string[];
+  onTagsChange?: (tags: string[]) => void;
+  className?: string;
+}
 
 export function TagInput({
-  placeholder = "Add tags...",
-  tags,
-  setTags,
-  suggestions = [],
-  disabled = false,
-  onTagAdd,
-  onTagRemove,
+  placeholder = "Type and press enter...",
+  tags = [],
+  onTagsChange,
+  className,
+  ...props
 }: TagInputProps) {
-  const inputRef = React.useRef<HTMLInputElement>(null);
   const [inputValue, setInputValue] = React.useState("");
-  const [open, setOpen] = React.useState(false);
+  const inputRef = React.useRef<HTMLInputElement>(null);
 
-  const handleAddTag = (text: string) => {
-    const trimmedText = text.trim();
-    if (!trimmedText) return;
-
-    // Check if tag already exists
-    if (
-      tags.some((tag) => tag.text.toLowerCase() === trimmedText.toLowerCase())
-    ) {
-      return;
-    }
-
-    const newTag = { id: crypto.randomUUID(), text: trimmedText };
-    setTags((prev) => [...prev, newTag]);
-    onTagAdd?.(newTag);
-    setInputValue("");
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
   };
 
-  const handleRemoveTag = (tagId: string) => {
-    setTags((prev) => prev.filter((tag) => tag.id !== tagId));
-    onTagRemove?.(tagId);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter" && inputValue) {
+      e.preventDefault();
+      if (!tags.includes(inputValue.trim())) {
+        const newTags = [...tags, inputValue.trim()];
+        onTagsChange?.(newTags);
+        setInputValue("");
+      }
+    } else if (e.key === "Backspace" && !inputValue && tags.length > 0) {
+      e.preventDefault();
+      const newTags = tags.slice(0, -1);
+      onTagsChange?.(newTags);
+    }
+  };
+
+  const removeTag = (tagToRemove: string) => {
+    const newTags = tags.filter((tag) => tag !== tagToRemove);
+    onTagsChange?.(newTags);
+  };
+
+  const handleWrapperClick = () => {
     inputRef.current?.focus();
   };
 
-  const filteredSuggestions = suggestions.filter(
-    (suggestion) =>
-      !tags.some(
-        (tag) => tag.text.toLowerCase() === suggestion.text.toLowerCase()
-      ) && suggestion.text.toLowerCase().includes(inputValue.toLowerCase())
-  );
-
   return (
-    <div className="flex flex-col gap-2">
-      <div className="flex flex-wrap gap-2">
+    <div
+      className={cn(
+        "flex min-h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
+        className
+      )}
+      onClick={handleWrapperClick}
+    >
+      <div className="flex flex-wrap gap-1">
         {tags.map((tag) => (
-          <Badge key={tag.id} variant="secondary" className="h-7 px-3">
-            {tag.text}
-            <button
-              type="button"
-              className="ml-1 rounded-full outline-none ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2"
-              onClick={() => handleRemoveTag(tag.id)}
-              disabled={disabled}
-            >
-              <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-              <span className="sr-only">Remove {tag.text}</span>
-            </button>
+          <Badge
+            key={tag}
+            variant="secondary"
+            className="flex items-center gap-1 select-none"
+          >
+            {tag}
+            <X
+              className="h-3 w-3 cursor-pointer hover:text-destructive"
+              onClick={(e) => {
+                e.stopPropagation();
+                removeTag(tag);
+              }}
+            />
           </Badge>
         ))}
-      </div>
-      <div className="relative">
         <Input
           ref={inputRef}
+          type="text"
           value={inputValue}
-          onChange={(e) => {
-            setInputValue(e.target.value);
-            if (e.target.value.length > 0) {
-              setOpen(true);
-            } else {
-              setOpen(false);
-            }
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && inputValue) {
-              e.preventDefault();
-              handleAddTag(inputValue);
-            } else if (
-              e.key === "Backspace" &&
-              !inputValue &&
-              tags.length > 0
-            ) {
-              handleRemoveTag(tags[tags.length - 1].id);
-            }
-          }}
-          onBlur={() => setOpen(false)}
-          onFocus={() => inputValue && setOpen(true)}
-          placeholder={placeholder}
-          disabled={disabled}
-          className="w-full"
+          onChange={handleInputChange}
+          onKeyDown={handleKeyDown}
+          className="flex-1 !m-0 !p-0 !border-none !outline-none !ring-0 !ring-offset-0 focus-visible:!ring-0 focus-visible:!ring-offset-0"
+          placeholder={tags.length === 0 ? placeholder : ""}
+          {...props}
         />
-        {open && filteredSuggestions.length > 0 && (
-          <div className="absolute top-full z-10 mt-1 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
-            <div className="w-full p-1">
-              {filteredSuggestions.map((suggestion) => (
-                <div
-                  key={suggestion.id}
-                  onClick={() => {
-                    handleAddTag(suggestion.text);
-                    setOpen(false);
-                  }}
-                  className="flex cursor-pointer select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent hover:text-accent-foreground"
-                >
-                  {suggestion.text}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
