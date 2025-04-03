@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
@@ -12,7 +13,14 @@ const _ErrorPage: React.FC<ErrorPageProps> = (props) => {
   return (
     <div className="max-w-xl mx-auto">
       <div className="flex flex-col items-center justify-center gap-4 p-4">
-        <img src="/images/sadface.gif" className="max-w-full" alt="Error" />
+        <Image
+          width={500}
+          height={500}
+          unoptimized
+          src="/images/sadface.gif"
+          className="max-w-full"
+          alt="Error"
+        />
         <p className="text-2xl text-destructive">
           <i>{props.error.message}</i>
         </p>

@@ -4,6 +4,9 @@
 /node_modules
 /.pnp
 .pnp.js
+yarn.lock
+.yarn/cache
+bun.lockb
 .yarn/install-state.gz
 
 # testing
@@ -34,6 +37,3 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# Sentry Config File
-.env.sentry-build-plugin

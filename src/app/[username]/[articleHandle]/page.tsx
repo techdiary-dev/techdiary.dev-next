@@ -1,15 +1,14 @@
-import BaseLayout from "@/components/layout/BaseLayout";
-import * as articleActions from "@/backend/services/article.actions";
-import React from "react";
-import { Metadata, NextPage } from "next";
-import HomepageLayout from "@/components/layout/HomepageLayout";
 import HomeLeftSidebar from "@/app/(home)/_components/HomeLeftSidebar";
-import { markdownToHtml } from "@/utils/markdoc-parser";
+import * as articleActions from "@/backend/services/article.actions";
 import AppImage from "@/components/AppImage";
-import Link from "next/link";
+import HomepageLayout from "@/components/layout/HomepageLayout";
 import { readingTime, removeMarkdownSyntax } from "@/lib/utils";
+import { markdownToHtml } from "@/utils/markdoc-parser";
+import { Metadata, NextPage } from "next";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import ArticleSidebar from "./_components/ArticleSidebar";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Article detail",
@@ -55,9 +54,11 @@ const Page: NextPage<ArticlePageProps> = async ({ params }) => {
         {/* User information */}
         <div className="mb-4 flex items-center my-4">
           <div className="relative rounded-full overflow-hidden border transition-transform duration-300 size-10">
-            <img
-              src={article?.user?.profile_photo}
-              alt={article?.user?.username}
+            <Image
+              src={article?.user?.profile_photo ?? ""}
+              alt={article?.user?.username ?? ""}
+              width={40}
+              height={40}
               className="w-full h-full object-cover transition-opacity duration-300 ease-in-out opacity-100"
             />
           </div>

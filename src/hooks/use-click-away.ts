@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
 export function useClickAway(
   ref: React.RefObject<HTMLElement | null>,
@@ -16,7 +16,7 @@ export function useClickAway(
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [callback]);
+  }, [callback, ref]);
 
   return ref;
 }
