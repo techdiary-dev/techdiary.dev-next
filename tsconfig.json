@@ -19,14 +19,16 @@
     ],
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "target": "ESNext"
   },
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/middleware.tsxxx"
+    "src/middleware.tsxxx",
+    "next.config.mjs"
   ],
   "exclude": ["node_modules"]
 }

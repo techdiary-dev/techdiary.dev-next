@@ -5,7 +5,7 @@ const nextConfig = {
     fetches: { fullUrl: true },
   },
   experimental: {
-    optimizePackageImports: ["@mantine/core", "@mantine/hooks"],
+    optimizePackageImports: [],
   },
   images: {
     remotePatterns: [

@@ -1,17 +1,28 @@
+import ArticleEditor from "@/components/Editor/ArticleEditor";
+import * as articleActions from "@/backend/services/article.actions";
 import React from "react";
-import ArticleEditor from "../_components/ArticleEditor";
-import { NextPage } from "next";
-import { ArticleApiRepository } from "@/http/repositories/article.repository";
+import * as sessionActions from "@/backend/services/session.actions";
+import { notFound } from "next/navigation";
+import { persistenceRepository } from "@/backend/persistence-repositories";
+import { eq, and } from "@/backend/persistence/persistence-where-operator";
 
 interface Props {
-  params: { uuid: string };
+  params: Promise<{ uuid: string }>;
 }
+const page: React.FC<Props> = async ({ params }) => {
+  const sessionUserId = await sessionActions.getSessionUserId();
+  const _params = await params;
 
-const ArticleEditPage: NextPage<Props> = async ({ params }) => {
-  const api = new ArticleApiRepository();
-  const data = await api.getArticleByUUID(params.uuid);
+  const [article] = await persistenceRepository.article.findRows({
+    limit: 1,
+    where: and(eq("id", _params.uuid), eq("author_id", sessionUserId)),
+  });
 
-  return <ArticleEditor uuid={params.uuid} article={data} />;
+  if (!article) {
+    throw notFound();
+  }
+
+  return <ArticleEditor uuid={_params.uuid} article={article} />;
 };
 
-export default ArticleEditPage;
+export default page;

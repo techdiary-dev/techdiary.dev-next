@@ -1,0 +1,43 @@
+.fake-editor {
+  @apply transition-all duration-150;
+  @apply bg-muted text-muted-foreground;
+  @apply border;
+  @apply flex cursor-pointer rounded p-5;
+}
+.fake-editor__icon {
+  @apply h-6 w-6;
+  @apply mr-4 fill-current opacity-75;
+}
+.fake-editor__placeholder {
+  @apply text-base;
+}
+
+.td-editor h1,
+.td-editor h2,
+.td-editor h3,
+.td-editor h4,
+.td-editor h5 {
+  @apply font-bold;
+}
+.td-editor h1 {
+  @apply text-2xl;
+}
+.td-editor h2 {
+  @apply text-xl;
+}
+.td-editor h3 {
+  @apply text-lg;
+}
+.td-editor h4 {
+  @apply text-base;
+}
+.td-editor .ce-block--stretched {
+  position: relative;
+}
+@media (min-width: 768px) {
+  .td-editor .ce-block--stretched {
+    position: relative;
+    margin-left: calc(50% - 32vw);
+    margin-right: calc(50% - 32vw);
+  }
+}

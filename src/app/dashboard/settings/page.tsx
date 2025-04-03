@@ -1,33 +1,25 @@
-"use client";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import _t from "@/i18n/_t";
 
-import { useTranslation } from "@/i18n/use-translation";
-import { Tabs } from "@mantine/core";
-import SettingGeneralTab from "./_components/SettingGeneralTab";
-import SettingProfileTab from "./_components/SettingProfileReadmeTab";
-import SettingSocialTab from "./_components/SettingSocialTab";
-import SettingProfileReadmeTab from "./_components/SettingProfileReadmeTab";
-
-const SettingPage = () => {
-  const { _t } = useTranslation();
-
+const SettingsPage = () => {
   return (
-    <Tabs defaultValue="general">
-      <Tabs.List>
-        <Tabs.Tab value="general">{_t("General")}</Tabs.Tab>
-        <Tabs.Tab value="social">{_t("Social")}</Tabs.Tab>
-        <Tabs.Tab value="profile-readme">{_t("Profile Readme")}</Tabs.Tab>
-      </Tabs.List>
-      <Tabs.Panel value="general" className="py-2">
-        <SettingGeneralTab />
-      </Tabs.Panel>
-      <Tabs.Panel value="social" className="py-2">
-        <SettingSocialTab />
-      </Tabs.Panel>
-      <Tabs.Panel value="profile-readme" className="py-2">
-        <SettingProfileReadmeTab />
-      </Tabs.Panel>
-    </Tabs>
+    <div>
+      <Tabs defaultValue="account">
+        <TabsList>
+          <TabsTrigger value="general">{_t("General")}</TabsTrigger>
+          <TabsTrigger value="social">{_t("Social")}</TabsTrigger>
+          <TabsTrigger value="profile_readme">
+            {_t("Profile Readme")}
+          </TabsTrigger>
+        </TabsList>
+        <TabsContent value="general">Change your password here.</TabsContent>
+        <TabsContent value="social">Change your password here.</TabsContent>
+        <TabsContent value="profile_readme">
+          Change your profile readme here.
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 };
 
-export default SettingPage;
+export default SettingsPage;

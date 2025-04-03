@@ -1,9 +1,9 @@
-import { IServerFile } from "@/http/models/AppImage.model";
 import { blur } from "@cloudinary/url-gen/actions/effect";
 import Image from "next/image";
 
 import { Cloudinary } from "@cloudinary/url-gen";
 import React from "react";
+import { IServerFile } from "@/backend/models/domain-models";
 
 interface AppImageProps {
   alt?: string;

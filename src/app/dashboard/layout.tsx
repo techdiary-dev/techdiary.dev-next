@@ -1,16 +1,35 @@
-import { ssrGetMe } from "@/utils/ssr-user";
+import * as sessionActions from "@/backend/services/session.actions";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { Metadata } from "next";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import React, { PropsWithChildren } from "react";
-import DashboardLayout from "./_components/DashboardLayout";
-import Image from "next/image";
+import DashboardScaffold from "./_components/DashboardScaffold";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Dashboard",
+    template: "%s | TechDiary",
+  },
+};
 
 const layout: React.FC<PropsWithChildren> = async ({ children }) => {
-  const { status } = await ssrGetMe();
-  if (status !== 200) {
-    redirect("/auth/login");
+  const _headers = await headers();
+  const currentPath = _headers.get("x-current-path");
+  const session = await sessionActions.getSession();
+
+  const cookieStore = await cookies();
+  const defaultOpen = cookieStore.get("sidebar_state")?.value === "true";
+
+  if (!session?.user) {
+    redirect(`/login?next=${currentPath}`);
   }
 
-  return <DashboardLayout>{children}</DashboardLayout>;
+  return (
+    <SidebarProvider defaultOpen={defaultOpen}>
+      <DashboardScaffold>{children}</DashboardScaffold>
+    </SidebarProvider>
+  );
 };
 
 export default layout;

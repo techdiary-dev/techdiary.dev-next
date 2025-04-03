@@ -1,8 +1,12 @@
+import ArticleEditor from "@/components/Editor/ArticleEditor";
 import React from "react";
-import ArticleEditor from "../_components/ArticleEditor";
 
-const ArticleNewPage = () => {
-  return <ArticleEditor />;
+const page = () => {
+  return (
+    <>
+      <ArticleEditor />
+    </>
+  );
 };
 
-export default ArticleNewPage;
+export default page;
