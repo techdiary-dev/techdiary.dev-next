@@ -86,13 +86,12 @@ export async function createMyArticle(
 
 export const getUniqueArticleHandle = async (title: string) => {
   try {
-    const [article] = await articleRepository.findRows({
+    const count = await articleRepository.findRowCount({
       where: eq("handle", slugify(title)),
       columns: ["id", "handle"],
-      limit: 1,
     });
-    if (article) {
-      return `${slugify(title)}-${generateRandomString(5)}`;
+    if (count) {
+      return `${slugify(title)}-${count + 1}`;
     }
     return slugify(title);
   } catch (error) {

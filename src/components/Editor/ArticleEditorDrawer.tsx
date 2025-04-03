@@ -31,6 +31,7 @@ import {
   SheetHeader,
 } from "../ui/sheet";
 import { Textarea } from "../ui/textarea";
+import { InputTags } from "../ui/input-tags";
 
 interface Props {
   article: Article;
@@ -169,7 +170,7 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
                         click-through-rates.
                       </FormDescription>
                       <FormControl>
-                        <Input {...field} />
+                        <Input {...field} placeholder={form.watch("handle")} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -207,7 +208,12 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
                         visibility
                       </FormDescription>
                       <FormControl>
-                        <Textarea {...field} />
+                        <InputTags
+                          value={[]}
+                          onChange={(e) => {
+                            console.log(e);
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

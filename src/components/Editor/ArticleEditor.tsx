@@ -284,14 +284,16 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         </div>
       </div>
 
-      <ArticleEditorDrawer
-        article={article!}
-        open={isOpenSettingDrawer}
-        onClose={toggleSettingDrawer}
-        onSave={function (): void {
-          throw new Error("Function not implemented.");
-        }}
-      />
+      {uuid && (
+        <ArticleEditorDrawer
+          article={article!}
+          open={isOpenSettingDrawer}
+          onClose={toggleSettingDrawer}
+          onSave={function (): void {
+            throw new Error("Function not implemented.");
+          }}
+        />
+      )}
     </>
   );
 };
