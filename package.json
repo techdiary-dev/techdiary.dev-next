@@ -27,7 +27,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "jotai": "^2.12.2",
-    "next": "^15.2.3",
+    "next": "^15.2.4",
     "react": "^19",
     "react-dom": "^19",
     "react-hook-form": "^7.54.2",
