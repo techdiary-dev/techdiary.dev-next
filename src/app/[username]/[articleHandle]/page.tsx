@@ -57,6 +57,8 @@ const Page: NextPage<ArticlePageProps> = async ({ params }) => {
             <Image
               src={article?.user?.profile_photo ?? ""}
               alt={article?.user?.username ?? ""}
+              width={40}
+              height={40}
               className="w-full h-full object-cover transition-opacity duration-300 ease-in-out opacity-100"
             />
           </div>

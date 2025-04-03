@@ -45,6 +45,8 @@ const UserInformationCard: React.FC<Props> = ({ userId }) => {
           <Image
             src={profileData.avatarUrl ?? ""}
             alt={profileData.name ?? ""}
+            width={56}
+            height={56}
             className="w-14 h-14 rounded-full object-cover border-2 border-white/90 shadow-md"
           />
         </div>

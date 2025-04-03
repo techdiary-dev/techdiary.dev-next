@@ -49,8 +49,11 @@ const ArticleCard = ({
       <HoverCard>
         <HoverCardTrigger>
           <div className="mb-4 flex items-center">
-            <div className="relative rounded-full overflow-hidden border border-neutral-200 bg-neutral-100 transition-transform duration-300 w-8 h-8 opacity-100">
+            <div className="relative rounded-full overflow-hidden border border-neutral-200 bg-neutral-100 transition-transform duration-300 size-8 opacity-100">
               <Image
+                width={32}
+                height={32}
+                unoptimized
                 src={author.avatar ?? ""}
                 alt={author.name ?? ""}
                 className="w-full h-full object-cover transition-opacity duration-300 ease-in-out opacity-100"
@@ -97,6 +100,8 @@ const ArticleCard = ({
               <Image
                 src={coverImage}
                 alt={title}
+                width={1200}
+                height={630}
                 className="h-full w-full object-cover transition-all duration-700 opacity-100 scale-100"
               />
             </div>

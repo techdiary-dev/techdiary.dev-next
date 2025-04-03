@@ -24,6 +24,8 @@ const ProfilePageAside: React.FC<ProfilePageAsideProps> = ({ profile }) => {
     <div>
       <Image
         className="w-[28%] md:w-full rounded"
+        width={280}
+        height={280}
         src={
           profile?.profile_photo ||
           `https://api.dicebear.com/8.x/initials/svg?seed=${profile?.username}`

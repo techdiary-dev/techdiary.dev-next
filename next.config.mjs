@@ -12,6 +12,22 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "avatars.githubusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars2.githubusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "h3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
         hostname: "images.ctfassets.net",
       },
       {

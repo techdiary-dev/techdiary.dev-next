@@ -30,12 +30,14 @@ export default LatestUsers;
 const UserItem = ({ user }: { user: User }) => (
   <div className="flex items-center">
     <Link href={`/@${user.username}`}>
-      <div className="h-10 w-10 overflow-hidden rounded-full">
+      <div className="size-10 overflow-hidden rounded-full">
         <Image
           src={user?.profile_photo!}
           alt={user?.name!}
           loading="lazy"
           className="h-auto w-full"
+          width={40}
+          height={40}
         />
       </div>
     </Link>
