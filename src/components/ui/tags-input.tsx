@@ -1,8 +1,7 @@
-import * as React from "react";
-import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { X } from "lucide-react";
+import * as React from "react";
 
 export interface TagInputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -43,11 +42,12 @@ export function TagInput({
 
   const removeTag = (tagToRemove: string) => {
     const newTags = tags.filter((tag) => tag !== tagToRemove);
+    console.log({ newTags });
     onTagsChange?.(newTags);
   };
 
   const handleWrapperClick = () => {
-    inputRef.current?.focus();
+    // inputRef.current?.focus();
   };
 
   return (
@@ -58,7 +58,7 @@ export function TagInput({
       )}
       onClick={handleWrapperClick}
     >
-      <div className="flex flex-wrap gap-1">
+      <div className="flex gap-1 flex-wrap">
         {tags.map((tag) => (
           <Badge
             key={tag}
@@ -66,23 +66,24 @@ export function TagInput({
             className="flex items-center gap-1 select-none"
           >
             {tag}
-            <X
-              className="h-3 w-3 cursor-pointer hover:text-destructive"
+            <button
               onClick={(e) => {
                 e.stopPropagation();
                 removeTag(tag);
               }}
-            />
+            >
+              <X className="h-3 w-3 cursor-pointer hover:text-destructive" />
+            </button>
           </Badge>
         ))}
-        <Input
+        <input
           ref={inputRef}
           type="text"
           value={inputValue}
           onChange={handleInputChange}
           onKeyDown={handleKeyDown}
-          className="flex-1 !m-0 !p-0 !border-none !outline-none !ring-0 !ring-offset-0 focus-visible:!ring-0 focus-visible:!ring-offset-0"
-          placeholder={tags.length === 0 ? placeholder : ""}
+          placeholder={"Type and press enter..."}
+          className="focus:outline-none"
           {...props}
         />
       </div>
