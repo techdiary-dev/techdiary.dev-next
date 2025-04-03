@@ -30,6 +30,7 @@
     "@radix-ui/react-tooltip": "^1.1.8",
     "@sentry/nextjs": "^9.11.0",
     "@t3-oss/env-nextjs": "^0.12.0",
+    "@tailwindcss/postcss": "^4.1.1",
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/react-query": "^5.69.0",
     "badge": "^1.0.3",
@@ -67,7 +68,7 @@
     "postcss-import": "^16.1.0",
     "postcss-nesting": "^13.0.1",
     "prettier": "^3.5.3",
-    "tailwindcss": "^4.0.15",
+    "tailwindcss": "^4.1.1",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   }
