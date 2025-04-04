@@ -3,6 +3,7 @@
 import { Article } from "@/backend/models/domain-models";
 import * as articleActions from "@/backend/services/article.actions";
 import { ArticleRepositoryInput } from "@/backend/services/inputs/article.input";
+import MultipleSelector, { Option } from "@/components/ui/multi-select";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { useTranslation } from "@/i18n/use-translation";
 import { useSession } from "@/store/session.atom";
@@ -26,7 +27,6 @@ import {
 import { Input } from "../ui/input";
 import { InputTags } from "../ui/input-tags";
 import { Sheet, SheetContent } from "../ui/sheet";
-import { TagInput } from "../ui/tags-input";
 import { Textarea } from "../ui/textarea";
 
 interface Props {
@@ -77,6 +77,20 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
     },
     resolver: zodResolver(ArticleRepositoryInput.updateMyArticleInput),
   });
+
+  const OPTIONS: Option[] = [
+    { label: "nextjs", value: "Nextjs" },
+    { label: "Vite", value: "vite", disable: true },
+    { label: "Nuxt", value: "nuxt", disable: true },
+    { label: "Vue", value: "vue, disable: true", disable: true },
+    { label: "Remix", value: "remix" },
+    { label: "Svelte", value: "svelte", disable: true },
+    { label: "Angular", value: "angular", disable: true },
+    { label: "Ember", value: "ember", disable: true },
+    { label: "React", value: "react" },
+    { label: "Gatsby", value: "gatsby", disable: true },
+    { label: "Astro", value: "astro", disable: true },
+  ];
 
   const handleOnSubmit: SubmitHandler<
     z.infer<typeof ArticleRepositoryInput.updateMyArticleInput>
@@ -194,7 +208,7 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
                     </FormItem>
                   )}
                 />
-
+                {/* 
                 <FormField
                   control={form.control}
                   name="metadata.seo.keywords"
@@ -216,9 +230,17 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
 
-                <TagInput tags={tags ?? []} onTagsChange={setTags} />
+                <MultipleSelector
+                  defaultOptions={OPTIONS}
+                  placeholder="Select frameworks you like..."
+                  emptyIndicator={
+                    <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
+                      no results found.
+                    </p>
+                  }
+                />
               </div>
 
               <Button>{_t("Save")}</Button>
