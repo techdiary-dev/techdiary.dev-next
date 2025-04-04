@@ -78,20 +78,6 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
     resolver: zodResolver(ArticleRepositoryInput.updateMyArticleInput),
   });
 
-  const OPTIONS: Option[] = [
-    { label: "nextjs", value: "Nextjs" },
-    { label: "Vite", value: "vite", disable: true },
-    { label: "Nuxt", value: "nuxt", disable: true },
-    { label: "Vue", value: "vue, disable: true", disable: true },
-    { label: "Remix", value: "remix" },
-    { label: "Svelte", value: "svelte", disable: true },
-    { label: "Angular", value: "angular", disable: true },
-    { label: "Ember", value: "ember", disable: true },
-    { label: "React", value: "react" },
-    { label: "Gatsby", value: "gatsby", disable: true },
-    { label: "Astro", value: "astro", disable: true },
-  ];
-
   const handleOnSubmit: SubmitHandler<
     z.infer<typeof ArticleRepositoryInput.updateMyArticleInput>
   > = (payload) => {
@@ -191,6 +177,38 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
 
                 <FormField
                   control={form.control}
+                  name="metadata.seo.keywords"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{_t("SEO Keywords")}</FormLabel>
+                      <FormDescription className="text-xs">
+                        Put some relevent keywords for better search engine
+                        visibility.
+                      </FormDescription>
+                      <FormControl>
+                        <MultipleSelector
+                          creatable
+                          maxSelected={10}
+                          value={
+                            field.value?.map((option) => ({
+                              label: option,
+                              value: option,
+                            })) ?? []
+                          }
+                          onChange={(options) => {
+                            field.onChange(
+                              options.map((option) => option.value)
+                            );
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
                   name="metadata.seo.description"
                   render={({ field }) => (
                     <FormItem>
@@ -231,16 +249,6 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
                     </FormItem>
                   )}
                 /> */}
-
-                <MultipleSelector
-                  defaultOptions={OPTIONS}
-                  placeholder="Select frameworks you like..."
-                  emptyIndicator={
-                    <p className="text-center text-lg leading-10 text-gray-600 dark:text-gray-400">
-                      no results found.
-                    </p>
-                  }
-                />
               </div>
 
               <Button>{_t("Save")}</Button>
