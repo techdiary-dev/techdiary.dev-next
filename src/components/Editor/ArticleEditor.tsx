@@ -16,34 +16,21 @@ import {
 import React, { useRef } from "react";
 
 import { ArticleRepositoryInput } from "@/backend/services/inputs/article.input";
-import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
-import { useClickAway } from "@/hooks/use-click-away";
-import {
-  formattedRelativeTime,
-  formattedTime,
-  zodErrorToString,
-} from "@/lib/utils";
+import { useAutosizeTextArea } from "@/hooks/use-auto-resize-textarea";
+import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
+import { useToggle } from "@/hooks/use-toggle";
+import { formattedTime } from "@/lib/utils";
+import { markdownToHtml } from "@/utils/markdoc-parser";
 import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useAppConfirm } from "../app-confirm";
+import ArticleEditorDrawer from "./ArticleEditorDrawer";
 import EditorCommandButton from "./EditorCommandButton";
 import { useMarkdownEditor } from "./useMarkdownEditor";
-import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
-import { markdownToHtml } from "@/utils/markdoc-parser";
-import { useAppConfirm } from "../app-confirm";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "../ui/sheet";
-import { useToggle } from "@/hooks/use-toggle";
-import ArticleEditorDrawer from "./ArticleEditorDrawer";
 
 interface Prop {
   uuid?: string;
@@ -55,9 +42,8 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
   const router = useRouter();
   const [isOpenSettingDrawer, toggleSettingDrawer] = useToggle();
   const appConfig = useAppConfirm();
-  const titleRef = useRef<HTMLTextAreaElement | null>(null);
+  const titleRef = useRef<HTMLTextAreaElement>(null!);
   const bodyRef = useRef<HTMLTextAreaElement | null>(null);
-  useAutoResizeTextarea(titleRef);
   const setDebouncedTitle = useDebouncedCallback(() => handleSaveTitle(), 1000);
   const setDebouncedBody = useDebouncedCallback(() => handleSaveBody(), 1000);
 
@@ -71,6 +57,8 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     },
     resolver: zodResolver(ArticleRepositoryInput.updateArticleInput),
   });
+
+  useAutosizeTextArea(titleRef, editorForm.watch("title") ?? "");
 
   const editor = useMarkdownEditor({ ref: bodyRef });
 
@@ -226,6 +214,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
           placeholder={_t("Title")}
           tabIndex={1}
           autoFocus
+          rows={1}
           value={editorForm.watch("title")}
           className="w-full text-2xl focus:outline-none bg-background resize-none"
           ref={titleRef}
@@ -257,7 +246,6 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
             />
           </div>
         </div>
-
         {/* Editor Textarea */}
         <div className="w-full">
           {editorMode === "write" ? (
