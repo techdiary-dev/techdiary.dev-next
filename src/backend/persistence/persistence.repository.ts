@@ -33,7 +33,7 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
     const nodes = await this.findRows({
       limit: _limit,
       offset: _offset,
-      columns: payload?.columns || [],
+      columns: payload?.columns,
       where: payload?.where || undefined,
       orderBy: payload?.orderBy || [],
       joins: payload?.joins || [],
@@ -65,7 +65,7 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
     const columns =
       payload.columns
         ?.map((col) => `${this.tableName}.${col.toString()}`)
-        .join(",") ?? "*";
+        .join(",") ?? `${this.tableName}.*`;
     const { whereClause, values } = buildWhereClause(payload.where);
     const orderByClause = buildOrderByClause(payload?.orderBy);
     const { joinConditionClause, joinSelectClause } = buildJoinClause(

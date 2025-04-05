@@ -1,6 +1,7 @@
 import {
   AnyPgColumn,
   boolean,
+  integer,
   json,
   jsonb,
   pgTable,
@@ -11,6 +12,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { IServerFile } from "../models/domain-models";
+import { index } from "drizzle-orm/gel-core";
 
 export const usersTable = pgTable("users", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -62,6 +64,33 @@ export const userFollowsTable = pgTable("user_follows", {
   followee_id: uuid("followee_id")
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),
+  created_at: timestamp("created_at"),
+  updated_at: timestamp("updated_at"),
+});
+
+export const seriesTable = pgTable("series", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  title: varchar("title").notNull(),
+  handle: varchar("handle"),
+  cover_image: jsonb("cover_image").$type<IServerFile>(),
+  owner_id: uuid("owner_id")
+    .notNull()
+    .references(() => usersTable.id, { onDelete: "cascade" }),
+  created_at: timestamp("created_at"),
+  updated_at: timestamp("updated_at"),
+});
+
+export const seriesItemsTable = pgTable("series_items", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  series_id: uuid("series_id")
+    .notNull()
+    .references(() => seriesTable.id, { onDelete: "cascade" }),
+  type: varchar("type").notNull(), // title, article
+  title: varchar("title"),
+  article_id: uuid("article_id").references(() => articlesTable.id, {
+    onDelete: "cascade",
+  }),
+  index: integer("index").notNull().default(0),
   created_at: timestamp("created_at"),
   updated_at: timestamp("updated_at"),
 });

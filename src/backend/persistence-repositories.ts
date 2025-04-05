@@ -1,4 +1,11 @@
-import { Article, User, UserSession, UserSocial } from "./models/domain-models";
+import {
+  Article,
+  Series,
+  SeriesItem,
+  User,
+  UserSession,
+  UserSocial,
+} from "./models/domain-models";
 import { pgClient } from "./persistence/database-drivers/pg.client";
 import { PersistentRepository } from "./persistence/persistence.repository";
 
@@ -17,9 +24,18 @@ export const userSessionRepository = new PersistentRepository<UserSession>(
   pgClient
 );
 
+const seriesRepository = new PersistentRepository<Series>("series", pgClient);
+
+const seriesItemsRepository = new PersistentRepository<SeriesItem>(
+  "series_items",
+  pgClient
+);
+
 export const persistenceRepository = {
   user: userRepository,
   userSocial: userSocialRepository,
   userSession: userSessionRepository,
   article: articleRepository,
+  series: seriesRepository,
+  seriesItems: seriesItemsRepository,
 };

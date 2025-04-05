@@ -1,0 +1,1 @@
+ALTER TABLE "series" ALTER COLUMN "handle" DROP NOT NULL;

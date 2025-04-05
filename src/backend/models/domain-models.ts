@@ -67,3 +67,26 @@ export interface Article {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface Series {
+  id: string;
+  title: string;
+  handle: string;
+  cover_image?: IServerFile | null;
+  owner_id: string;
+  owner?: User | null;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface SeriesItem {
+  id: string;
+  series_id: string;
+  type: "TITLE" | "ARTICLE";
+  title?: string | null;
+  article_id?: string | null;
+  article?: Article | null;
+  index: number;
+  created_at: Date;
+  updated_at: Date;
+}
