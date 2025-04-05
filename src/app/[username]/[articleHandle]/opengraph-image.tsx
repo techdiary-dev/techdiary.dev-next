@@ -57,14 +57,26 @@ export default async function Image(options: ArticlePageProps) {
           width: "100%",
         }}
       >
-        <h2
+        <div
           style={{
-            fontSize: 32,
-            padding: 30,
+            display: "flex",
+            textAlign: "center",
+            background: "rgb(54%, 61%, 100%)",
+            justifyContent: "center",
+            alignItems: "center",
+            flex: 1,
           }}
         >
-          {article.title}
-        </h2>
+          <h2
+            style={{
+              fontSize: 40,
+              padding: 30,
+              color: "white",
+            }}
+          >
+            {article.title}
+          </h2>
+        </div>
 
         <div
           style={{
