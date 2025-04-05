@@ -14,17 +14,13 @@ const UserProfilePage: React.FC<UserProfilePageProps> = async ({ params }) => {
     : _params.username.toLowerCase();
 
   const profile = await getUserByUsername(username, ["profile_readme"]);
-  // return <pre>{JSON.stringify(profile, null, 2)}</pre>;
 
   return (
     <main className="border rounded-bl-2xl rounded-br-2xl md:col-span-9 col-span-full">
       {profile?.profile_readme ? (
-        <div
-          dangerouslySetInnerHTML={{
-            __html: markdocParser(profile?.profile_readme ?? ""),
-          }}
-          className="p-3 content-typography"
-        ></div>
+        <div className="p-3 content-typography">
+          {markdocParser(profile?.profile_readme ?? "")}
+        </div>
       ) : (
         <div className="py-10 flex flex-col items-center justify-center gap-4">
           <Image

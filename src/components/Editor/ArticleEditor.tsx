@@ -269,12 +269,9 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
               onChange={handleBodyContentChange}
             ></textarea>
           ) : (
-            <div
-              className="content-typography"
-              dangerouslySetInnerHTML={{
-                __html: markdocParser(editorForm.watch("body") ?? ""),
-              }}
-            />
+            <div className="content-typography">
+              {markdocParser(editorForm.watch("body") ?? "")}
+            </div>
           )}
         </div>
       </div>
