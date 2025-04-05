@@ -2,11 +2,11 @@
 
 import { useTranslation } from "@/i18n/use-translation";
 import { formattedTime } from "@/lib/utils";
+import Image from "next/image";
 import Link from "next/link";
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "./ui/hover-card";
 import UserInformationCard from "./UserInformationCard";
-import Image from "next/image";
 
 interface ArticleCardProps {
   id: string;

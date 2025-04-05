@@ -60,7 +60,10 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
 
   useAutosizeTextArea(titleRef, editorForm.watch("title") ?? "");
 
-  const editor = useMarkdownEditor({ ref: bodyRef });
+  const editor = useMarkdownEditor({
+    ref: bodyRef,
+    onChange: handleBodyContentChange,
+  });
 
   const updateMyArticleMutation = useMutation({
     mutationFn: (
@@ -125,6 +128,14 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
       }
     }
   };
+
+  function handleBodyContentChange(
+    e: React.ChangeEvent<HTMLTextAreaElement> | string
+  ) {
+    const value = typeof e === "string" ? e : e.target.value;
+    editorForm.setValue("body", value);
+    setDebouncedBody(value);
+  }
 
   return (
     <>
@@ -255,11 +266,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
               placeholder={_t("Write something stunning...")}
               ref={bodyRef}
               value={editorForm.watch("body")}
-              onChange={(e) => {
-                console.log({ value: e.target.value });
-                editorForm.setValue("body", e.target.value);
-                setDebouncedBody(e.target.value);
-              }}
+              onChange={handleBodyContentChange}
             ></textarea>
           ) : (
             <div

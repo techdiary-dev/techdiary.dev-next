@@ -12,6 +12,7 @@ type MarkdownCommand =
 interface Options {
   value?: string;
   ref?: React.RefObject<HTMLTextAreaElement | null>;
+  onChange?: (value: string) => void;
 }
 
 export function useMarkdownEditor(options?: Options) {
@@ -22,8 +23,6 @@ export function useMarkdownEditor(options?: Options) {
     if (!textareaRef.current) return;
     const { selectionStart, selectionEnd } = textareaRef.current;
     let updatedValue = textareaRef.current.value;
-
-    console.log({ updatedValue, selectionStart, selectionEnd });
 
     switch (command) {
       case "heading":
@@ -52,9 +51,10 @@ export function useMarkdownEditor(options?: Options) {
         break;
     }
     textareaRef.current.value = updatedValue;
-    // Trigger input event to notify changes
-    const event = new Event("change", { bubbles: true });
-    textareaRef.current.dispatchEvent(event);
+
+    if (options?.onChange) {
+      options.onChange(updatedValue);
+    }
 
     textareaRef.current.focus();
   };
