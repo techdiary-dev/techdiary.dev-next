@@ -41,6 +41,7 @@ const Page: NextPage<ArticlePageProps> = async ({ params }) => {
       image: article?.user?.profile_photo,
       url: `https://www.techdiary.dev/@${article?.user?.username}`,
     },
+    articleBody: removeMarkdownSyntax(article?.body ?? "", 10000),
   };
 
   if (!article) {
