@@ -41,7 +41,7 @@ const ArticleCard = ({
   const { lang } = useTranslation();
 
   const articleUrl = useMemo(() => {
-    return `/${author.username}/${handle}`;
+    return `/@${author.username}/${handle}`;
   }, [author.username, handle]);
 
   return (
@@ -95,7 +95,7 @@ const ArticleCard = ({
         </div>
 
         {coverImage && (
-          <a href={articleUrl} className="block">
+          <Link href={articleUrl} className="block">
             <div className="relative mt-4 overflow-hidden rounded-md aspect-[16/9]">
               <Image
                 src={coverImage}
@@ -105,7 +105,7 @@ const ArticleCard = ({
                 className="h-full w-full object-cover transition-all duration-700 opacity-100 scale-100"
               />
             </div>
-          </a>
+          </Link>
         )}
       </div>
       {/* <div className="mt-4 flex items-center justify-between">
