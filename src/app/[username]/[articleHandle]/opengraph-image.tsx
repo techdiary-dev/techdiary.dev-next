@@ -69,7 +69,7 @@ export default async function Image(options: ArticlePageProps) {
         >
           <h2
             style={{
-              fontSize: 40,
+              fontSize: 45,
               padding: 30,
               color: "white",
             }}
