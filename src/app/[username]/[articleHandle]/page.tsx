@@ -32,6 +32,13 @@ export async function generateMetadata(
     limit: 1,
   });
 
+  if (!article.cover_image) {
+    return {
+      title: article.title,
+      description: removeMarkdownSyntax(article.body ?? "", 20),
+    };
+  }
+
   return {
     title: article.title,
     description: removeMarkdownSyntax(
