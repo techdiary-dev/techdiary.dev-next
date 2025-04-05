@@ -4,23 +4,50 @@ import AppImage from "@/components/AppImage";
 import type { Article, WithContext } from "schema-dts";
 import HomepageLayout from "@/components/layout/HomepageLayout";
 import { readingTime, removeMarkdownSyntax } from "@/lib/utils";
-import { markdownToHtml } from "@/utils/markdoc-parser";
-import { Metadata, NextPage } from "next";
+import { markdocParser } from "@/utils/markdoc-parser";
+import { Metadata, NextPage, ResolvingMetadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ArticleSidebar from "./_components/ArticleSidebar";
 import getFileUrl from "@/utils/getFileUrl";
-
-export const metadata: Metadata = {
-  title: "Article detail",
-};
+import { persistenceRepository } from "@/backend/persistence-repositories";
+import { eq } from "@/backend/persistence/persistence-where-operator";
 
 interface ArticlePageProps {
   params: Promise<{
     username: string;
     articleHandle: string;
   }>;
+}
+
+export async function generateMetadata(
+  { params }: ArticlePageProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  // read route params
+  const { articleHandle } = await params;
+  const [article] = await persistenceRepository.article.findRows({
+    where: eq("handle", articleHandle),
+    columns: ["title", "excerpt", "cover_image", "body"],
+    limit: 1,
+  });
+
+  return {
+    title: article.title,
+    description: removeMarkdownSyntax(
+      article.excerpt ?? article.body ?? "",
+      20
+    ),
+    openGraph: {
+      images: [
+        {
+          url: getFileUrl(article.cover_image),
+          alt: article.title,
+        },
+      ],
+    },
+  };
 }
 
 const Page: NextPage<ArticlePageProps> = async ({ params }) => {
@@ -48,7 +75,7 @@ const Page: NextPage<ArticlePageProps> = async ({ params }) => {
     throw notFound();
   }
 
-  const parsedHTML = markdownToHtml(article?.body ?? "");
+  const parsedHTML = markdocParser(article?.body ?? "");
 
   return (
     <>
@@ -117,10 +144,7 @@ const Page: NextPage<ArticlePageProps> = async ({ params }) => {
             <h1 className="text-2xl font-bold">{article?.title ?? ""}</h1>
           </div>
 
-          <div
-            className="mx-auto content-typography"
-            dangerouslySetInnerHTML={{ __html: parsedHTML }}
-          ></div>
+          <div className="mx-auto content-typography">{parsedHTML}</div>
         </div>
       </HomepageLayout>
     </>

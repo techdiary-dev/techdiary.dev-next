@@ -1,6 +1,6 @@
 import { getUserByUsername } from "@/backend/services/user.action";
 import _t from "@/i18n/_t";
-import { markdownToHtml } from "@/utils/markdoc-parser";
+import { markdocParser } from "@/utils/markdoc-parser";
 import Image from "next/image";
 import React from "react";
 
@@ -21,7 +21,7 @@ const UserProfilePage: React.FC<UserProfilePageProps> = async ({ params }) => {
       {profile?.profile_readme ? (
         <div
           dangerouslySetInnerHTML={{
-            __html: markdownToHtml(profile?.profile_readme ?? ""),
+            __html: markdocParser(profile?.profile_readme ?? ""),
           }}
           className="p-3 content-typography"
         ></div>

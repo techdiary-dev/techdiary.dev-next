@@ -20,7 +20,7 @@ import { useAutosizeTextArea } from "@/hooks/use-auto-resize-textarea";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { useToggle } from "@/hooks/use-toggle";
 import { formattedTime } from "@/lib/utils";
-import { markdownToHtml } from "@/utils/markdoc-parser";
+import { markdocParser } from "@/utils/markdoc-parser";
 import { useMutation } from "@tanstack/react-query";
 import clsx from "clsx";
 import Link from "next/link";
@@ -272,7 +272,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
             <div
               className="content-typography"
               dangerouslySetInnerHTML={{
-                __html: markdownToHtml(editorForm.watch("body") ?? ""),
+                __html: markdocParser(editorForm.watch("body") ?? ""),
               }}
             />
           )}
