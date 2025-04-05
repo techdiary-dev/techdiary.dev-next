@@ -29,7 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .map((article) => {
       let url = "null";
       if (article?.handle) {
-        url = `https://www.techdiary.dev/${article.user?.username}/${article?.handle}`;
+        url = `https://www.techdiary.dev/@${article.user?.username}/${article?.handle}`;
       }
 
       return {
