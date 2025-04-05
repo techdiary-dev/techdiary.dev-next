@@ -1,0 +1,14 @@
+# Primary (www) domain with reverse proxy
+caddy_0=https://www.techdiary.dev
+caddy_0.handle_path=/*
+caddy_0.handle_path.0_reverse_proxy={{upstreams 3000}}
+caddy_0.encode=zstd gzip
+caddy_0.try_files={path} /index.html /index.php
+caddy_0.header=-Server
+
+# Redirect non-www to www
+caddy_1=https://techdiary.dev
+caddy_1.redir=https://www.techdiary.dev{uri}
+
+# Set Docker network for Caddy to access the app
+caddy_ingress_network=coolify
