@@ -22,11 +22,10 @@ interface ArticlePageProps {
 }
 
 export async function generateMetadata(
-  { params }: ArticlePageProps,
-  parent: ResolvingMetadata
+  options: ArticlePageProps
 ): Promise<Metadata> {
   // read route params
-  const { articleHandle } = await params;
+  const { articleHandle } = await options.params;
   const [article] = await persistenceRepository.article.findRows({
     where: eq("handle", articleHandle),
     columns: ["title", "excerpt", "cover_image", "body"],
