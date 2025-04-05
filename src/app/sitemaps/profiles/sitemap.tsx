@@ -9,7 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return profiles.map((profile) => {
     return {
-      url: `https://www.techdiary.dev/${profile.username}`,
+      url: `https://www.techdiary.dev/@${profile.username}`,
       lastModified: profile?.updated_at,
       changeFrequency: "weekly",
       priority: 1,
