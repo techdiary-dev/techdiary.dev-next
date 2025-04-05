@@ -186,12 +186,12 @@ export function desc<T>(key: keyof T): IPersistentOrderBy<T> {
   };
 }
 
-export function joinTable<T, U>(payload: {
+export function joinTable<LOCAL_MODEL, FOREIGN_MODEL>(payload: {
   as: string;
   joinTo: string;
-  localField: keyof T;
-  foreignField: keyof U;
-  columns: Array<keyof U>;
+  localField: keyof LOCAL_MODEL;
+  foreignField: keyof FOREIGN_MODEL;
+  columns: Array<keyof FOREIGN_MODEL>;
 }): IPersistenceJoin {
   return {
     as: payload.as,
