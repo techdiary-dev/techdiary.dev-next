@@ -48,7 +48,7 @@ export async function bootSocialUser(
     const [userSocial] = await persistenceRepository.userSocial.findRows({
       where: and(
         eq("service", input.service),
-        eq("service_uid", input.service)
+        eq("service_uid", input.service_uid)
       ),
       columns: ["id", "service", "service_uid", "user_id"],
       limit: 1,
