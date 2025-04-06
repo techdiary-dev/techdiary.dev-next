@@ -1,6 +1,7 @@
 "use server";
 
-import { generateRandomString, removeMarkdownSyntax } from "@/lib/utils";
+import { slugify } from "@/lib/slug-helper.util";
+import { removeMarkdownSyntax } from "@/lib/utils";
 import { z } from "zod";
 import { Article, User } from "../models/domain-models";
 import { pgClient } from "../persistence/database-drivers/pg.client";
@@ -18,7 +19,6 @@ import {
 } from "./RepositoryException";
 import { ArticleRepositoryInput } from "./inputs/article.input";
 import { getSessionUserId } from "./session.actions";
-import { slugify } from "@/lib/slug-helper.util";
 
 const articleRepository = new PersistentRepository<Article>(
   "articles",

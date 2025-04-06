@@ -2,10 +2,10 @@
 
 import * as articleActions from "@/backend/services/article.actions";
 import ArticleCard from "@/components/ArticleCard";
+import VisibilitySensor from "@/components/VisibilitySensor";
 import { readingTime } from "@/lib/utils";
 import getFileUrl from "@/utils/getFileUrl";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import VisibilitySensor from "@/components/VisibilitySensor";
 
 const ArticleFeed = () => {
   const feedInfiniteQuery = useInfiniteQuery({
@@ -14,6 +14,7 @@ const ArticleFeed = () => {
       articleActions.articleFeed({ limit: 5, page: pageParam }),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
+      if (!lastPage?.meta.hasNextPage) return undefined;
       const _page = lastPage?.meta?.currentPage ?? 1;
       return _page + 1;
     },
