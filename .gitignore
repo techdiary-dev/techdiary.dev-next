@@ -5,6 +5,7 @@
 /.pnp
 .pnp.js
 yarn.lock
+pnpm-lock.yaml
 .yarn/cache
 bun.lockb
 .yarn/install-state.gz
