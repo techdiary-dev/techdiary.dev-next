@@ -12,7 +12,6 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 import { IServerFile } from "../models/domain-models";
-import { index } from "drizzle-orm/gel-core";
 
 export const usersTable = pgTable("users", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -33,7 +32,7 @@ export const usersTable = pgTable("users", {
 });
 
 export const userSocialsTable = pgTable("user_socials", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   service: varchar("service").notNull(),
   service_uid: varchar("service_uid").notNull(),
   user_id: uuid("user_id")
@@ -57,7 +56,7 @@ export const userSessionsTable = pgTable("user_sessions", {
 });
 
 export const userFollowsTable = pgTable("user_follows", {
-  id: serial("id").primaryKey(),
+  id: uuid("id").defaultRandom().primaryKey(),
   follower_id: uuid("follower_id")
     .notNull()
     .references(() => usersTable.id, { onDelete: "cascade" }),

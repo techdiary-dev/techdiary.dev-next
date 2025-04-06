@@ -1,3 +1,3 @@
 import { atom } from "jotai";
 
-export const i18nLangAtom = atom<"en" | "bn" | null>(null);
+export const i18nLangAtom = atom<"en" | "bn">("bn");

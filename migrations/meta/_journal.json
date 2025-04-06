@@ -197,6 +197,20 @@
       "when": 1743863306485,
       "tag": "0027_small_yellow_claw",
       "breakpoints": true
+    },
+    {
+      "idx": 28,
+      "version": "7",
+      "when": 1743919426607,
+      "tag": "0028_redundant_landau",
+      "breakpoints": true
+    },
+    {
+      "idx": 29,
+      "version": "7",
+      "when": 1743919570807,
+      "tag": "0029_blushing_roland_deschain",
+      "breakpoints": true
     }
   ]
 }
