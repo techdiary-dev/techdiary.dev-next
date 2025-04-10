@@ -10,7 +10,9 @@ import {
   desc,
   eq,
   joinTable,
+  like,
   neq,
+  or,
 } from "../persistence/persistence-where-operator";
 import { PersistentRepository } from "../persistence/persistence.repository";
 import {
@@ -84,18 +86,86 @@ export async function createMyArticle(
   }
 }
 
-export const getUniqueArticleHandle = async (title: string) => {
+export const getUniqueArticleHandle = async (
+  title: string,
+  ignoreArticleId?: string
+) => {
   try {
-    const count = await articleRepository.findRowCount({
-      where: eq("handle", slugify(title)),
-      columns: ["id", "handle"],
-    });
-    if (count) {
-      return `${slugify(title)}-${count + 1}`;
+    // Slugify the title first
+    const baseHandle = slugify(title);
+
+    // If we have an ignoreArticleId, check if this article already exists
+    if (ignoreArticleId) {
+      const [existingArticle] = await articleRepository.findRows({
+        where: eq("id", ignoreArticleId),
+        columns: ["id", "handle"],
+        limit: 1,
+      });
+
+      // If the article exists and its handle is already the slugified title,
+      // we can just return that handle (no need to append a number)
+      if (existingArticle && existingArticle.handle === baseHandle) {
+        return baseHandle;
+      }
     }
-    return slugify(title);
+
+    // Find all articles with the same base handle or handles that have numeric suffixes
+    const handlePattern = `${baseHandle}-%`;
+    let baseHandleWhereClause: any = eq<Article, keyof Article>(
+      "handle",
+      baseHandle
+    );
+    let suffixWhereClause: any = like<Article>("handle", handlePattern);
+
+    let whereClause: any = or(baseHandleWhereClause, suffixWhereClause);
+
+    if (ignoreArticleId) {
+      whereClause = and(
+        whereClause,
+        neq<Article, keyof Article>("id", ignoreArticleId)
+      );
+    }
+
+    // Get all existing handles that match our patterns
+    const existingArticles = await articleRepository.findRows({
+      where: whereClause,
+      columns: ["handle"],
+    });
+
+    // If no existing handles found, return the base handle
+    if (existingArticles.length === 0) {
+      return baseHandle;
+    }
+
+    // Check if the exact base handle exists
+    const exactBaseExists = existingArticles.some(
+      (article) => article.handle === baseHandle
+    );
+
+    // If the exact base handle doesn't exist, we can use it
+    if (!exactBaseExists) {
+      return baseHandle;
+    }
+
+    // Find the highest numbered suffix
+    let highestNumber = 1;
+    const regex = new RegExp(`^${baseHandle}-(\\d+)$`);
+
+    existingArticles.forEach((article) => {
+      const match = article.handle.match(regex);
+      if (match) {
+        const num = parseInt(match[1], 10);
+        if (num >= highestNumber) {
+          highestNumber = num + 1;
+        }
+      }
+    });
+
+    // Return with the next number in sequence
+    return `${baseHandle}-${highestNumber}`;
   } catch (error) {
     handleRepositoryException(error);
+    throw error;
   }
 };
 
@@ -116,7 +186,9 @@ export async function updateArticle(
       where: eq("id", input.article_id),
       data: {
         title: input.title,
-        handle: input.handle,
+        handle: input.handle
+          ? await getUniqueArticleHandle(input.handle, input.article_id)
+          : undefined,
         excerpt: input.excerpt,
         body: input.body,
         cover_image: input.cover_image,

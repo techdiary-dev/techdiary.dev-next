@@ -1,9 +1,11 @@
-import { slugify } from "@/lib/slug-helper.util";
+import * as articleActions from "@/backend/services/article.actions";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  // const _headers = await headers();
   return NextResponse.json({
-    slug: slugify("কেমন আছেন আপনারা?"),
+    handle: await articleActions.getUniqueArticleHandle(
+      "untitled",
+      "fc6cfc91-f017-4923-9706-8813ae8df621"
+    ),
   });
 }

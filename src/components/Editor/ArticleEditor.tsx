@@ -44,8 +44,14 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
   const appConfig = useAppConfirm();
   const titleRef = useRef<HTMLTextAreaElement>(null!);
   const bodyRef = useRef<HTMLTextAreaElement | null>(null);
-  const setDebouncedTitle = useDebouncedCallback(() => handleSaveTitle(), 1000);
-  const setDebouncedBody = useDebouncedCallback(() => handleSaveBody(), 1000);
+  const setDebouncedTitle = useDebouncedCallback(
+    (title: string) => handleDebouncedSaveTitle(title),
+    1000
+  );
+  const setDebouncedBody = useDebouncedCallback(
+    (body: string) => handleDebouncedSaveBody(body),
+    1000
+  );
 
   const [editorMode, selectEditorMode] = React.useState<"write" | "preview">(
     "write"
@@ -91,39 +97,43 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     },
   });
 
-  const handleSaveTitle = () => {
+  const handleSaveArticleOnBlurTitle = (title: string) => {
     if (!uuid) {
-      if (editorForm.watch("title")) {
+      if (title) {
         articleCreateMutation.mutate({
-          title: editorForm.watch("title") ?? "",
-        });
-      }
-    }
-
-    if (uuid) {
-      if (editorForm.watch("title")) {
-        updateMyArticleMutation.mutate({
-          article_id: uuid,
-          title: editorForm.watch("title") ?? "",
+          title: title ?? "",
         });
       }
     }
   };
 
-  const handleSaveBody = () => {
-    // if (!uuid) {
-    //   if (editorForm.watch("body")) {
-    //     articleCreateMutation.mutate({
-    //       title: editorForm.watch("body") ?? "",
-    //     });
-    //   }
-    // }
-
+  const handleDebouncedSaveTitle = (title: string) => {
     if (uuid) {
-      if (editorForm.watch("body")) {
+      if (title) {
+        updateMyArticleMutation.mutate({
+          title: title ?? "",
+          article_id: uuid,
+        });
+      }
+    }
+  };
+
+  const handleDebouncedSaveBody = (body: string) => {
+    if (uuid) {
+      if (body) {
         updateMyArticleMutation.mutate({
           article_id: uuid,
-          body: editorForm.watch("body") ?? "",
+          handle: article?.handle ?? "untitled",
+          body,
+        });
+      }
+    } else {
+      if (body) {
+        articleCreateMutation.mutate({
+          title: editorForm.watch("title")?.length
+            ? (editorForm.watch("title") ?? "untitled")
+            : "untitled",
+          body,
         });
       }
     }
@@ -229,7 +239,7 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
           value={editorForm.watch("title")}
           className="w-full text-2xl focus:outline-none bg-background resize-none"
           ref={titleRef}
-          onBlur={() => handleSaveTitle()}
+          onBlur={(e) => handleSaveArticleOnBlurTitle(e.target.value)}
           onChange={(e) => {
             editorForm.setValue("title", e.target.value);
             setDebouncedTitle(e.target.value);
