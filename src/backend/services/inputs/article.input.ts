@@ -46,11 +46,15 @@ export const ArticleRepositoryInput = {
     is_published: z.boolean().optional(),
   }),
   updateMyArticleInput: z.object({
-    article_id: z.string(),
+    article_id: z.string(), // Required, unique identifier for the article
+
+    // Optional fields for updating
     title: z.string().optional(),
     handle: z.string().optional(),
     excerpt: z.string().optional(),
     body: z.string().optional(),
+
+    // Optional nested object for cover image
     cover_image: z
       .object({
         key: z.string(),
@@ -58,7 +62,11 @@ export const ArticleRepositoryInput = {
         alt: z.string().optional(),
       })
       .optional(),
+
+    // Optional boolean flag for publish status
     is_published: z.boolean().optional(),
+
+    // Optional metadata object
     metadata: z
       .object({
         seo: z
@@ -66,7 +74,12 @@ export const ArticleRepositoryInput = {
             title: z.string().optional(),
             description: z.string().optional(),
             keywords: z.array(z.string()).optional(),
-            canonical_url: z.string().url().optional(),
+            // canonical_url: z.string().url().nullable().optional(),
+            canonical_url: z
+              .union([z.string().url(), z.literal(""), z.null()])
+              .optional()
+              .nullable()
+              .transform((val) => (val === "" ? null : val)),
           })
           .nullable()
           .optional(),

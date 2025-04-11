@@ -39,10 +39,6 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
   const session = useSession();
   const { _t } = useTranslation();
   const router = useRouter();
-  const setDebounceHandler = useDebouncedCallback(async (slug: string) => {
-    const handle = await articleActions.getUniqueArticleHandle(slug);
-    form.setValue("handle", handle);
-  }, 2000);
   const updateMyArticleMutation = useMutation({
     mutationFn: (
       input: z.infer<typeof ArticleRepositoryInput.updateMyArticleInput>
@@ -57,13 +53,21 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
     },
   });
 
-  const [tags, setTags] = React.useState<string[]>([]);
+  const setDebounceHandler = useDebouncedCallback(async (slug: string) => {
+    const handle = await articleActions.getUniqueArticleHandle(slug);
+    form.setValue("handle", handle);
+    updateMyArticleMutation.mutate({
+      article_id: article?.id ?? "",
+      handle: handle,
+    });
+  }, 2000);
 
   const form = useForm<
     z.infer<typeof ArticleRepositoryInput.updateMyArticleInput>
   >({
     defaultValues: {
       article_id: article.id,
+      title: article?.title ?? "",
       handle: article?.handle ?? "",
       excerpt: article?.excerpt ?? "",
       metadata: {
@@ -95,7 +99,7 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
       },
     });
   };
-  //className="m-3 h-[100vh-20px] w-[100vw-20px]"
+
   return (
     <Sheet open={open} onOpenChange={onClose}>
       <SheetContent>
@@ -127,7 +131,7 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
                       />
                     </FormControl>
                     <FormDescription className="-mt-1">
-                      https://www.techdiary.dev/{session?.user?.username}/
+                      https://www.techdiary.dev/@{session?.user?.username}/
                       {form.watch("handle")}
                     </FormDescription>
                     <FormMessage />
@@ -170,12 +174,27 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
                         click-through-rates.
                       </FormDescription>
                       <FormControl>
-                        <Input {...field} placeholder={form.watch("handle")} />
+                        <Input {...field} placeholder={form.watch("title")} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* <FormField
+                  control={form.control}
+                  name="metadata.seo.canonical_url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{_t("Are you republishing")}?</FormLabel>
+                      <FormDescription className="text-xs"></FormDescription>
+                      <FormControl>
+                        <Input {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                /> */}
 
                 <FormField
                   control={form.control}
@@ -253,7 +272,7 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
                 /> */}
               </div>
 
-              <Button>{_t("Save")}</Button>
+              <Button type="submit">{_t("Save")}</Button>
             </form>
           </Form>
         </div>
