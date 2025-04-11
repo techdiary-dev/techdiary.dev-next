@@ -10,7 +10,7 @@ import { useEffect } from "react";
  * return <textarea ref={textAreaRef} />;
  */
 export function useAutosizeTextArea(
-  textAreaRef: React.RefObject<HTMLTextAreaElement>,
+  textAreaRef: React.RefObject<HTMLTextAreaElement | null>,
   value: string,
   initialHeight?: string
 ): void {
