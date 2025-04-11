@@ -105,6 +105,8 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
               onSubmit={form.handleSubmit(handleOnSubmit)}
               className="flex flex-col gap-2"
             >
+              {JSON.stringify(form.formState.errors)}
+
               <FormField
                 control={form.control}
                 name="handle"
