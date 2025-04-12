@@ -66,6 +66,8 @@ export const ArticleRepositoryInput = {
     // Optional boolean flag for publish status
     is_published: z.boolean().optional(),
 
+    tag_ids: z.array(z.string()).optional().nullable(),
+
     // Optional metadata object
     metadata: z
       .object({

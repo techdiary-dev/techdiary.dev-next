@@ -3,7 +3,7 @@
 import { Article } from "@/backend/models/domain-models";
 import * as articleActions from "@/backend/services/article.actions";
 import { ArticleRepositoryInput } from "@/backend/services/inputs/article.input";
-import MultipleSelector, { Option } from "@/components/ui/multi-select";
+import MultipleSelector from "@/components/ui/multi-select";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { useTranslation } from "@/i18n/use-translation";
 import { useSession } from "@/store/session.atom";
@@ -25,7 +25,6 @@ import {
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
-import { InputTags } from "../ui/input-tags";
 import { Sheet, SheetContent } from "../ui/sheet";
 import { Textarea } from "../ui/textarea";
 
@@ -70,6 +69,7 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
       title: article?.title ?? "",
       handle: article?.handle ?? "",
       excerpt: article?.excerpt ?? "",
+      tag_ids: article?.tags?.map((tag) => tag.id) ?? [],
       metadata: {
         seo: {
           title: article?.metadata?.seo?.title ?? "",
@@ -84,12 +84,11 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
   const handleOnSubmit: SubmitHandler<
     z.infer<typeof ArticleRepositoryInput.updateMyArticleInput>
   > = (payload) => {
-    console.log(payload);
-
     updateMyArticleMutation.mutate({
       article_id: article?.id ?? "",
       excerpt: payload.excerpt,
       handle: payload.handle,
+      tag_ids: payload.tag_ids,
       metadata: {
         seo: {
           title: payload.metadata?.seo?.title ?? "",

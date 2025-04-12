@@ -115,4 +115,5 @@ export enum DatabaseTableName {
   series = "series",
   series_items = "series_items",
   tags = "tags",
+  article_tag = "article_tag",
 }

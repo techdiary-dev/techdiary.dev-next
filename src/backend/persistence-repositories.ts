@@ -1,5 +1,6 @@
 import {
   Article,
+  ArticleTag,
   Series,
   SeriesItem,
   Tag,
@@ -21,6 +22,10 @@ export const articleRepository = new PersistentRepository<Article>(
 );
 export const tagRepository = new PersistentRepository<Tag>(
   DatabaseTableName.tags,
+  pgClient
+);
+export const articleTagRepository = new PersistentRepository<ArticleTag>(
+  DatabaseTableName.article_tag,
   pgClient
 );
 export const userSocialRepository = new PersistentRepository<UserSocial>(
@@ -47,6 +52,7 @@ export const persistenceRepository = {
   userSocial: userSocialRepository,
   userSession: userSessionRepository,
   article: articleRepository,
+  articleTag: articleTagRepository,
   tags: tagRepository,
   series: seriesRepository,
   seriesItems: seriesItemsRepository,

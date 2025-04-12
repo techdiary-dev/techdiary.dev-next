@@ -3,7 +3,7 @@
 import { slugify } from "@/lib/slug-helper.util";
 import { removeMarkdownSyntax } from "@/lib/utils";
 import { z } from "zod";
-import { Article, User } from "../models/domain-models";
+import { Article, Tag, User } from "../models/domain-models";
 import { pgClient } from "../persistence/database-drivers/pg.client";
 import {
   and,
@@ -12,6 +12,7 @@ import {
   joinTable,
   like,
   neq,
+  notInArray,
   or,
 } from "../persistence/persistence-where-operator";
 import { PersistentRepository } from "../persistence/persistence.repository";
@@ -22,6 +23,7 @@ import {
 import { ArticleRepositoryInput } from "./inputs/article.input";
 import { getSessionUserId } from "./session.actions";
 import { DatabaseTableName } from "../persistence/persistence-contracts";
+import { persistenceRepository } from "../persistence-repositories";
 
 const articleRepository = new PersistentRepository<Article>(
   DatabaseTableName.articles,
@@ -227,6 +229,23 @@ export async function updateMyArticle(
         metadata: input.metadata,
       },
     });
+
+    if (input.tag_ids) {
+      await persistenceRepository.articleTag.deleteRows({
+        where: and(
+          eq("article_id", article.id),
+          notInArray("tag_id", input.tag_ids)
+        ),
+      });
+
+      await input.tag_ids.forEach((tag_id) => {
+        persistenceRepository.articleTag.createOne({
+          article_id: article.id,
+          tag_id: tag_id,
+        });
+      });
+    }
+
     return article;
   } catch (error) {
     handleRepositoryException(error);
@@ -417,6 +436,12 @@ export async function articleDetailByHandle(article_handle: string) {
           foreignField: "id",
           columns: ["id", "name", "username", "profile_photo"],
         }),
+        // joinTable<Article, Tag>({
+        //   as: "tags",
+        //   joinTo: "tags",
+        //   localField: "author_id",
+        //   foreignField: "id",
+        // }),
       ],
       limit: 1,
     });

@@ -55,6 +55,7 @@ export interface Article {
   id: string;
   title: string;
   handle: string;
+  tags?: Tag[];
   excerpt?: string | null;
   body?: string | null;
   cover_image?: IServerFile | null;
@@ -97,6 +98,14 @@ export interface Tag {
   icon?: IServerFile | null;
   color?: string | null;
   description?: string | null;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface ArticleTag {
+  id: string;
+  article_id: string;
+  tag_id: string;
   created_at: Date;
   updated_at: Date;
 }
