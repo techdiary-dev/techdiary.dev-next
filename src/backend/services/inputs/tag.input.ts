@@ -1,10 +1,10 @@
-import { color } from "@cloudinary/url-gen/qualifiers/background";
 import { z } from "zod";
 
 export const TagRepositoryInput = {
   findAllInput: z.object({
     page: z.number().default(1),
     limit: z.number().default(10),
+    search: z.string().optional().nullable(),
   }),
   createInput: z.object({
     name: z.string(),

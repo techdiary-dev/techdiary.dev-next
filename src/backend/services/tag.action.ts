@@ -4,6 +4,7 @@ import { z } from "zod";
 import { persistenceRepository } from "../persistence-repositories";
 import { TagRepositoryInput } from "./inputs/tag.input";
 import { handleRepositoryException } from "./RepositoryException";
+import { like } from "../persistence/persistence-where-operator";
 
 export const getTags = async (
   _input: z.infer<typeof TagRepositoryInput.findAllInput>
@@ -13,6 +14,7 @@ export const getTags = async (
     return persistenceRepository.tags.findAllWithPagination({
       page: input.page,
       limit: input.limit,
+      where: input.search ? like("name", `%${input.search}%`) : undefined,
     });
   } catch (error) {
     handleRepositoryException(error);

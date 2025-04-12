@@ -61,7 +61,7 @@ export interface IPersistenceJoin {
   columns: string[];
 }
 
-export interface IPersistentPaginationPayload<T, U = any> {
+export interface IPersistentPaginationPayload<T> {
   where?: WhereCondition<T>;
   joins?: IPersistenceJoin[];
   orderBy?: Array<IPersistentOrderBy<T>>;

@@ -16,6 +16,7 @@ import {
   toSnakeCase,
 } from "./persistence-utils";
 import { removeNullOrUndefinedFromObject } from "@/lib/utils";
+import { and } from "./persistence-where-operator";
 
 export class PersistentRepository<DOMAIN_MODEL_TYPE> {
   constructor(
@@ -67,6 +68,7 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
       payload.columns
         ?.map((col) => `${this.tableName}.${col.toString()}`)
         .join(",") ?? `${this.tableName}.*`;
+
     const { whereClause, values } = buildWhereClause(payload.where);
     const orderByClause = buildOrderByClause(payload?.orderBy);
     const { joinConditionClause, joinSelectClause } = buildJoinClause(

@@ -1,18 +1,18 @@
 import HomeLeftSidebar from "@/app/(home)/_components/HomeLeftSidebar";
+import { persistenceRepository } from "@/backend/persistence-repositories";
+import { eq } from "@/backend/persistence/persistence-where-operator";
 import * as articleActions from "@/backend/services/article.actions";
 import AppImage from "@/components/AppImage";
-import type { Article, WithContext } from "schema-dts";
 import HomepageLayout from "@/components/layout/HomepageLayout";
 import { readingTime, removeMarkdownSyntax } from "@/lib/utils";
+import getFileUrl from "@/utils/getFileUrl";
 import { markdocParser } from "@/utils/markdoc-parser";
-import { Metadata, NextPage, ResolvingMetadata } from "next";
+import { Metadata, NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import type { Article, WithContext } from "schema-dts";
 import ArticleSidebar from "./_components/ArticleSidebar";
-import getFileUrl from "@/utils/getFileUrl";
-import { persistenceRepository } from "@/backend/persistence-repositories";
-import { eq } from "@/backend/persistence/persistence-where-operator";
 
 interface ArticlePageProps {
   params: Promise<{
