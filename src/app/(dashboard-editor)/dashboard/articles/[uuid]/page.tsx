@@ -9,8 +9,9 @@ import {
   and,
   manyToManyJoin,
   leftJoin,
+  inArray,
 } from "@/backend/persistence/persistence-where-operator";
-import { Article, Tag, User } from "@/backend/models/domain-models";
+import { Article, ArticleTag, Tag, User } from "@/backend/models/domain-models";
 import { DatabaseTableName } from "@/backend/persistence/persistence-contracts";
 
 interface Props {
@@ -35,13 +36,30 @@ const page: React.FC<Props> = async ({ params }) => {
     ],
   });
 
+  const aggregatedTags = await persistenceRepository.articleTag.findRows({
+    where: inArray("article_id", [article.id]),
+    columns: ["tag_id", "article_id"],
+    joins: [
+      leftJoin<ArticleTag, Tag>({
+        as: "tag",
+        joinTo: "tags",
+        localField: "tag_id",
+        foreignField: "id",
+        columns: ["id", "name", "created_at"],
+      }),
+    ],
+  });
+
+  const tags = aggregatedTags?.map((item) => item?.tag);
+  if (tags.length) {
+    article.tags = tags as Tag[];
+  }
+
   if (!article) {
     throw notFound();
   }
 
-  return <pre>{JSON.stringify(article, null, 2)}</pre>;
-
-  // return <ArticleEditor uuid={_params.uuid} article={article} />;
+  return <ArticleEditor uuid={_params.uuid} article={article} />;
 };
 
 export default page;
