@@ -13,7 +13,7 @@ import {
   HeadingIcon,
   ImageIcon,
 } from "@radix-ui/react-icons";
-import React, { useRef } from "react";
+import React, { useRef, useState, useCallback } from "react";
 
 import { ArticleRepositoryInput } from "@/backend/services/inputs/article.input";
 import { useAutosizeTextArea } from "@/hooks/use-auto-resize-textarea";
@@ -32,24 +32,20 @@ import ArticleEditorDrawer from "./ArticleEditorDrawer";
 import EditorCommandButton from "./EditorCommandButton";
 import { useMarkdownEditor } from "./useMarkdownEditor";
 
-interface Prop {
+interface ArticleEditorProps {
   uuid?: string;
   article?: Article;
 }
 
-const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
+const ArticleEditor: React.FC<ArticleEditorProps> = ({ article, uuid }) => {
   const { _t, lang } = useTranslation();
   const router = useRouter();
   const [isOpenSettingDrawer, toggleSettingDrawer] = useToggle();
   const appConfig = useAppConfirm();
-  const titleRef = useRef<HTMLTextAreaElement>(null!);
+  const titleRef = useRef<HTMLTextAreaElement>(null);
   const bodyRef = useRef<HTMLTextAreaElement | null>(null);
-  const setDebouncedTitle = useDebouncedCallback(() => handleSaveTitle(), 1000);
-  const setDebouncedBody = useDebouncedCallback(() => handleSaveBody(), 1000);
+  const [editorMode, setEditorMode] = useState<"write" | "preview">("write");
 
-  const [editorMode, selectEditorMode] = React.useState<"write" | "preview">(
-    "write"
-  );
   const editorForm = useForm({
     defaultValues: {
       title: article?.title || "",
@@ -58,103 +54,169 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
     resolver: zodResolver(ArticleRepositoryInput.updateArticleInput),
   });
 
-  useAutosizeTextArea(titleRef, editorForm.watch("title") ?? "");
+  const watchedTitle = editorForm.watch("title");
+  const watchedBody = editorForm.watch("body");
 
-  const editor = useMarkdownEditor({
-    ref: bodyRef,
-    onChange: handleBodyContentChange,
-  });
+  useAutosizeTextArea(titleRef, watchedTitle ?? "");
 
   const updateMyArticleMutation = useMutation({
     mutationFn: (
       input: z.infer<typeof ArticleRepositoryInput.updateMyArticleInput>
-    ) => {
-      return articleActions.updateMyArticle(input);
-    },
-    onSuccess: () => {
-      router.refresh();
-    },
-    onError(err) {
-      alert(err.message);
-    },
+    ) => articleActions.updateMyArticle(input),
+    onSuccess: () => router.refresh(),
+    onError: (err) => alert(err.message),
   });
 
   const articleCreateMutation = useMutation({
     mutationFn: (
       input: z.infer<typeof ArticleRepositoryInput.createMyArticleInput>
     ) => articleActions.createMyArticle(input),
-    onSuccess: (res) => {
-      router.push(`/dashboard/articles/${res?.id}`);
-    },
-    onError(err) {
-      alert(err.message);
-    },
+    onSuccess: (res) => router.push(`/dashboard/articles/${res?.id}`),
+    onError: (err) => alert(err.message),
   });
 
-  const handleSaveTitle = () => {
-    if (!uuid) {
-      if (editorForm.watch("title")) {
+  const handleDebouncedSaveTitle = useCallback(
+    (title: string) => {
+      if (uuid && title) {
+        updateMyArticleMutation.mutate({
+          title,
+          article_id: uuid,
+        });
+      }
+    },
+    [uuid, updateMyArticleMutation]
+  );
+
+  const handleDebouncedSaveBody = useCallback(
+    (body: string) => {
+      if (!body) return;
+
+      if (uuid) {
+        updateMyArticleMutation.mutate({
+          article_id: uuid,
+          handle: article?.handle ?? "untitled",
+          body,
+        });
+      } else {
         articleCreateMutation.mutate({
-          title: editorForm.watch("title") ?? "",
+          title: watchedTitle?.length
+            ? (watchedTitle ?? "untitled")
+            : "untitled",
+          body,
         });
       }
-    }
+    },
+    [
+      uuid,
+      article?.handle,
+      watchedTitle,
+      updateMyArticleMutation,
+      articleCreateMutation,
+    ]
+  );
 
-    if (uuid) {
-      if (editorForm.watch("title")) {
-        updateMyArticleMutation.mutate({
-          article_id: uuid,
-          title: editorForm.watch("title") ?? "",
+  const setDebouncedTitle = useDebouncedCallback(
+    handleDebouncedSaveTitle,
+    1000
+  );
+  const setDebouncedBody = useDebouncedCallback(handleDebouncedSaveBody, 1000);
+
+  const handleSaveArticleOnBlurTitle = useCallback(
+    (title: string) => {
+      if (!uuid && title) {
+        articleCreateMutation.mutate({
+          title,
         });
       }
-    }
-  };
+    },
+    [uuid, articleCreateMutation]
+  );
 
-  const handleSaveBody = () => {
-    // if (!uuid) {
-    //   if (editorForm.watch("body")) {
-    //     articleCreateMutation.mutate({
-    //       title: editorForm.watch("body") ?? "",
-    //     });
-    //   }
-    // }
+  const handleBodyContentChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement> | string) => {
+      const value = typeof e === "string" ? e : e.target.value;
+      editorForm.setValue("body", value);
+      setDebouncedBody(value);
+    },
+    [editorForm, setDebouncedBody]
+  );
 
-    if (uuid) {
-      if (editorForm.watch("body")) {
-        updateMyArticleMutation.mutate({
-          article_id: uuid,
-          body: editorForm.watch("body") ?? "",
-        });
-      }
-    }
-  };
+  const editor = useMarkdownEditor({
+    ref: bodyRef,
+    onChange: handleBodyContentChange,
+  });
 
-  function handleBodyContentChange(
-    e: React.ChangeEvent<HTMLTextAreaElement> | string
-  ) {
-    const value = typeof e === "string" ? e : e.target.value;
-    editorForm.setValue("body", value);
-    setDebouncedBody(value);
-  }
+  const toggleEditorMode = useCallback(
+    () => setEditorMode((mode) => (mode === "write" ? "preview" : "write")),
+    []
+  );
+
+  const handlePublishToggle = useCallback(() => {
+    appConfig.show({
+      title: _t("Are you sure?"),
+      labels: {
+        confirm: _t("Yes"),
+        cancel: _t("No"),
+      },
+      onConfirm: () => {
+        if (uuid) {
+          updateMyArticleMutation.mutate({
+            article_id: uuid,
+            is_published: !article?.is_published,
+          });
+        }
+      },
+    });
+  }, [appConfig, _t, uuid, article?.is_published, updateMyArticleMutation]);
+
+  const handleTitleChange = useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+      const value = e.target.value;
+      editorForm.setValue("title", value);
+      setDebouncedTitle(value);
+    },
+    [editorForm, setDebouncedTitle]
+  );
+
+  const renderEditorToolbar = () => (
+    <div className="flex w-full gap-6 p-2 my-2 bg-muted">
+      <EditorCommandButton
+        onClick={() => editor?.executeCommand("heading")}
+        Icon={<HeadingIcon />}
+      />
+      <EditorCommandButton
+        onClick={() => editor?.executeCommand("bold")}
+        Icon={<FontBoldIcon />}
+      />
+      <EditorCommandButton
+        onClick={() => editor?.executeCommand("italic")}
+        Icon={<FontItalicIcon />}
+      />
+      <EditorCommandButton
+        onClick={() => editor?.executeCommand("image")}
+        Icon={<ImageIcon />}
+      />
+    </div>
+  );
 
   return (
     <>
       <div className="flex bg-background gap-2 items-center justify-between mt-2 mb-10 sticky z-30 p-5">
         <div className="flex items-center gap-2 text-sm text-forground-muted">
           <div className="flex gap-4 items-center">
-            <Link href={"/dashboard"} className=" text-forground">
+            <Link href="/dashboard" className="text-forground">
               <ArrowLeftIcon width={20} height={20} />
             </Link>
             {updateMyArticleMutation.isPending ? (
               <p>{_t("Saving")}...</p>
             ) : (
-              <p>
-                {article?.updated_at && (
+              article?.updated_at && (
+                <p>
                   <span>
-                    ({_t("Saved")} {formattedTime(article?.updated_at, lang)})
+                    ({_t("Saved")} {formattedTime(article.updated_at, lang)})
                   </span>
-                )}
-              </p>
+                </p>
+              )
             )}
           </div>
 
@@ -177,30 +239,14 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
         {uuid && (
           <div className="flex gap-2">
             <button
-              onClick={() =>
-                selectEditorMode(editorMode === "write" ? "preview" : "write")
-              }
+              onClick={toggleEditorMode}
               className="px-4 py-1 hidden md:block font-semibold transition-colors duration-200 rounded-sm hover:bg-muted"
             >
               {editorMode === "write" ? _t("Preview") : _t("Editor")}
             </button>
 
             <button
-              onClick={() => {
-                appConfig.show({
-                  title: _t("Are you sure?"),
-                  labels: {
-                    confirm: _t("Yes"),
-                    cancel: _t("No"),
-                  },
-                  onConfirm: () => {
-                    updateMyArticleMutation.mutate({
-                      article_id: uuid,
-                      is_published: !article?.is_published,
-                    });
-                  },
-                });
-              }}
+              onClick={handlePublishToggle}
               className={clsx(
                 "transition-colors hidden md:block duration-200 px-4 py-1 font-semibold cursor-pointer",
                 {
@@ -212,52 +258,31 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
             >
               {article?.is_published ? _t("Unpublish") : _t("Publish")}
             </button>
-            <button onClick={() => toggleSettingDrawer()}>
+            <button onClick={toggleSettingDrawer}>
               <GearIcon className="w-5 h-5" />
             </button>
           </div>
         )}
       </div>
 
-      {/* Editor */}
       <div className="max-w-[750px] mx-auto p-4 md:p-0">
         <textarea
           placeholder={_t("Title")}
           tabIndex={1}
           autoFocus
           rows={1}
-          value={editorForm.watch("title")}
+          value={watchedTitle}
+          disabled={articleCreateMutation.isPending}
           className="w-full text-2xl focus:outline-none bg-background resize-none"
           ref={titleRef}
-          onBlur={() => handleSaveTitle()}
-          onChange={(e) => {
-            editorForm.setValue("title", e.target.value);
-            setDebouncedTitle(e.target.value);
-          }}
+          onBlur={(e) => handleSaveArticleOnBlurTitle(e.target.value)}
+          onChange={handleTitleChange}
         />
 
-        {/* Editor Toolbar */}
         <div className="flex flex-col justify-between md:items-center md:flex-row">
-          <div className="flex w-full gap-6 p-2 my-2 bg-muted">
-            <EditorCommandButton
-              onClick={() => editor?.executeCommand("heading")}
-              Icon={<HeadingIcon />}
-            />
-            <EditorCommandButton
-              onClick={() => editor?.executeCommand("bold")}
-              Icon={<FontBoldIcon />}
-            />
-            <EditorCommandButton
-              onClick={() => editor?.executeCommand("italic")}
-              Icon={<FontItalicIcon />}
-            />
-            <EditorCommandButton
-              onClick={() => editor?.executeCommand("image")}
-              Icon={<ImageIcon />}
-            />
-          </div>
+          {renderEditorToolbar()}
         </div>
-        {/* Editor Textarea */}
+
         <div className="w-full">
           {editorMode === "write" ? (
             <textarea
@@ -265,24 +290,24 @@ const ArticleEditor: React.FC<Prop> = ({ article, uuid }) => {
               className="focus:outline-none h-[calc(100vh-120px)] bg-background w-full resize-none"
               placeholder={_t("Write something stunning...")}
               ref={bodyRef}
-              value={editorForm.watch("body")}
+              value={watchedBody}
               onChange={handleBodyContentChange}
-            ></textarea>
+            />
           ) : (
             <div className="content-typography">
-              {markdocParser(editorForm.watch("body") ?? "")}
+              {markdocParser(watchedBody ?? "")}
             </div>
           )}
         </div>
       </div>
 
-      {uuid && (
+      {uuid && article && (
         <ArticleEditorDrawer
-          article={article!}
+          article={article}
           open={isOpenSettingDrawer}
           onClose={toggleSettingDrawer}
-          onSave={function (): void {
-            throw new Error("Function not implemented.");
+          onSave={() => {
+            // Implementation needed
           }}
         />
       )}
