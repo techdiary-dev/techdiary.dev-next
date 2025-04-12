@@ -24,7 +24,6 @@ const page: React.FC<Props> = async ({ params }) => {
   const [article] = await persistenceRepository.article.findRows({
     limit: 1,
     where: and(eq("id", _params.uuid), eq("author_id", sessionUserId)),
-    columns: ["id", "title", "handle"],
     joins: [
       leftJoin<Article, User>({
         as: "author",
@@ -38,14 +37,13 @@ const page: React.FC<Props> = async ({ params }) => {
 
   const aggregatedTags = await persistenceRepository.articleTag.findRows({
     where: inArray("article_id", [article.id]),
-    columns: ["tag_id", "article_id"],
     joins: [
       leftJoin<ArticleTag, Tag>({
         as: "tag",
         joinTo: "tags",
         localField: "tag_id",
         foreignField: "id",
-        columns: ["id", "name", "created_at"],
+        columns: ["id", "name", "color", "icon", "description"],
       }),
     ],
   });

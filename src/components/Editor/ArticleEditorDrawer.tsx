@@ -109,7 +109,7 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
               className="flex flex-col gap-2"
             >
               {/* {JSON.stringify(form.formState.errors)} */}
-
+              <pre>{JSON.stringify(article, null, 2)}</pre>
               <FormField
                 control={form.control}
                 name="handle"

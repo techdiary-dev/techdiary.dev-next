@@ -231,11 +231,6 @@ export async function updateMyArticle(
         metadata: input.metadata,
       },
     });
-    // a 1, t 1
-    // a 1, t 2
-    // a 1, t 3
-
-    // a-> (2,3,4)
 
     if (input.tag_ids) {
       await persistenceRepository.articleTag.deleteRows({
@@ -443,13 +438,13 @@ export async function articleDetailByHandle(article_handle: string) {
           foreignField: "id",
           columns: ["id", "name", "username", "profile_photo"],
         }),
-        manyToManyJoin<Article, Tag>({
-          as: "tags",
-          pivotTable: DatabaseTableName.article_tag,
-          localField: "id",
-          foreignField: "id",
-          columns: ["id", "name", "icon", "color", "description"],
-        }),
+        // manyToManyJoin<Article, Tag>({
+        //   as: "tags",
+        //   pivotTable: DatabaseTableName.article_tag,
+        //   localField: "id",
+        //   foreignField: "id",
+        //   columns: ["id", "name", "icon", "color", "description"],
+        // }),
       ],
       limit: 1,
     });
