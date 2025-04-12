@@ -43,12 +43,12 @@ export interface IServerFile {
 }
 
 export interface ArticleMetadata {
-  seo: {
+  seo?: {
     title?: string;
     description?: string;
     keywords?: string[];
     canonical_url?: string;
-  };
+  } | null;
 }
 
 export interface Article {

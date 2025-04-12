@@ -223,6 +223,7 @@ export async function updateMyArticle(
         cover_image: input.cover_image,
         is_published: input.is_published,
         published_at: input.is_published ? new Date() : null,
+        metadata: input.metadata,
       },
     });
     return article;

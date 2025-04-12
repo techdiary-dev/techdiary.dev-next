@@ -7,8 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "migrate:generate": "npx drizzle-kit generate",
-    "migrate:push-db": "npx drizzle-kit push"
+    "db:generate": "npx drizzle-kit generate",
+    "db:push": "npx drizzle-kit push",
+    "db:studio": "npx drizzle-kit studio"
   },
   "dependencies": {
     "@cloudinary/react": "^1.14.1",
@@ -32,7 +33,6 @@
     "@tailwindcss/postcss": "^4.1.1",
     "@tailwindcss/typography": "^0.5.16",
     "@tanstack/react-query": "^5.69.0",
-    "badge": "^1.0.3",
     "class-variance-authority": "^0.7.1",
     "cloudinary": "^2.6.0",
     "clsx": "^2.1.1",
@@ -48,10 +48,7 @@
     "react": "^19",
     "react-dom": "^19",
     "react-hook-form": "^7.55.0",
-    "react-icons": "^5.5.0",
-    "react-mde": "^12.0.8",
     "recharts": "^2.15.1",
-    "sass": "^1.86.0",
     "schema-dts": "^1.1.5",
     "tailwind-merge": "^3.0.2",
     "tw-animate-css": "^1.2.4",

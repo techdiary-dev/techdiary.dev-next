@@ -9,7 +9,7 @@ import { useTranslation } from "@/i18n/use-translation";
 import { useSession } from "@/store/session.atom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { LinkIcon } from "lucide-react";
+import { LinkIcon, Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -75,7 +75,6 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
           title: article?.metadata?.seo?.title ?? "",
           description: article?.metadata?.seo?.description ?? "",
           keywords: article?.metadata?.seo?.keywords ?? [],
-          canonical_url: article?.metadata?.seo?.canonical_url ?? "",
         },
       },
     },
@@ -85,6 +84,8 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
   const handleOnSubmit: SubmitHandler<
     z.infer<typeof ArticleRepositoryInput.updateMyArticleInput>
   > = (payload) => {
+    console.log(payload);
+
     updateMyArticleMutation.mutate({
       article_id: article?.id ?? "",
       excerpt: payload.excerpt,
@@ -94,7 +95,6 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
           title: payload.metadata?.seo?.title ?? "",
           description: payload.metadata?.seo?.description ?? "",
           keywords: payload.metadata?.seo?.keywords ?? [],
-          canonical_url: payload.metadata?.seo?.canonical_url ?? "",
         },
       },
     });
@@ -109,7 +109,7 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
               onSubmit={form.handleSubmit(handleOnSubmit)}
               className="flex flex-col gap-2"
             >
-              {JSON.stringify(form.formState.errors)}
+              {/* {JSON.stringify(form.formState.errors)} */}
 
               <FormField
                 control={form.control}
@@ -181,21 +181,6 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
                   )}
                 />
 
-                {/* <FormField
-                  control={form.control}
-                  name="metadata.seo.canonical_url"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{_t("Are you republishing")}?</FormLabel>
-                      <FormDescription className="text-xs"></FormDescription>
-                      <FormControl>
-                        <Input {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
-
                 <FormField
                   control={form.control}
                   name="metadata.seo.keywords"
@@ -247,32 +232,17 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
                     </FormItem>
                   )}
                 />
-                {/* 
-                <FormField
-                  control={form.control}
-                  name="metadata.seo.keywords"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{_t("SEO Keywords")}</FormLabel>
-                      <FormDescription className="text-xs">
-                        Put some relevent keywords for better search engine
-                        visibility
-                      </FormDescription>
-                      <FormControl>
-                        <InputTags
-                          value={[]}
-                          onChange={(e) => {
-                            console.log(e);
-                          }}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                /> */}
               </div>
 
-              <Button type="submit">{_t("Save")}</Button>
+              <Button
+                type="submit"
+                disabled={updateMyArticleMutation.isPending}
+              >
+                {updateMyArticleMutation.isPending && (
+                  <Loader className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                {_t("Save")}
+              </Button>
             </form>
           </Form>
         </div>
