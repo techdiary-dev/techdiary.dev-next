@@ -1,6 +1,7 @@
 import { log } from "console";
 import {
   AppPaginationResponseDto,
+  DatabaseTableName,
   IPagination,
   IPersistentDriver,
   IPersistentPaginationPayload,
@@ -18,7 +19,7 @@ import { removeNullOrUndefinedFromObject } from "@/lib/utils";
 
 export class PersistentRepository<DOMAIN_MODEL_TYPE> {
   constructor(
-    public readonly tableName: string,
+    public readonly tableName: DatabaseTableName,
     public readonly persistentDriver: IPersistentDriver
   ) {}
 
@@ -51,7 +52,7 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
         totalCount: +totalCountResult,
         currentPage: +_page,
         hasNextPage: _page * _limit < totalCountResult,
-        totalPages: +Math.ceil(totalCountResult / _limit),
+        totalPages: _limit == -1 ? 1 : +Math.ceil(totalCountResult / _limit),
       },
     };
   }

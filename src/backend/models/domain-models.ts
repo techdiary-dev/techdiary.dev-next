@@ -90,3 +90,13 @@ export interface SeriesItem {
   created_at: Date;
   updated_at: Date;
 }
+
+export interface Tag {
+  id: string;
+  name: string;
+  icon?: IServerFile | null;
+  color?: string | null;
+  description?: string | null;
+  created_at: Date;
+  updated_at: Date;
+}

@@ -21,9 +21,10 @@ import {
 } from "./RepositoryException";
 import { ArticleRepositoryInput } from "./inputs/article.input";
 import { getSessionUserId } from "./session.actions";
+import { DatabaseTableName } from "../persistence/persistence-contracts";
 
 const articleRepository = new PersistentRepository<Article>(
-  "articles",
+  DatabaseTableName.articles,
   pgClient
 );
 
