@@ -1,5 +1,7 @@
 "use client";
 
+// https://shadcnui-expansions.typeart.cc/docs/multiple-selector
+
 import { Command as CommandPrimitive, useCommandState } from "cmdk";
 import { X } from "lucide-react";
 import * as React from "react";

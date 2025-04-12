@@ -1,17 +1,18 @@
 "use client";
 
-import { Article } from "@/backend/models/domain-models";
+import { Article, Tag } from "@/backend/models/domain-models";
 import * as articleActions from "@/backend/services/article.actions";
+import * as tagActions from "@/backend/services/tag.action";
 import { ArticleRepositoryInput } from "@/backend/services/inputs/article.input";
 import MultipleSelector from "@/components/ui/multi-select";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
 import { useTranslation } from "@/i18n/use-translation";
 import { useSession } from "@/store/session.atom";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { LinkIcon, Loader } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button } from "../ui/button";
@@ -51,6 +52,8 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
       alert(err.message);
     },
   });
+
+  const [selectedTags, setSelectedTags] = useState<Tag[]>(article.tags ?? []);
 
   const setDebounceHandler = useDebouncedCallback(async (slug: string) => {
     const handle = await articleActions.getUniqueArticleHandle(slug);
@@ -108,49 +111,104 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
               onSubmit={form.handleSubmit(handleOnSubmit)}
               className="flex flex-col gap-2"
             >
-              {/* {JSON.stringify(form.formState.errors)} */}
-              <pre>{JSON.stringify(article, null, 2)}</pre>
-              <FormField
-                control={form.control}
-                name="handle"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{_t("Handle")}</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="Your handle"
-                        Prefix={
-                          <LinkIcon className="size-3 text-muted-foreground" />
-                        }
-                        {...field}
-                        onChange={(e) => {
-                          setDebounceHandler(e.target.value);
-                          form.setValue("handle", e.target.value);
-                        }}
-                      />
-                    </FormControl>
-                    <FormDescription className="-mt-1">
-                      https://www.techdiary.dev/@{session?.user?.username}/
-                      {form.watch("handle")}
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {/*  */}
-              <FormField
-                control={form.control}
-                name="excerpt"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{_t("Excerpt")}</FormLabel>
-                    <FormControl>
-                      <Textarea {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {JSON.stringify({
+                errors: form.formState.errors,
+                values: form.watch("tag_ids"),
+              })}
+              {/* <pre>{JSON.stringify(article, null, 2)}</pre> */}
+              <div className="flex flex-col gap-6">
+                <FormField
+                  control={form.control}
+                  name="handle"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{_t("Handle")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="Your handle"
+                          Prefix={
+                            <LinkIcon className="size-3 text-muted-foreground" />
+                          }
+                          {...field}
+                          onChange={(e) => {
+                            setDebounceHandler(e.target.value);
+                            form.setValue("handle", e.target.value);
+                          }}
+                        />
+                      </FormControl>
+                      <FormDescription className="-mt-1">
+                        https://www.techdiary.dev/@{session?.user?.username}/
+                        {form.watch("handle")}
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="excerpt"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{_t("Excerpt")}</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="tag_ids"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{_t("Tags")}</FormLabel>
+                      <FormDescription className="text-xs">
+                        {_t("Select tags to help categorize your article.")}
+                      </FormDescription>
+                      <FormControl>
+                        <MultipleSelector
+                          maxSelected={10}
+                          onSearch={async (searchTerm) => {
+                            const res = await tagActions.getTags({
+                              limit: -1,
+                              page: 1,
+                              search: searchTerm,
+                            });
+
+                            const searchResult = res?.nodes ?? [];
+                            return searchResult?.map((tag) => ({
+                              label: tag.name,
+                              value: tag.id,
+                            }));
+                          }}
+                          value={
+                            selectedTags?.map((option) => ({
+                              label: option.name,
+                              value: option.id,
+                            })) ?? []
+                          }
+                          onChange={(e) => {
+                            setSelectedTags(
+                              e.map((option) => ({
+                                id: option.value,
+                                name: option.label,
+                                created_at: new Date(),
+                                updated_at: new Date(),
+                              }))
+                            );
+                            form.setValue(
+                              "tag_ids",
+                              e.map((option) => option.value)
+                            );
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
               {/* Seo settings */}
               <div className="flex flex-col gap-6 mt-10">
