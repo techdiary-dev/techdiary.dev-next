@@ -70,7 +70,10 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
         ?.map((col) => `${this.tableName}.${col.toString()}`)
         .join(",") ?? `${this.tableName}.*`;
 
-    const { whereClause, values } = buildWhereClause(payload.where);
+    const { whereClause, values } = buildWhereClause(
+      payload.where,
+      this.tableName
+    );
     const orderByClause = buildOrderByClause(payload?.orderBy);
     const { joinConditionClause, joinSelectClause } = buildJoinClause(
       payload.joins
@@ -102,7 +105,10 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
   async findRowCount(
     payload: IPersistentPaginationPayload<DOMAIN_MODEL_TYPE>
   ): Promise<number> {
-    const { whereClause, values } = buildWhereClause(payload.where);
+    const { whereClause, values } = buildWhereClause(
+      payload.where,
+      this.tableName
+    );
 
     // Construct the SQL query
     const query = `
@@ -176,7 +182,8 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
   ): Promise<DOMAIN_MODEL_TYPE> {
     // Build WHERE clause
     const { whereClause, values: whereValues } = buildWhereClause(
-      payload.where
+      payload.where,
+      this.tableName
     );
 
     // Build SET clause using the where values as starting point
@@ -213,7 +220,10 @@ export class PersistentRepository<DOMAIN_MODEL_TYPE> {
   async deleteRows(
     payload: IPersistentQueryPayload<DOMAIN_MODEL_TYPE>
   ): Promise<DOMAIN_MODEL_TYPE[]> {
-    const { whereClause, values } = buildWhereClause(payload.where);
+    const { whereClause, values } = buildWhereClause(
+      payload.where,
+      this.tableName
+    );
     const columns = toSnakeCase(payload.columns as any) || "*";
 
     const sql = `

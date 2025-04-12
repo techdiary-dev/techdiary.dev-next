@@ -22,7 +22,7 @@ const page: React.FC<Props> = async ({ params }) => {
   // eq("author_id", sessionUserId)
   const [article] = await persistenceRepository.article.findRows({
     limit: 1,
-    where: and(eq("id", _params.uuid)),
+    where: and(eq("id", _params.uuid), eq("author_id", sessionUserId)),
     columns: ["id", "title", "handle"],
     joins: [
       leftJoin<Article, User>({

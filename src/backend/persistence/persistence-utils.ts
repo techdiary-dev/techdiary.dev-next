@@ -1,4 +1,5 @@
 import {
+  DatabaseTableName,
   IPersistenceLeftJoin,
   IPersistentOrderBy,
   SimpleWhere,
@@ -13,7 +14,8 @@ export const sql = String.raw;
  * @returns Object containing the WHERE clause and values array
  */
 export const buildWhereClause = <T>(
-  where: WhereCondition<T> | undefined
+  where: WhereCondition<T> | undefined,
+  tableName: DatabaseTableName
 ): { whereClause: string; values: any[] } => {
   // If no where clause is provided, return empty
   if (!where) {
@@ -23,10 +25,12 @@ export const buildWhereClause = <T>(
   const values: any[] = [];
 
   // Process the where condition
-  const result = processWhereCondition(where, values);
+  const whereClause = processWhereCondition(where, values, tableName);
+
+  console.log({ whereClause, tableName });
 
   return {
-    whereClause: result,
+    whereClause,
     values,
   };
 };
@@ -36,13 +40,14 @@ export const buildWhereClause = <T>(
  */
 const processWhereCondition = <T>(
   where: WhereCondition<T>,
-  values: any[]
+  values: any[],
+  tableName: DatabaseTableName
 ): string => {
   // Handle composite conditions (AND/OR)
   if (typeof where === "object") {
     if ("AND" in where && Array.isArray(where.AND) && where.AND.length > 0) {
       const conditions = where.AND.map((condition) =>
-        processWhereCondition(condition, values)
+        processWhereCondition(condition, values, tableName)
       ).filter(Boolean);
 
       if (conditions.length === 0) return "";
@@ -53,7 +58,7 @@ const processWhereCondition = <T>(
 
     if ("OR" in where && Array.isArray(where.OR) && where.OR.length > 0) {
       const conditions = where.OR.map((condition) =>
-        processWhereCondition(condition, values)
+        processWhereCondition(condition, values, tableName)
       ).filter(Boolean);
 
       if (conditions.length === 0) return "";
@@ -64,7 +69,7 @@ const processWhereCondition = <T>(
 
     // Handle simple conditions
     if ("key" in where && "operator" in where) {
-      return processSimpleCondition(where as SimpleWhere<T>, values);
+      return processSimpleCondition(where as SimpleWhere<T>, values, tableName);
     }
   }
 
@@ -76,7 +81,8 @@ const processWhereCondition = <T>(
  */
 const processSimpleCondition = <T>(
   condition: SimpleWhere<T>,
-  values: any[]
+  values: any[],
+  tableName: DatabaseTableName
 ): string => {
   const { key, operator, value } = condition;
 
@@ -96,21 +102,21 @@ const processSimpleCondition = <T>(
       })
       .join(", ");
 
-    return `"${key.toString()}" ${operator} (${placeholders})`;
+    return `"${tableName}"."${key.toString()}" ${operator} (${placeholders})`;
   }
 
   // Handle NULL values
   if (value === null) {
     return operator === "="
-      ? `"${key.toString()}" IS NULL`
+      ? `"${tableName}"."${key.toString()}" IS NULL`
       : operator === "<>"
-        ? `"${key.toString()}" IS NOT NULL`
-        : `"${key.toString()}" IS NULL`;
+        ? `"${tableName}"."${key.toString()}" IS NOT NULL`
+        : `"${tableName}"."${key.toString()}" IS NULL`;
   }
 
   // Standard case with non-null value
   values.push(value);
-  return `"${key.toString()}" ${operator} $${values.length}`;
+  return `"${tableName}"."${key.toString()}" ${operator} $${values.length}`;
 };
 
 /**
