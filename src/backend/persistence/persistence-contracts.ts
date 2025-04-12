@@ -53,7 +53,7 @@ export type CompositeWhere<T> = {
 };
 export type WhereCondition<T> = SimpleWhere<T> | CompositeWhere<T>;
 
-export interface IPersistenceJoin {
+export interface IPersistenceLeftJoin {
   as: string;
   joinTo: string;
   localField: string;
@@ -61,9 +61,17 @@ export interface IPersistenceJoin {
   columns: string[];
 }
 
+export interface IPersistenceManyToManyJoin {
+  as: string;
+  pivotTable: DatabaseTableName;
+  localField: string;
+  foreignField: string;
+  columns: string[];
+}
+
 export interface IPersistentPaginationPayload<T> {
   where?: WhereCondition<T>;
-  joins?: IPersistenceJoin[];
+  joins?: IPersistenceLeftJoin[];
   orderBy?: Array<IPersistentOrderBy<T>>;
   columns?: Array<keyof T>;
   limit?: number;
@@ -88,7 +96,7 @@ export interface IPagination<T> {
   where?: WhereCondition<T>; // No longer allows arrays
   columns?: Array<keyof T>;
   orderBy?: Array<IPersistentOrderBy<T>>;
-  joins?: IPersistenceJoin[];
+  joins?: IPersistenceLeftJoin[];
 }
 
 //------------------------------------

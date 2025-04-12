@@ -1,5 +1,5 @@
 import {
-  IPersistenceJoin,
+  IPersistenceLeftJoin,
   IPersistentOrderBy,
   SimpleWhere,
   WhereCondition,
@@ -144,7 +144,7 @@ export const buildOrderByClause = <T>(
   return `ORDER BY ${orderByConditions.join(", ")}`;
 };
 
-export const buildJoinClause = <T>(joins?: Array<IPersistenceJoin>) => {
+export const buildJoinClause = <T>(joins?: Array<IPersistenceLeftJoin>) => {
   if (!joins || joins.length === 0) {
     return {
       joinConditionClause: "",

@@ -9,8 +9,9 @@ import {
   and,
   desc,
   eq,
-  joinTable,
+  leftJoin,
   like,
+  manyToManyJoin,
   neq,
   notInArray,
   or,
@@ -199,6 +200,7 @@ export async function updateArticle(
         published_at: input.is_published ? new Date() : null,
       },
     });
+
     return article;
   } catch (error) {
     handleRepositoryException(error);
@@ -229,6 +231,11 @@ export async function updateMyArticle(
         metadata: input.metadata,
       },
     });
+    // a 1, t 1
+    // a 1, t 2
+    // a 1, t 3
+
+    // a-> (2,3,4)
 
     if (input.tag_ids) {
       await persistenceRepository.articleTag.deleteRows({
@@ -238,8 +245,8 @@ export async function updateMyArticle(
         ),
       });
 
-      await input.tag_ids.forEach((tag_id) => {
-        persistenceRepository.articleTag.createOne({
+      input.tag_ids.forEach(async (tag_id) => {
+        await persistenceRepository.articleTag.createOne({
           article_id: article.id,
           tag_id: tag_id,
         });
@@ -294,7 +301,7 @@ export async function findRecentArticles(
       orderBy: [desc("published_at")],
       columns: ["id", "title", "handle"],
       joins: [
-        joinTable<Article, User>({
+        leftJoin<Article, User>({
           as: "user",
           joinTo: "users",
           localField: "author_id",
@@ -337,7 +344,7 @@ export async function articleFeed(
         "excerpt",
       ],
       joins: [
-        joinTable<Article, User>({
+        leftJoin<Article, User>({
           as: "user",
           joinTo: "users",
           localField: "author_id",
@@ -386,7 +393,7 @@ export async function userArticleFeed(
         "excerpt",
       ],
       joins: [
-        joinTable<Article, User>({
+        leftJoin<Article, User>({
           as: "user",
           joinTo: "users",
           localField: "author_id",
@@ -429,19 +436,20 @@ export async function articleDetailByHandle(article_handle: string) {
         "updated_at",
       ],
       joins: [
-        joinTable<Article, User>({
+        leftJoin<Article, User>({
           as: "user",
           joinTo: "users",
           localField: "author_id",
           foreignField: "id",
           columns: ["id", "name", "username", "profile_photo"],
         }),
-        // joinTable<Article, Tag>({
-        //   as: "tags",
-        //   joinTo: "tags",
-        //   localField: "author_id",
-        //   foreignField: "id",
-        // }),
+        manyToManyJoin<Article, Tag>({
+          as: "tags",
+          pivotTable: DatabaseTableName.article_tag,
+          localField: "id",
+          foreignField: "id",
+          columns: ["id", "name", "icon", "color", "description"],
+        }),
       ],
       limit: 1,
     });
@@ -476,7 +484,7 @@ export async function articleDetailByUUID(uuid: string) {
         "updated_at",
       ],
       joins: [
-        joinTable<Article, User>({
+        leftJoin<Article, User>({
           as: "user",
           joinTo: "users",
           localField: "author_id",

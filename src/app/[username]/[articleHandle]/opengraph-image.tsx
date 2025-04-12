@@ -1,9 +1,6 @@
 import { Article, User } from "@/backend/models/domain-models";
 import { persistenceRepository } from "@/backend/persistence-repositories";
-import {
-  eq,
-  joinTable,
-} from "@/backend/persistence/persistence-where-operator";
+import { eq, leftJoin } from "@/backend/persistence/persistence-where-operator";
 import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
@@ -33,7 +30,7 @@ export default async function Image(options: ArticlePageProps) {
     columns: ["title", "excerpt", "cover_image", "body"],
     limit: 1,
     joins: [
-      joinTable<Article, User>({
+      leftJoin<Article, User>({
         as: "user",
         joinTo: "users",
         localField: "author_id",
