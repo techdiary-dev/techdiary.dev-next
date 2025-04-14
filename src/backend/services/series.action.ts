@@ -6,7 +6,7 @@ import {
   asc,
   desc,
   eq,
-  joinTable,
+  leftJoin,
 } from "../persistence/persistence-where-operator";
 import { Article, Series, SeriesItem, User } from "../models/domain-models";
 
@@ -31,7 +31,7 @@ export const getSeriesDetailByHandle = async (handle: string) => {
       where: eq("handle", handle),
       limit: 1,
       joins: [
-        joinTable<Series, User>({
+        leftJoin<Series, User>({
           as: "owner",
           joinTo: "users",
           localField: "owner_id",
@@ -46,7 +46,7 @@ export const getSeriesDetailByHandle = async (handle: string) => {
       orderBy: [asc("index")],
       limit: -1,
       joins: [
-        joinTable<SeriesItem, Article>({
+        leftJoin<SeriesItem, Article>({
           as: "article",
           joinTo: "articles",
           localField: "article_id",

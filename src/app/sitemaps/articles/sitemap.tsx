@@ -3,7 +3,7 @@ import { persistenceRepository } from "@/backend/persistence-repositories";
 import {
   and,
   eq,
-  joinTable,
+  leftJoin,
   neq,
 } from "@/backend/persistence/persistence-where-operator";
 import type { MetadataRoute } from "next";
@@ -14,7 +14,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     columns: ["handle", "updated_at"],
     limit: -1,
     joins: [
-      joinTable<Article, User>({
+      leftJoin<Article, User>({
         as: "user",
         joinTo: "users",
         localField: "author_id",

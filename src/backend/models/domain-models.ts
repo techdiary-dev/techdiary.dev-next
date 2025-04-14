@@ -108,4 +108,8 @@ export interface ArticleTag {
   tag_id: string;
   created_at: Date;
   updated_at: Date;
+
+  // Relationships
+  article?: Article;
+  tag?: Tag;
 }

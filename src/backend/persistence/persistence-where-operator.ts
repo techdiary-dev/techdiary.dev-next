@@ -2,7 +2,10 @@
  * Drizzle-style operator functions with direct generic approach
  */
 
-import { IPersistenceJoin } from "./persistence-contracts";
+import {
+  DatabaseTableName,
+  IPersistenceLeftJoin,
+} from "./persistence-contracts";
 
 // Type for all possible operators
 type Operator =
@@ -186,16 +189,32 @@ export function desc<T>(key: keyof T): IPersistentOrderBy<T> {
   };
 }
 
-export function joinTable<LOCAL_MODEL, FOREIGN_MODEL>(payload: {
+export function leftJoin<LOCAL_MODEL, FOREIGN_MODEL>(payload: {
   as: string;
   joinTo: string;
   localField: keyof LOCAL_MODEL;
   foreignField: keyof FOREIGN_MODEL;
   columns: Array<keyof FOREIGN_MODEL>;
-}): IPersistenceJoin {
+}): IPersistenceLeftJoin {
   return {
     as: payload.as,
     joinTo: payload.joinTo,
+    localField: payload.localField.toString(),
+    foreignField: payload.foreignField.toString(),
+    columns: payload.columns.map((col) => col.toString()),
+  };
+}
+
+export function manyToManyJoin<LOCAL_MODEL, FOREIGN_MODEL>(payload: {
+  as: string;
+  pivotTable: DatabaseTableName;
+  localField: keyof LOCAL_MODEL;
+  foreignField: keyof FOREIGN_MODEL;
+  columns: Array<keyof FOREIGN_MODEL>;
+}): IPersistenceLeftJoin {
+  return {
+    as: payload.as,
+    joinTo: payload.pivotTable,
     localField: payload.localField.toString(),
     foreignField: payload.foreignField.toString(),
     columns: payload.columns.map((col) => col.toString()),
