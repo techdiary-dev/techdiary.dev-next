@@ -2,9 +2,9 @@
 
 import { z } from "zod";
 import { persistenceRepository } from "../persistence-repositories";
+import { like } from "../persistence/persistence-where-operator";
 import { TagRepositoryInput } from "./inputs/tag.input";
 import { handleRepositoryException } from "./RepositoryException";
-import { like } from "../persistence/persistence-where-operator";
 
 export const getTags = async (
   _input: z.infer<typeof TagRepositoryInput.findAllInput>

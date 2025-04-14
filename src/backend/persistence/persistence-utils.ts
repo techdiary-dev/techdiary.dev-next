@@ -11,6 +11,7 @@ export const sql = String.raw;
 /**
  * Builds a WHERE clause for SQL queries
  * @param where Where condition or undefined
+ * @param tableName
  * @returns Object containing the WHERE clause and values array
  */
 export const buildWhereClause = <T>(
@@ -26,8 +27,6 @@ export const buildWhereClause = <T>(
 
   // Process the where condition
   const whereClause = processWhereCondition(where, values, tableName);
-
-  console.log({ whereClause, tableName });
 
   return {
     whereClause,
@@ -94,15 +93,7 @@ const processSimpleCondition = <T>(
       return operator === "in" ? "FALSE" : "TRUE";
     }
 
-    const placeholders = value
-      .map(() => `$${values.length + 1}`)
-      .map((placeholder, index) => {
-        values.push(value[index]);
-        return placeholder;
-      })
-      .join(", ");
-
-    return `"${tableName}"."${key.toString()}" ${operator} (${placeholders})`;
+    return `"${tableName}"."${key.toString()}" ${operator} (${value.map(v => `'${v}'`).join(',')})`;
   }
 
   // Handle NULL values

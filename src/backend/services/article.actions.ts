@@ -15,6 +15,7 @@ import {
   neq,
   notInArray,
   or,
+  inArray,
 } from "../persistence/persistence-where-operator";
 import { PersistentRepository } from "../persistence/persistence.repository";
 import {
@@ -233,12 +234,13 @@ export async function updateMyArticle(
     });
 
     if (input.tag_ids) {
-      await persistenceRepository.articleTag.deleteRows({
+     const deleted =  await persistenceRepository.articleTag.deleteRows({
         where: and(
-          eq("article_id", article.id),
+          // eq("article_id", article.id),
           notInArray("tag_id", input.tag_ids)
         ),
       });
+      console.log(deleted)
 
       input.tag_ids.forEach(async (tag_id) => {
         await persistenceRepository.articleTag.createOne({
