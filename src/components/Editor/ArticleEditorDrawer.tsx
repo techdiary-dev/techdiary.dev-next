@@ -176,7 +176,7 @@ const ArticleEditorDrawer: React.FC<Props> = ({ article, open, onClose }) => {
                               search: searchTerm,
                             });
 
-                            const searchResult = res?.nodes ?? [];
+                            const searchResult = res ?? [];
                             return searchResult?.map((tag) => ({
                               label: tag.name,
                               value: tag.id,

@@ -1,33 +1,25 @@
 "use server";
 
 import { slugify } from "@/lib/slug-helper.util";
-import { removeMarkdownSyntax } from "@/lib/utils";
-import { z } from "zod";
-import { Article, Tag, User } from "../models/domain-models";
-import { pgClient } from "../persistence/database-drivers/pg.client";
 import {
-  and,
-  desc,
-  eq,
-  leftJoin,
-  like,
-  manyToManyJoin,
-  neq,
-  notInArray,
-  or,
-  inArray,
-} from "../persistence/persistence-where-operator";
-import { PersistentRepository } from "../persistence/persistence.repository";
+  removeMarkdownSyntax,
+  removeNullOrUndefinedFromObject,
+} from "@/lib/utils";
+import * as sk from "sqlkit";
+import { and, desc, eq, like, neq, or } from "sqlkit";
+import { z } from "zod";
+import { Article, User } from "../models/domain-models";
+import { pgClient } from "../persistence/database-drivers/pg.client";
+import { DatabaseTableName } from "../persistence/persistence-contracts";
 import {
   handleRepositoryException,
   RepositoryException,
 } from "./RepositoryException";
 import { ArticleRepositoryInput } from "./inputs/article.input";
 import { getSessionUserId } from "./session.actions";
-import { DatabaseTableName } from "../persistence/persistence-contracts";
-import { persistenceRepository } from "../persistence-repositories";
+import { syncTagsWithArticles } from "./tag.action";
 
-const articleRepository = new PersistentRepository<Article>(
+const articleRepository = new sk.Repository<Article>(
   DatabaseTableName.articles,
   pgClient
 );
@@ -45,7 +37,7 @@ export async function createArticle(
   try {
     const input =
       await ArticleRepositoryInput.createArticleInput.parseAsync(_input);
-    const article = await articleRepository.createOne({
+    const article = await articleRepository.insertOne({
       title: input.title,
       handle: input.handle,
       excerpt: input.excerpt ?? null,
@@ -75,7 +67,7 @@ export async function createMyArticle(
 
     const handle = await getUniqueArticleHandle(input.title);
 
-    const article = await articleRepository.createOne({
+    const article = await articleRepository.insertOne({
       title: input.title,
       handle: handle,
       excerpt: input.excerpt ?? null,
@@ -219,9 +211,10 @@ export async function updateMyArticle(
 
     const input =
       await ArticleRepositoryInput.updateMyArticleInput.parseAsync(_input);
-    const article = await articleRepository.updateOne({
+
+    const article = await articleRepository.update({
       where: and(eq("id", input.article_id), eq("author_id", sessionUserId)),
-      data: {
+      data: removeNullOrUndefinedFromObject({
         title: input.title,
         handle: input.handle,
         excerpt: input.excerpt,
@@ -230,23 +223,13 @@ export async function updateMyArticle(
         is_published: input.is_published,
         published_at: input.is_published ? new Date() : null,
         metadata: input.metadata,
-      },
+      }),
     });
 
     if (input.tag_ids) {
-     const deleted =  await persistenceRepository.articleTag.deleteRows({
-        where: and(
-          // eq("article_id", article.id),
-          notInArray("tag_id", input.tag_ids)
-        ),
-      });
-      console.log(deleted)
-
-      input.tag_ids.forEach(async (tag_id) => {
-        await persistenceRepository.articleTag.createOne({
-          article_id: article.id,
-          tag_id: tag_id,
-        });
+      await syncTagsWithArticles({
+        article_id: input.article_id,
+        tag_ids: input.tag_ids,
       });
     }
 
@@ -265,17 +248,11 @@ export async function updateMyArticle(
  */
 export async function deleteArticle(article_id: string) {
   try {
-    const deletedArticles = await articleRepository.deleteRows({
+    const deletedArticles = await articleRepository.delete({
       where: eq("id", article_id),
     });
 
-    if (!deletedArticles || deletedArticles.length === 0) {
-      throw new RepositoryException(
-        "Article not found or could not be deleted"
-      );
-    }
-
-    return deletedArticles[0];
+    return deletedArticles;
   } catch (error) {
     handleRepositoryException(error);
   }
@@ -288,30 +265,30 @@ export async function deleteArticle(article_id: string) {
  * @returns Promise<Article[]> - Array of recent articles with author information
  * @throws {RepositoryException} If query fails
  */
-export async function findRecentArticles(
-  limit: number = 5
-): Promise<Article[]> {
-  try {
-    return articleRepository.findRows({
-      where: and(eq("is_published", true), neq("published_at", null)),
-      limit,
-      orderBy: [desc("published_at")],
-      columns: ["id", "title", "handle"],
-      joins: [
-        leftJoin<Article, User>({
-          as: "user",
-          joinTo: "users",
-          localField: "author_id",
-          foreignField: "id",
-          columns: ["id", "name", "username", "profile_photo"],
-        }),
-      ],
-    });
-  } catch (error) {
-    handleRepositoryException(error);
-    return [];
-  }
-}
+// export async function findRecentArticles(
+//   limit: number = 5
+// ): Promise<Article[]> {
+//   try {
+//     return articleRepository.findRows({
+//       where: and(eq("is_published", true), neq("published_at", null)),
+//       limit,
+//       orderBy: [desc("published_at")],
+//       columns: ["id", "title", "handle"],
+//       joins: [
+//         leftJoin<Article, User>({
+//           as: "user",
+//           joinTo: "users",
+//           localField: "author_id",
+//           foreignField: "id",
+//           columns: ["id", "name", "username", "profile_photo"],
+//         }),
+//       ],
+//     });
+//   } catch (error) {
+//     handleRepositoryException(error);
+//     return [];
+//   }
+// }
 
 /**
  * Retrieves a paginated feed of published articles.
@@ -326,7 +303,7 @@ export async function articleFeed(
   try {
     const input = await ArticleRepositoryInput.feedInput.parseAsync(_input);
 
-    const response = await articleRepository.findAllWithPagination({
+    const response = await articleRepository.paginate({
       where: and(eq("is_published", true), neq("approved_at", null)),
       page: input.page,
       limit: input.limit,
@@ -341,13 +318,16 @@ export async function articleFeed(
         "excerpt",
       ],
       joins: [
-        leftJoin<Article, User>({
+        {
           as: "user",
-          joinTo: "users",
-          localField: "author_id",
-          foreignField: "id",
+          table: DatabaseTableName.users,
+          type: "left",
+          on: {
+            foreignField: "id",
+            localField: "author_id",
+          },
           columns: ["id", "name", "username", "profile_photo"],
-        }),
+        } as sk.Join<Article, User>,
       ],
     });
 
@@ -371,7 +351,7 @@ export async function userArticleFeed(
   try {
     const input = await ArticleRepositoryInput.userFeedInput.parseAsync(_input);
 
-    const response = await articleRepository.findAllWithPagination({
+    const response = await articleRepository.paginate({
       where: and(
         eq("is_published", true),
         neq("approved_at", null),
@@ -390,13 +370,15 @@ export async function userArticleFeed(
         "excerpt",
       ],
       joins: [
-        leftJoin<Article, User>({
-          as: "user",
-          joinTo: "users",
-          localField: "author_id",
-          foreignField: "id",
+        {
+          as: "tags",
+          table: DatabaseTableName.users,
+          on: {
+            foreignField: "id",
+            localField: "author_id",
+          },
           columns: ["id", "name", "username", "profile_photo"],
-        }),
+        } as sk.Join<Article, User>,
       ],
     });
 
@@ -433,20 +415,16 @@ export async function articleDetailByHandle(article_handle: string) {
         "updated_at",
       ],
       joins: [
-        leftJoin<Article, User>({
+        {
           as: "user",
-          joinTo: "users",
-          localField: "author_id",
-          foreignField: "id",
+          type: "left",
+          table: DatabaseTableName.users,
+          on: {
+            foreignField: "id",
+            localField: "author_id",
+          },
           columns: ["id", "name", "username", "profile_photo"],
-        }),
-        // manyToManyJoin<Article, Tag>({
-        //   as: "tags",
-        //   pivotTable: DatabaseTableName.article_tag,
-        //   localField: "id",
-        //   foreignField: "id",
-        //   columns: ["id", "name", "icon", "color", "description"],
-        // }),
+        } as sk.Join<Article, User>,
       ],
       limit: 1,
     });
@@ -506,9 +484,14 @@ export async function myArticles(
   input: z.infer<typeof ArticleRepositoryInput.myArticleInput>
 ) {
   const sessionUserId = await getSessionUserId();
+
+  if (!sessionUserId) {
+    throw new RepositoryException("Unauthorized");
+  }
+
   try {
-    const articles = await articleRepository.findAllWithPagination({
-      where: eq("author_id", sessionUserId),
+    const articles = await articleRepository.paginate({
+      where: eq("author_id", sessionUserId!),
       columns: [
         "id",
         "title",
@@ -539,8 +522,11 @@ export async function setArticlePublished(
 ) {
   const sessionUserId = await getSessionUserId();
   try {
-    const articles = await articleRepository.updateOne({
-      where: and(eq("id", article_id), eq("author_id", sessionUserId)),
+    const articles = await articleRepository.update({
+      where: and(
+        eq("id", article_id),
+        eq("author_id", sessionUserId?.toString()!)
+      ),
       data: {
         is_published: is_published,
         published_at: is_published ? new Date() : null,

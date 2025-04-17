@@ -50,6 +50,7 @@
     "react-hook-form": "^7.55.0",
     "recharts": "^2.15.1",
     "schema-dts": "^1.1.5",
+    "sqlkit": "^1.0.8",
     "tailwind-merge": "^3.0.2",
     "tw-animate-css": "^1.2.4",
     "zod": "^3.24.2"

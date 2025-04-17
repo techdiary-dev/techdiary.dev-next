@@ -22,4 +22,8 @@ export const TagRepositoryInput = {
   deleteInput: z.object({
     tag_id: z.string(),
   }),
+  syncTagsWithArticlesInput: z.object({
+    article_id: z.string(),
+    tag_ids: z.array(z.string()),
+  }),
 };
