@@ -336,28 +336,22 @@ export async function createSeries(formData: FormData) {
             item.article_id ||
             (item.id && item.type === "article" ? item.id : null);
 
-          await persistenceRepository.seriesItems.createOne(
-            {
-              series_id: series.id,
-              type: item.type || "article",
-              title: item.title || null,
-              article_id: articleId,
-              index: i,
-            },
-            client
-          );
+          await persistenceRepository.seriesItems.createOne({
+            series_id: series.id,
+            type: item.type || "article",
+            title: item.title || null,
+            article_id: articleId,
+            index: i,
+          });
         }
         console.log(`Created ${items.length} series items`);
       }
 
-      await client.query("COMMIT");
       return series;
     } catch (error) {
-      await client.query("ROLLBACK");
       console.error("Transaction error in createSeries:", error);
       throw error;
     } finally {
-      client.release();
     }
   } catch (error) {
     console.error("Error in createSeries:", error);
@@ -424,33 +418,22 @@ export async function updateSeries(id: string, formData: FormData) {
       console.log("Generated new handle:", handle);
     }
 
-    // Use transaction for update
-    const client = await persistenceRepository.series.getClient();
     try {
-      await client.query("BEGIN");
-
       // Update the series
-      const updatedSeries = await persistenceRepository.series.updateOne(
-        {
-          where: eq("id", id),
-          data: {
-            title,
-            description: description || null,
-            handle,
-          },
+      const updatedSeries = await persistenceRepository.series.updateOne({
+        where: eq("id", id),
+        data: {
+          title,
+          handle,
         },
-        client
-      );
+      });
 
       console.log("Updated series:", updatedSeries);
 
       // Delete existing items - we'll recreate them with the new order
-      await persistenceRepository.seriesItems.deleteRows(
-        {
-          where: eq("series_id", id),
-        },
-        client
-      );
+      await persistenceRepository.seriesItems.deleteRows({
+        where: eq("series_id", id),
+      });
 
       // Create new items with updated order
       if (items && items.length > 0) {
@@ -460,28 +443,21 @@ export async function updateSeries(id: string, formData: FormData) {
             item.article_id ||
             (item.id && item.type === "article" ? item.id : null);
 
-          await persistenceRepository.seriesItems.createOne(
-            {
-              series_id: id,
-              type: item.type || "article",
-              title: item.title || null,
-              article_id: articleId,
-              index: i,
-            },
-            client
-          );
+          await persistenceRepository.seriesItems.createOne({
+            series_id: id,
+            type: item.type || "article",
+            title: item.title || null,
+            article_id: articleId,
+            index: i,
+          });
         }
         console.log(`Created ${items.length} updated series items`);
       }
 
-      await client.query("COMMIT");
       return updatedSeries;
     } catch (error) {
-      await client.query("ROLLBACK");
       console.error("Transaction error in updateSeries:", error);
       throw error;
-    } finally {
-      client.release();
     }
   } catch (error) {
     console.error("Error in updateSeries:", error);
