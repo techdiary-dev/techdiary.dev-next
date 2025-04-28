@@ -32,6 +32,11 @@ const DashboardSidebar = () => {
       icon: Home,
     },
     {
+      title: _t("Series"),
+      url: "/series",
+      icon: Home,
+    },
+    {
       title: _t("Notifications"),
       url: "/notifications",
       icon: BellIcon,
