@@ -13,7 +13,7 @@ import {
   HeadingIcon,
   ImageIcon,
 } from "@radix-ui/react-icons";
-import React, { useRef, useState, useCallback } from "react";
+import React, { useCallback, useRef, useState } from "react";
 
 import { ArticleRepositoryInput } from "@/backend/services/inputs/article.input";
 import { useAutosizeTextArea } from "@/hooks/use-auto-resize-textarea";
@@ -71,8 +71,23 @@ const ArticleEditor: React.FC<ArticleEditorProps> = ({ article, uuid }) => {
     mutationFn: (
       input: z.infer<typeof ArticleRepositoryInput.createMyArticleInput>
     ) => articleActions.createMyArticle(input),
-    onSuccess: (res) => router.push(`/dashboard/articles/${res?.id}`),
-    onError: (err) => alert(err.message),
+    onSuccess: (res) => {
+      if (res && res.id) {
+        router.push(`/dashboard/articles/${res.id}`);
+      } else {
+        console.error("Article created but no ID returned", res);
+        // Fallback to dashboard if ID is missing
+        router.push("/dashboard/articles");
+      }
+    },
+    onError: (err) => {
+      console.error("Error creating article:", err);
+      alert(
+        err instanceof Error
+          ? err.message
+          : "Failed to create article. Please try again."
+      );
+    },
   });
 
   const handleDebouncedSaveTitle = useCallback(

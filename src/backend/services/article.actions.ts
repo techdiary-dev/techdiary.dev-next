@@ -68,10 +68,20 @@ export async function createMyArticle(
     const input =
       await ArticleRepositoryInput.createMyArticleInput.parseAsync(_input);
 
-    const handle = await getUniqueArticleHandle(input.title);
+    // Default to "untitled" if title is empty
+    const titleToUse = input.title?.trim() || "Untitled Article";
+
+    // Generate a unique handle based on the title
+    const handle = await getUniqueArticleHandle(titleToUse);
+
+    if (!handle) {
+      throw new RepositoryException(
+        "Failed to generate a unique handle for the article"
+      );
+    }
 
     const article = await articleRepository.createOne({
-      title: input.title,
+      title: titleToUse,
       handle: handle,
       excerpt: input.excerpt ?? null,
       body: input.body ?? null,
@@ -80,9 +90,16 @@ export async function createMyArticle(
       published_at: input.is_published ? new Date() : null,
       author_id: sessionUserId,
     });
+
+    if (!article) {
+      throw new RepositoryException("Failed to create article");
+    }
+
     return article;
   } catch (error) {
+    console.error("Article creation error:", error);
     handleRepositoryException(error);
+    return null;
   }
 }
 
